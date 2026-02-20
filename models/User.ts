@@ -24,6 +24,10 @@ const UserSchema = new Schema({
   vendorStatus: { type: String, enum: ['None', 'Pending', 'Approved', 'Rejected'], default: 'None' },
   businessName: { type: String },
   businessDescription: { type: String },
+
+  // Add these inside your UserSchema definition
+    resetPasswordToken: { type: String },
+    resetPasswordExpire: { type: Date },
   
 }, { timestamps: true });
 

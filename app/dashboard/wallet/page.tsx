@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -36,12 +37,32 @@ export default function WalletPage() {
   const adminWallets: Record<string, string> = {
     'USDT-TRC20': 'TAMVc7wE73TPmkVnMzGZmxjeWGkEzjcFVo', 
     'BTC': 'bc1qn3elluy6w0rlfj5zda3zag4wfsefq4knan2p93', 
-    'ETH': '0xfCf9437dF2b5A73728b840222F77F2D80D7AD2BE'
+    'ETH': '0xfCf9437dF2b5A73728b840222F77F2D80D7AD2BE',
+    'SOL': "L5f8pZD3iPiVALCwhVEprXCk3zB3iMfz8fgmBXJHhFG",
+    'BNB': "0xfCf9437dF2b5A73728b840222F77F2D80D7AD2BE"
   };
+
+  const getQRValue = (network: string, address: string) => {
+  switch (network) {
+    case 'BTC':
+      return `bitcoin:${address}`;
+    case 'ETH':
+      return `ethereum:${address}`;
+    case 'USDT-TRC20':
+      return `tron:${address}`;
+    case 'SOL':
+      return `solana:${address}`;
+    case 'BNB':
+    case 'USDT-BEP20':
+      return `ethereum:${address}`; 
+    default:
+      return address;
+  }
+};
   
   const adminBankDetails = {
-    bankName: "Guaranty Trust Bank (GTB)",
-    accountNumber: "0123456789",
+    bankName: "Fidelity Bank Plc",
+    accountNumber: "6540001694",
     accountName: "SleepStream Enterprise"
   };
 
@@ -187,7 +208,7 @@ export default function WalletPage() {
                       ))}
                     </div>
                     <div className="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 flex flex-col items-center text-center">
-                      <div className="bg-white p-4 rounded-xl mb-4"><QRCode size={120} value={adminWallets[depositNetwork]} /></div>
+                      <div className="bg-white p-4 rounded-xl mb-4"><QRCode size={120} value={getQRValue(depositNetwork, adminWallets[depositNetwork])} /></div>
                       <div className="w-full flex items-center gap-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 shadow-sm">
                         <span className="font-mono text-xs truncate flex-1">{adminWallets[depositNetwork]}</span>
                         <button onClick={() => {navigator.clipboard.writeText(adminWallets[depositNetwork]); alert("Copied!");}}><Copy className="w-4 h-4 text-blue-500" /></button>
