@@ -75,7 +75,7 @@ export default function AdminLayout({
             </div>
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Access Denied</h1>
             <p className="text-slate-500 dark:text-slate-400 mb-8">
-              This area is restricted to administrators only. Your attempt has been logged.
+              This area is restricted to administrators only. Your attempt to login as admin has been recorded.
             </p>
             <div className="flex flex-col gap-3">
               <button 
@@ -110,11 +110,11 @@ export default function AdminLayout({
         
         {/* Simple Top Bar */}
         <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-8 sticky top-0 z-10">
-           <h2 className="font-bold text-slate-700 dark:text-slate-200">System Overview</h2>
-           <div className="flex items-center gap-2">
+           <h2 className="font-bold pl-5 text-slate-700 dark:text-slate-200">Admin dashboard</h2>
+           {/* <div className="flex items-center gap-2">
              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
              <span className="text-xs font-mono text-slate-500">SERVER: ONLINE</span>
-           </div>
+           </div> */}
         </header>
 
         {/* Scrollable Page Content */}
