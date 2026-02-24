@@ -22,7 +22,8 @@ export default function LandingPage() {
       <nav className="fixed w-full z-50 px-6 py-6 flex justify-between items-center backdrop-blur-xl bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors">
         <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold tracking-tight">
           <div className="p-1.5 bg-blue-600 rounded-lg text-white shadow-lg shadow-blue-500/30">
-            <Bot className="w-5 h-5" />
+            {/* <Bot className="w-5 h-5" /> */}
+            <img src="/logo.png" alt="Logo" className="w-5 h-5" />
           </div>
           <span className="text-lg">SleepStream</span>
         </div>
@@ -44,7 +45,7 @@ export default function LandingPage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
             </span>
-            Live System v2.0
+            Bots available now
           </div>
 
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
@@ -56,7 +57,7 @@ export default function LandingPage() {
           
           <p className="text-xl text-slate-500 dark:text-slate-400 max-w-lg mx-auto leading-relaxed">
             Deploy automated bots to view high-value ads. <br className="hidden md:block" />
-            Secure <span className="text-slate-900 dark:text-white font-bold decoration-blue-500/30 underline decoration-4 underline-offset-2">15% daily returns</span> with zero effort.
+            Secure <span className="text-slate-900 dark:text-white font-bold decoration-blue-500/30 underline decoration-4 underline-offset-2">15% returns</span> with zero effort.
           </p>
 
           <div className="pt-8 flex flex-col items-center">
@@ -66,7 +67,7 @@ export default function LandingPage() {
             >
               Start Earning Now <ArrowRight className="w-5 h-5" />
             </button>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-4 font-medium">No credit card required • Instant activation</p>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-4 font-medium">Don't sleep on this!</p>
           </div>
         </div>
       </section>
@@ -81,7 +82,7 @@ export default function LandingPage() {
               <Wallet className="w-6 h-6" />
             </div>
             <h3 className="text-slate-900 dark:text-white font-bold text-xl">1. Deposit Capital</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Select a bot tier. Your funds are securely locked in the trading pool for a fixed 10-day cycle.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Select a bot tier. Your funds are used to purchase automated bots to act o your behalf.</p>
           </div>
 
           {/* Card 2 */}
@@ -135,14 +136,14 @@ export default function LandingPage() {
                 Ready to automate your finances?
               </h2>
               <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto text-lg leading-relaxed">
-                Join thousands of users earning passive income daily. 
-                Create a free account to view live bot performance.
+                Join thousands of users already earning passive income. 
+                Create an account to view live bot performance.
               </p>
               
               <div className="pt-4">
                 <button 
                   onClick={() => router.push('/signup')} 
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-12 py-5 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3 mx-auto shadow-xl shadow-blue-500/20"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold lg:text-lg text-md px-12 py-5 rounded-2xl transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center gap-3 mx-auto shadow-xl shadow-blue-500/20"
                 >
                   Create Free Account <ArrowRight className="w-5 h-5" />
                 </button>

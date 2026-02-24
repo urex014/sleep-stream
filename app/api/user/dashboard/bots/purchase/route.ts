@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
+import Transaction from '@/models/Transaction'; // Added for logging the purchase
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 
@@ -47,9 +48,12 @@ export async function POST(req: Request) {
 
     // 4. Check Business Logic
     
-    // Check A: Does user already have a higher or equal tier?
-    if (user.tier >= tierId && user.activeBot) {
-      return NextResponse.json({ success: false, message: 'You already have this tier active' }, { status: 400 });
+    // Check A: STRICT BOT CHECK - Prevent purchase if ANY bot is running
+    if (user.activeBot) {
+      return NextResponse.json({ 
+        success: false, 
+        message: 'You already have an active bot running. Please wait for its cycle to complete.' 
+      }, { status: 400 });
     }
 
     // Check B: Insufficient Funds
@@ -69,14 +73,25 @@ export async function POST(req: Request) {
     user.tier = tierId;
     user.activeBot = true;
     
-    // Optional: Reset cycle start date if you are tracking specific cycle times
-    // user.botStartDate = new Date(); 
+    // Reset cycle start date so the 10-day countdown starts today
+    // (Make sure to add `botActivatedAt: { type: Date }` to your User model!)
+    user.botActivatedAt = new Date(); 
 
     await user.save();
 
+    // 6. Log the Transaction (Optional but highly recommended for accounting)
+    await Transaction.create({
+      userId: user._id,
+      type: 'Bot Purchase',
+      amount: price,
+      method: 'Wallet Balance',
+      status: 'Success',
+      description: `Purchased Tier ${tierId} Bot`
+    });
+
     return NextResponse.json({
       success: true,
-      message: `Successfully upgraded to Tier ${tierId}`,
+      message: `Successfully activated Tier ${tierId} Bot!`,
       newBalance: user.balance,
       tier: user.tier
     });

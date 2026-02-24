@@ -128,12 +128,12 @@ export default function Navbar() {
         <div className="flex items-center gap-4 md:gap-6">
           <div className="h-6 w-px bg-slate-200 dark:bg-slate-800 hidden sm:block"></div>
 
-          <button 
+          {/* <button 
             onClick={toggleTheme}
             className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all"
           >
             {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+          </button> */}
           
           <NotificationBell />
           

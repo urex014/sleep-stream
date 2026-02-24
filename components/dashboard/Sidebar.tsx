@@ -13,6 +13,7 @@ import {
   CircleHelp,
   Loader2 
 } from 'lucide-react';
+import Image from 'next/image';
 
 const navItems = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
@@ -58,6 +59,7 @@ export default function Sidebar() {
       <div className="h-20 flex items-center px-8 border-b border-slate-100 dark:border-slate-800">
         <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold tracking-tight text-xl">
           <div className="p-1.5 bg-blue-600 rounded-lg text-white shadow-md shadow-blue-500/20">
+          {/* <Image alt='SS' src="/logo.jpg" width /> */}
             <Bot className="w-5 h-5" />
           </div>
           <span>Sleep Stream</span>

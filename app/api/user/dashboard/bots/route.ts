@@ -31,7 +31,7 @@ export async function GET(req: Request) {
 
     if (user.activeBot) {
       // Calculate days running based on account creation (Mock Logic)
-      const startDate = new Date(user.createdAt);
+      const startDate = new Date(user.botActivatedAt || user.createdAt);
       const today = new Date();
       const diffTime = Math.abs(today.getTime() - startDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
