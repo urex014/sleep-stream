@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { Bot, Mail, Lock, User, ArrowRight, Gift, ChevronLeft, KeyRound, ShieldCheck, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Logo from '@/components/Logo';
 
 // 1. Create the Form Component separately to handle SearchParams safely
 function SignupForm() {
@@ -87,10 +88,11 @@ function SignupForm() {
         </div>
 
         <div className="relative z-10 flex items-center gap-2 font-bold text-xl tracking-tight">
-          <div className="p-1.5 bg-white/10 backdrop-blur-md rounded-lg border border-white/10">
-            <Bot className="w-5 h-5 text-white" />
-          </div>
-          <span>SleepStream</span>
+          
+            {/* <Bot className="w-5 h-5 text-white" /> */}
+            <Logo />
+          
+          {/* <span>SleepStream</span> */}
         </div>
 
         <div className="relative z-10 max-w-lg mb-20">

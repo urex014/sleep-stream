@@ -180,7 +180,6 @@ export default function WalletPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="relative flex items-center justify-center">
            <div className="absolute inset-0 w-12 h-12 border-4 border-slate-200 dark:border-blue-900/30 rounded-full animate-ping"></div>
-           <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin relative z-10" />
         </div>
       </div>
     );
@@ -202,7 +201,7 @@ export default function WalletPage() {
               <Wallet className="w-4 h-4 text-blue-200" />
               <span className="text-sm font-bold tracking-wide uppercase text-blue-50">Total Balance</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 drop-shadow-sm">
+            <h2 className="text-5xl md:text-7xl font-bold text-blue-50 tracking-tight mb-6 drop-shadow-sm">
               ${wallet.total.toFixed(2)}
             </h2>
             <div className="flex flex-wrap justify-center md:justify-start gap-4">

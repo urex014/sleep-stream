@@ -2,6 +2,7 @@
 import React from 'react';
 import { Bot, ArrowRight, Wallet, Activity, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Logo from '@/components/Logo';
 
 export default function LandingPage() {
   
@@ -21,11 +22,11 @@ export default function LandingPage() {
       {/* --- MINIMAL NAVBAR --- */}
       <nav className="fixed w-full z-50 px-6 py-6 flex justify-between items-center backdrop-blur-xl bg-white/70 dark:bg-slate-950/70 border-b border-slate-200/50 dark:border-slate-800/50 transition-colors">
         <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold tracking-tight">
-          <div className="p-1.5 bg-blue-600 rounded-lg text-white shadow-lg shadow-blue-500/30">
+          
             {/* <Bot className="w-5 h-5" /> */}
-            <img src="/logo.png" alt="Logo" className="w-5 h-5" />
-          </div>
-          <span className="text-lg">SleepStream</span>
+            <Logo className="h-10 w-auto" />
+          
+          {/* <span className="text-lg">SleepStream</span> */}
         </div>
         <button 
           onClick={() => router.push('/login')} 

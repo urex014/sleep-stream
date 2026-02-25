@@ -69,7 +69,6 @@ export default function ReferralsPage() {
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="relative flex items-center justify-center">
            <div className="absolute inset-0 w-12 h-12 border-4 border-slate-200 dark:border-slate-800 rounded-full animate-ping"></div>
-           <Loader2 className="w-8 h-8 text-blue-600 dark:text-blue-500 animate-spin relative z-10" />
         </div>
       </div>
     );
@@ -96,17 +95,17 @@ export default function ReferralsPage() {
               Invite friends.<br />Earn capital.
             </h1>
             <p className="text-blue-100/80 text-lg mb-8 max-w-md leading-relaxed">
-              Share your unique link. When your friends sign up and activate a bot, you get paid instantly.
+              Share your unique link.<br className="lg:hidden" /> When your friends sign up and activate<br className="lg:hidsden"/> a bot, you get paid instantly.
             </p>
             
             {/* Link Copier */}
-            <div className="flex flex-col sm:flex-row gap-3 w-[70%] lg:max-w-lg">
+            <div className="flex flex-col sm:flex-row gap-3 w-[50%] lg:max-w-lg">
               <div className="flex-1 bg-black/20 dark:bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl px-5 py-4 flex items-center shadow-inner">
                 <span className="text-sm font-mono text-white/90 truncate select-all">{referralLink}</span>
               </div>
               <button 
                 onClick={handleCopy}
-                className="bg-white text-blue-900 font-bold px-8 py-4 rounded-2xl hover:bg-blue-50 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl shrink-0"
+                className="bg-white w-[90%] text-blue-900 font-bold px-8 py-4 rounded-2xl hover:bg-blue-50 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-xl shrink-0"
               >
                 {copied ? <CheckCircle2 className="w-5 h-5 text-emerald-500" /> : <Copy className="w-5 h-5" />}
                 {copied ? "Copied!" : "Copy Link"}

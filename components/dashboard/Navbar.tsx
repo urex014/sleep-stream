@@ -5,9 +5,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   Menu, 
-  Bell, 
-  Sun, 
-  Moon, 
   X, 
   LayoutDashboard, 
   Bot, 
@@ -19,6 +16,7 @@ import {
   Loader2
 } from 'lucide-react';
 import NotificationBell from '../NotificationBell';
+import Logo from '../Logo';
 
 export default function Navbar() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -74,17 +72,7 @@ export default function Navbar() {
 
   }, []);
 
-  const toggleTheme = () => {
-    if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDarkMode(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDarkMode(true);
-    }
-  };
+  
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -139,7 +127,7 @@ export default function Navbar() {
           
 
           {/* Avatar (First letter of name or 'U') */}
-          <div className="h-10 w-10 rounded-full bg-blue-600 dark:bg-blue-500 border-2 border-white dark:border-slate-800 shadow-md flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:bg-blue-700 transition-colors">
+          <div onClick={()=>router.push('/dashboard/settings')} className="h-10 w-10 rounded-full bg-blue-600 dark:bg-blue-500 border-2 border-white dark:border-slate-800 shadow-md flex items-center justify-center text-white text-sm font-bold cursor-pointer hover:bg-blue-700 transition-colors">
             {userData?.name ? userData.name.charAt(0).toUpperCase() : 'U'}
           </div>
         </div>
@@ -155,13 +143,8 @@ export default function Navbar() {
 
           <div className="absolute left-0 top-0 bottom-0 w-3/4 max-w-xs bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
             
-            <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white">
-                <div className="p-1.5 bg-blue-600 rounded-lg text-white">
-                  <Bot className="w-4 h-4" />
-                </div>
-                <span>Sleep Stream</span>
-              </div>
+            <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100 dark:border-slate-800">              
+                <Logo />
               <button 
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 text-slate-400 hover:text-red-500 transition-colors"
