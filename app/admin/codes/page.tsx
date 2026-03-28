@@ -142,11 +142,11 @@ export default function AccessCodes() {
               <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl border border-slate-100 dark:border-slate-700">
                 <div className="flex justify-between text-sm mb-1">
                   <span className="text-slate-500 dark:text-slate-400">Value per Code</span>
-                  <span className="font-bold text-slate-900 dark:text-white">$5.00</span>
+                  <span className="font-bold text-slate-900 dark:text-white">N4500</span>
                 </div>
                 <div className="flex justify-between text-sm pt-2 border-t border-slate-200 dark:border-slate-700">
                   <span className="text-slate-500 dark:text-slate-400">Total Value</span>
-                  <span className="font-bold text-blue-600 dark:text-blue-400">${batchSize * 5}</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">N{batchSize * 4500}</span>
                 </div>
               </div>
 

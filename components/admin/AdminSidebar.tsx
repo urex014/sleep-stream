@@ -18,7 +18,6 @@ import {
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
-  { label: 'Deposit Requests', href: '/admin/users', icon: Users }, // Updated to deposits
   { label: 'Payout Requests', href: '/admin/withdrawals', icon: Wallet },  // Updated to payouts
   { label: 'Generate Codes', href: "/admin/codes", icon: Code2 },
   { label: 'Push Notifications', href: '/admin/notifications', icon: Bell }

@@ -45,74 +45,70 @@ export default function FAQPage() {
     },
   ];
 
-  const filteredFaqs = faqs.filter(f => 
-    f.question.toLowerCase().includes(searchQuery.toLowerCase()) || 
+  const filteredFaqs = faqs.filter(f =>
+    f.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
     f.answer.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700 pb-16">
-      
-      {/* 1. HERO HEADER & SEARCH */}
-      <div className="relative bg-gradient-to-br from-blue-600 via-indigo-700 to-slate-900 dark:from-[#0B1120] dark:via-blue-950 dark:to-slate-950 rounded-[2.5rem] p-10 md:p-16 shadow-2xl overflow-hidden text-center border border-blue-500/20 dark:border-blue-500/10">
-        
-        {/* Abstract Background Orbs */}
-        <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-blue-400/10 dark:bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute bottom-0 left-0 w-[20rem] h-[20rem] bg-indigo-400/10 dark:bg-indigo-600/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+    <div className="max-w-4xl mx-auto space-y-8 pb-16 font-sans text-[#333333]">
 
-        <div className="relative z-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-white/10 dark:bg-white/5 backdrop-blur-md text-blue-100 rounded-2xl mb-6 shadow-inner border border-white/20">
-            <HelpCircle className="w-7 h-7" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-4">
-            How can we help?
-          </h1>
-          <p className="text-blue-100/80 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-            Everything you need to know about automation, earnings, and managing your Sleep Stream account.
-          </p>
+      {/* 1. HERO HEADER & SEARCH (Classic Jumbotron Style) */}
+      <div className="bg-[#337ab7] border border-[#2e6da4] rounded shadow-sm p-10 md:p-14 text-center text-white">
 
-          {/* Premium Search Bar */}
-          <div className="relative max-w-2xl mx-auto group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors group-focus-within:text-blue-500" />
-            <input 
-              type="text" 
-              placeholder="Search for answers..." 
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 md:py-5 bg-white dark:bg-[#0B1120] border-2 border-transparent focus:border-blue-500/50 rounded-2xl outline-none text-slate-900 dark:text-white placeholder:text-slate-400 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all text-lg font-medium"
-            />
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-[#286090] border border-[#1e4b73] text-white rounded-full mb-4 shadow-sm">
+          <HelpCircle className="w-8 h-8" />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold mb-3">
+          How can we help?
+        </h1>
+        <p className="text-[#c4e3f3] text-base max-w-xl mx-auto mb-8">
+          Everything you need to know about automation, earnings, and managing your Sleep Stream account.
+        </p>
+
+        {/* Classic Search Bar */}
+        <div className="relative max-w-xl mx-auto">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+            <Search className="w-5 h-5 text-[#999999]" />
           </div>
+          <input
+            type="text"
+            placeholder="Search for answers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] rounded outline-none text-[#333333] placeholder-[#999999] transition-all text-base shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]"
+          />
         </div>
       </div>
 
-      {/* 2. FAQ ACCORDION LIST */}
-      <div className="bg-white dark:bg-[#0B1120] border border-slate-200/80 dark:border-white/[0.08] rounded-[2rem] shadow-sm overflow-hidden">
-        <div className="divide-y divide-slate-100 dark:divide-white/[0.05]">
+      {/* 2. FAQ ACCORDION LIST (Classic Bootstrap Panel Group) */}
+      <div className="bg-white border border-[#dddddd] rounded shadow-sm">
+        <div className="divide-y divide-[#dddddd]">
           {filteredFaqs.length > 0 ? (
             filteredFaqs.map((faq, index) => {
               const isOpen = openIndex === index;
               return (
-                <div key={index} className="transition-colors duration-300 bg-transparent">
-                  <button 
+                <div key={index} className="bg-white">
+                  <button
                     onClick={() => setOpenIndex(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition-colors focus:outline-none group"
+                    className={`w-full flex items-center justify-between p-5 text-left transition-colors focus:outline-none ${isOpen ? 'bg-[#f5f5f5]' : 'hover:bg-[#f9f9f9]'
+                      }`}
                   >
-                    <span className={`font-bold text-lg tracking-tight transition-colors duration-300 pr-8 ${
-                      isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400'
-                    }`}>
+                    <span className={`font-bold text-base transition-colors pr-8 ${isOpen ? 'text-[#337ab7]' : 'text-[#333333]'
+                      }`}>
                       {faq.question}
                     </span>
-                    <div className={`p-2 rounded-full transition-transform duration-300 shrink-0 ${isOpen ? 'bg-blue-50 dark:bg-blue-500/10 rotate-180' : 'bg-slate-50 dark:bg-white/[0.05] group-hover:bg-blue-50 dark:group-hover:bg-blue-500/10'}`}>
-                      <ChevronDown className={`w-5 h-5 ${isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400'}`} />
+                    <div className="shrink-0">
+                      <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'text-[#337ab7] rotate-180' : 'text-[#999999]'
+                        }`} />
                     </div>
                   </button>
-                  
-                  <div 
-                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                      isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-                    }`}
+
+                  <div
+                    className={`overflow-hidden transition-all duration-300 ease-in-out bg-white ${isOpen ? 'max-h-[500px] border-t border-[#eeeeee]' : 'max-h-0'
+                      }`}
                   >
-                    <div className="px-6 md:px-8 pb-8 text-slate-500 dark:text-slate-400 text-[15px] leading-relaxed">
+                    <div className="p-6 text-[#666666] text-sm leading-relaxed">
                       {faq.answer}
                     </div>
                   </div>
@@ -120,38 +116,29 @@ export default function FAQPage() {
               );
             })
           ) : (
-            <div className="text-center py-20 px-6">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-50 dark:bg-white/5 rounded-full mb-4">
-                <Search className="w-8 h-8 text-slate-300 dark:text-slate-600" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">No results found</h3>
-              <p className="text-slate-500 dark:text-slate-400">We couldn't find any FAQs matching "{searchQuery}".</p>
+            <div className="text-center py-16 px-6 bg-[#f9f9f9]">
+              <Search className="w-10 h-10 text-[#cccccc] mx-auto mb-4" />
+              <h3 className="text-lg font-bold text-[#222222] mb-1">No results found</h3>
+              <p className="text-[#666666]">We couldn't find any FAQs matching "{searchQuery}".</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* 3. PREMIUM SUPPORT CTA */}
-      <div className="bg-white dark:bg-[#0B1120] border border-slate-200/80 dark:border-white/[0.08] rounded-[2rem] p-8 md:p-12 text-center shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
-        
-        {/* Decorative corner accents */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+      {/* 3. PREMIUM SUPPORT CTA (Classic Well/Panel) */}
+      <div className="bg-[#f9f9f9] border border-[#dddddd] rounded p-8 md:p-10 text-center shadow-sm">
+        <h3 className="text-xl font-bold text-[#222222] mb-2">Still need assistance?</h3>
+        <p className="text-[#666666] mb-8 max-w-md mx-auto text-sm">
+          Our support team is available around the clock to help you with any specific issues or account inquiries.
+        </p>
 
-        <div className="relative z-10">
-          <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">Still need assistance?</h3>
-          <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-md mx-auto">
-            Our support team is available around the clock to help you with any specific issues or account inquiries.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 font-bold transition-colors">
-              <Send className="w-4 h-4" /> Telegram Support
-            </button>
-            <button className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 font-bold transition-colors">
-              <MessageCircle className="w-5 h-5" /> WhatsApp Support
-            </button>
-          </div>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-white border border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6] hover:border-[#adadad] font-bold transition-colors shadow-sm text-sm">
+            <Send className="w-4 h-4 text-[#337ab7]" /> Telegram Support
+          </button>
+          <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-[#5cb85c] border border-[#4cae4c] text-white hover:bg-[#449d44] font-bold transition-colors shadow-sm text-sm">
+            <MessageCircle className="w-4 h-4" /> WhatsApp Support
+          </button>
         </div>
       </div>
 

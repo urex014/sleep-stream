@@ -1,20 +1,13 @@
-import mongoose, { Schema, model, models } from 'mongoose';
+import mongoose from 'mongoose';
 
-const TransactionSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  type: { type: String, enum: ['Deposit', 'Withdrawal'], required: true },
+const TransactionSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  type: { type: String, enum: ['Earning', 'Withdrawal', 'Deposit'], required: true },
+  wallet: { type: String, enum: ['Ads', 'Referral'], required: true },
+  method: { type: String, required: true }, // e.g., "Video Ad", "Bank Transfer", "Crypto"
   amount: { type: Number, required: true },
-  status: { type: String, enum: ['Pending', 'Success', 'Failed'], default: 'Pending' },
-  
-  // Payment Details
-  method: { type: String, enum: ['crypto', 'fiat'], required: true },
-  network: { type: String },
-  txHash: { type: String, unique: true, sparse: true }, 
-  
-  // Admin/System Notes
-  description: { type: String },
-  
+  status: { type: String, enum: ['Pending', 'Success', 'Failed'], default: 'Success' },
+  destination: { type: String }, // For withdrawals (Bank details or Crypto address)
 }, { timestamps: true });
 
-const Transaction = models.Transaction || model('Transaction', TransactionSchema);
-export default Transaction;
+export default mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);

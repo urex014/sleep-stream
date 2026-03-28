@@ -64,7 +64,7 @@ export default function LiveTerminal() {
  
 
   return (
-    <div className="lg:col-span-2 bg-black border border-zinc-800 rounded-2xl p-6 flex flex-col relative overflow-hidden min-h-[350px]">
+    <div className="lg:col-span-2 bg-black border border-zinc-800 p-6 flex flex-col relative overflow-hidden">
       
       {/* Decorative Top Line */}
       <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gray-500 to-transparent opacity-50 ${isRunning ? 'animate-pulse' : 'opacity-0'}`}></div>
@@ -77,7 +77,7 @@ export default function LiveTerminal() {
         </h3>
         <div className="flex gap-2">
           <span className="text-xs font-mono text-green-500 bg-gray-500/10 px-2 py-1 rounded">
-            {isRunning ? 'STATUS: ONLINE' : 'STATUS: PAUSED'}
+            {isRunning ? 'ONLINE' : 'PAUSED'}
           </span>
         </div>
       </div>

@@ -1,39 +1,41 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/navigation';
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
 import Transaction from '@/models/Transaction';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
-export async function GET(req: Request) {
+export async function GET() {
   try {
     await connectDB();
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
+    const token = cookies().get('token')?.value;
     if (!token) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.id;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret') as { userId: string };
+    const user = await User.findById(decoded.userId);
 
-    // 1. Fetch User Balance
-    const user = await User.findById(userId).select('balance');
+    // 1. Get History
+    const history = await Transaction.find({ userId: user._id }).sort({ createdAt: -1 }).limit(20);
 
-    // 2. Fetch Transaction History (Newest First)
-    const transactions = await Transaction.find({ userId })
-      .sort({ createdAt: -1 })
-      .limit(20);
+    // 2. Calculate "Locked" funds (Pending withdrawals)
+    const pendingWithdrawals = await Transaction.find({
+      userId: user._id,
+      type: 'Withdrawal',
+      status: 'Pending'
+    });
+    const lockedAmount = pendingWithdrawals.reduce((sum, tx) => sum + tx.amount, 0);
 
     return NextResponse.json({
       success: true,
       wallet: {
-        total: user.balance,
-        available: user.balance, // You can separate locked funds here later
-        locked: 0.00
+        total: user.adsBalance + user.referralBalance,
+        available: (user.adsBalance + user.referralBalance) - lockedAmount,
+        locked: lockedAmount,
+        adsBalance: user.adsBalance,
+        referralBalance: user.referralBalance
       },
-      history: transactions
+      history
     });
 
   } catch (error: any) {
