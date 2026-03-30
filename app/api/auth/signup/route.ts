@@ -6,7 +6,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-const REFERRAL_BONUS = 1.50; // Amount to pay the referrer
+const REFERRAL_BONUS = 1800; // Amount to pay the referrer
 
 export async function POST(req: Request) {
   try {

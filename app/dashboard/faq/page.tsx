@@ -11,38 +11,38 @@ export default function FAQPage() {
     {
       category: "General",
       question: "How does Sleep Stream generate money?",
-      answer: "Sleep Stream views ads using bots that act like humans. Your money is used to purchase ad inventory from Google Ads. The bots then watch these ads in the background, earning you a share of the advertising revenue. This is the best way to earn passive income."
+      answer: "Sleep Stream generates revenue through advertising partnerships and user registration fees. This sustainable model allows us to share profits directly with our community for their engagement."
     },
     {
       category: "Earnings",
-      question: "Why is my capital locked for 10 days?",
-      answer: "The 10-day lock-up period ensures stability in our ad-serving network. It allows the bots to complete a full verification cycle with advertisers. Once the cycle ends, your initial capital and your profits are returned to your wallet automatically. This helps us maintain consistent earnings for all users."
-    },
-    {
-      category: "Earnings",
-      question: "Can I upgrade my bot tier later?",
-      answer: "Yes. You can activate a higher tier bot at any time. However, you cannot 'upgrade' an active running bot. You must wait for its 10-day cycle to finish, or simply purchase a new bot alongside your existing one."
-    },
-    {
-      category: 'Earnings',
-      question: 'Why are my earnings so small?',
-      answer: "Your earnings are small because you are probably on tier 0. Tier 0 offers only one bot watching ads for you, which means it might only be getting one ad per 2 days. Increase your tier to purchase more bots."
+      question: "How do I earn money on the platform?",
+      answer: "You can earn money by watching video ads and inviting new users through our referral program. Additional earning methods, such as PTC (Pay-To-Click) tasks and links, will be introduced in upcoming updates."
     },
     {
       category: "Withdrawals",
       question: "What is the minimum withdrawal amount?",
-      answer: "The minimum withdrawal amount is $15. This applies to both your Normal Balance and Referral Wallet."
+      answer: "The minimum withdrawal threshold depends on the wallet you are withdrawing from: it is ₦20,000 for your Ads Wallet (earnings from viewing ads) and ₦12,000 for your Referral Wallet (earnings from inviting friends)."
     },
     {
       category: "Withdrawals",
-      question: "How long do withdrawals take?",
-      answer: "Withdrawals are automatically processed every Wednesday and Saturday at 12am. It typically takes 0-24 hours to reflect."
+      question: "When are withdrawals processed?",
+      answer: "Withdrawal requests are automatically processed and disbursed to your account on our designated payout days: every Wednesday, Saturday, and Sunday."
     },
     {
       category: "Referrals",
-      question: "Do I need to deposit to earn referral bonuses?",
-      answer: "No. You can earn referral bonuses even if you haven't purchased a bot yourself. However, you must have a valid bank account linked to withdraw your earnings."
+      question: "How much can I earn per referral?",
+      answer: "You earn a fixed bonus of ₦1,800 for every active user you refer. For example, successfully referring just 7 friends will earn you ₦12,600."
     },
+    {
+      category:"General",
+      question:"Can I post my own ads on Sleep Stream?",
+      answer:"Yes, we offer advertising opportunities for businesses and individuals. Click on the post ads button in the watch ads page and follow the onscreen instructions "
+    },
+    {
+      category:"Account Limit",
+      question:"Why am I limited to 20 tasks per day?",
+      answer: "We implement daily task limits to maintain a healthy, sustainable ecosystem for both our users and our advertisers.  Advertisers pay for genuine engagement.If users were allowed to click hundreds of ads non- stop, the quality of that engagement drops, which harms the platform.By pacing the tasks, we ensure advertisers get real value, which in turn guarantees we can continue paying you reliably.Additionally, limits prevent automated bots from draining the reward pools, keeping the platform fair for real humans."
+    }
   ];
 
   const filteredFaqs = faqs.filter(f =>

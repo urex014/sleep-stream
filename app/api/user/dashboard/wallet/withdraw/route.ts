@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/navigation';
+import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/db';
@@ -11,15 +11,26 @@ export async function POST(req: Request) {
     // walletType dictates which balance they are withdrawing from ('ads' or 'referrals')
     const { amount, method, destination, network, walletType } = await req.json();
 
-    const token = cookies().get('token')?.value;
+    const token = (await cookies()).get('token')?.value;
     if (!token) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret') as { userId: string };
-    const user = await User.findById(decoded.userId);
+    // 1. Decode token handling BOTH potential ID formats
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+    const userId = decoded.id || decoded.userId;
+
+    if (!userId) {
+      return NextResponse.json({ success: false, message: 'Invalid token payload' }, { status: 401 });
+    }
+
+    // 2. Fetch User AND verify they exist before checking balances
+    const user = await User.findById(userId);
+    if (!user) {
+      return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
+    }
 
     const withdrawAmount = Number(amount);
 
-    // 1. Minimum Threshold Validation
+    // 3. Minimum Threshold & Balance Validation
     if (walletType === 'ads') {
       if (withdrawAmount < 20000) {
         return NextResponse.json({ success: false, message: 'Minimum withdrawal for Ads Wallet is ₦20,000' }, { status: 400 });
@@ -38,7 +49,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Invalid wallet selection' }, { status: 400 });
     }
 
-    // 2. Deduct Balance
+    // 4. Deduct Balance
     if (walletType === 'ads') {
       user.adsBalance -= withdrawAmount;
     } else {
@@ -46,7 +57,7 @@ export async function POST(req: Request) {
     }
     await user.save();
 
-    // 3. Create Pending Withdrawal Record
+    // 5. Create Pending Withdrawal Record
     await Transaction.create({
       userId: user._id,
       type: 'Withdrawal',
@@ -60,6 +71,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, message: 'Withdrawal requested successfully.' });
 
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    console.error("Withdrawal API Error:", error.message);
+    return NextResponse.json({ success: false, message: 'Internal Server Error' }, { status: 500 });
   }
 }

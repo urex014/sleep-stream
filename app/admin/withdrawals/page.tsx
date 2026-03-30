@@ -86,11 +86,11 @@ export default function PayoutRequests() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase">Pending Payouts</p>
-          <h3 className="text-3xl font-bold text-slate-900 dark:text-white mt-1">${pendingTotal.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-slate-900 dark:text-white mt-1">N{pendingTotal.toLocaleString()}</h3>
         </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
           <p className="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase">Paid Today</p>
-          <h3 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">${paidToday.toLocaleString()}</h3>
+          <h3 className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">N{paidToday.toLocaleString()}</h3>
         </div>
       </div>
 
@@ -133,18 +133,17 @@ export default function PayoutRequests() {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="font-mono font-bold text-lg text-slate-900 dark:text-white">${item.amount.toFixed(2)}</span>
+                    <span className="font-mono font-bold text-lg text-slate-900 dark:text-white">N{item.amount.toFixed(2)}</span>
                     <div className="text-xs text-slate-500">{item.method} ({item.network})</div>
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3 py-2 rounded-lg w-fit max-w-[200px]">
                       <span className="font-mono text-xs text-slate-600 dark:text-slate-300 truncate">
-                        {/* Parse description or check for destination field if you added it */}
-                         {item.description.replace('Withdrawal to ', '')}
+                        {item.destination || 'No destination provided'}
                       </span>
-                      <button 
-                        onClick={() => navigator.clipboard.writeText(item.description.replace('Withdrawal to ', ''))}
-                        className="text-blue-500 hover:text-blue-600 shrink-0" 
+                      <button
+                        onClick={() => navigator.clipboard.writeText(item.destination || '')}
+                        className="text-blue-500 hover:text-blue-600 shrink-0"
                         title="Copy"
                       >
                         <Copy className="w-3 h-3" />

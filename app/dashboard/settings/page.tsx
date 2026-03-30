@@ -8,16 +8,22 @@ import {
   Sparkles,
   Lock,
   ArrowRight,
-  ShieldCheck
+  ShieldCheck,
+  User2,
+  Copy,
+  Check
 } from 'lucide-react';
 
 export default function SettingsPage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUserIdCopied, setIsUserIdCopied] = useState(false);
+  const copyResetTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Profile State
   const [profile, setProfile] = useState({
+    id:'',
     fullName: '',
     email: '',
     vendorStatus: 'None',
@@ -42,6 +48,43 @@ export default function SettingsPage() {
     };
     fetchSettings();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      if (copyResetTimeoutRef.current) clearTimeout(copyResetTimeoutRef.current);
+    };
+  }, []);
+
+  const copyToClipboard = async (text: string) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'fixed';
+    textarea.style.top = '0';
+    textarea.style.left = '0';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  };
+
+  const handleCopyUserId = async () => {
+    if (!profile.id) return;
+    try {
+      await copyToClipboard(profile.id);
+      setIsUserIdCopied(true);
+      if (copyResetTimeoutRef.current) clearTimeout(copyResetTimeoutRef.current);
+      copyResetTimeoutRef.current = setTimeout(() => setIsUserIdCopied(false), 1500);
+    } catch (error) {
+      alert('Failed to copy. Please try again.');
+    }
+  };
 
   // --- 2. UPDATE PROFILE ---
   const handleSaveProfile = async () => {
@@ -122,6 +165,34 @@ export default function SettingsPage() {
 
             <div className="p-6 flex-1 flex flex-col space-y-6">
 
+              <div>
+                <label className="block text-sm font-bold text-[#333333] mb-2">
+                  User Id
+                </label>
+                <div className="flex shadow-sm">
+                  <span className="bg-[#eeeeee] border border-[#cccccc] border-r-0 px-3 py-2 text-[#555555] rounded-l flex items-center">
+                    <User2 className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="id"
+                    value={profile.id}
+                    disabled
+                    className="flex-1 bg-white border border-[#cccccc] border-r-0 focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded-none px-3 py-2 outline-none transition-all"
+                    
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCopyUserId}
+                    disabled={!profile.id}
+                    aria-label="Copy user id"
+                    className="bg-[#eeeeee] hover:bg-[#e0e0e0] border border-[#cccccc] px-3 py-2 text-[#555555] rounded-r flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isUserIdCopied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span className="text-sm font-bold">{isUserIdCopied ? 'Copied' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Classic Input Group 1 */}
               <div>
                 <label className="block text-sm font-bold text-[#333333] mb-2">
@@ -175,7 +246,7 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        {/* 3. VENDOR TEASER (Classic Bootstrap Warning Panel) */}
+        {/* vwndor */}
         <div className="lg:col-span-5 flex flex-col">
           <div className="bg-[#fcf8e3] border border-[#faebcc] rounded shadow-sm flex-1 flex flex-col text-[#8a6d3b]">
 

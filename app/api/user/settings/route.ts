@@ -20,6 +20,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       success: true,
       profile: {
+        id: user._id,
         fullName: user.username,
         email: user.email,
         vendorStatus: user.vendorStatus,

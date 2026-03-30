@@ -13,14 +13,16 @@ import {
   Bell,
   Menu,
   X,
-  Loader2
+  Loader2,
+  PlaySquare
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
   { label: 'Payout Requests', href: '/admin/withdrawals', icon: Wallet },  // Updated to payouts
   { label: 'Generate Codes', href: "/admin/codes", icon: Code2 },
-  { label: 'Push Notifications', href: '/admin/notifications', icon: Bell }
+  { label: 'Push Notifications', href: '/admin/notifications', icon: Bell },
+  { label:"post ads", href:"/admin/ads", icon: PlaySquare }
 ];
 
 export default function AdminSidebar() {
