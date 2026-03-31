@@ -7,13 +7,13 @@ import {
   Menu,
   X,
   LayoutDashboard,
-  Bot,
   Wallet,
   Users,
   Settings,
   CircleHelp,
   LogOut,
-  Loader2
+  Loader2,
+  PlayCircleIcon
 } from 'lucide-react';
 import NotificationBell from '../NotificationBell';
 import Logo from '../Logo';
@@ -31,7 +31,7 @@ export default function Navbar() {
 
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-    { label: 'My Bots', href: '/dashboard/bots', icon: Bot },
+    { label: 'View ads', href: '/dashboard/ads', icon: PlayCircleIcon },
     { label: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
     { label: 'Referrals', href: '/dashboard/referrals', icon: Users },
     { label: 'FAQ', href: '/dashboard/faq', icon: CircleHelp },
