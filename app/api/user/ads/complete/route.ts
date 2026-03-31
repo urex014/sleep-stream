@@ -67,7 +67,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error("Ad Completion Error:", error.message);
-    // NextResponse.json will now work because it is properly imported at the top
+
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
