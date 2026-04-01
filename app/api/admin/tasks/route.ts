@@ -36,3 +36,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    await connectDB();
+    const { id } = await req.json();
+
+    if (!id) return NextResponse.json({ success: false, message: 'Ad ID is required' }, { status: 400 });
+
+    const deleted = await Task.findByIdAndDelete(id);
+    if (!deleted) return NextResponse.json({ success: false, message: 'Ad not found' }, { status: 404 });
+
+    return NextResponse.json({ success: true, message: 'Ad deleted successfully!' });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}

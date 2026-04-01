@@ -84,7 +84,7 @@ function SignupForm() {
       <div className="hidden lg:flex flex-col justify-between w-1/2 bg-[#2b3e50] text-white p-12 border-r border-[#1e2b3c]">
 
         <div className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-normal">
-          <Logo className="h-8 w-auto brightness-0 invert" />
+          <img src="landingpagelogo-nobg.png" className='h-20 w-25'></img>
         </div>
 
         <div className="relative z-10 max-w-lg mb-20">
@@ -129,7 +129,7 @@ function SignupForm() {
 
           <div className="mb-6 text-center lg:text-left">
             <h1 className="text-3xl font-bold text-[#222222]">Activate Account</h1>
-            <p className="text-[#666666] mt-2">Instantly unlock Tier 0.</p>
+            {/* <p className="text-[#666666] mt-2">Instantly unlock Tier 0.</p> */}
           </div>
 
           <div className="bg-white p-8 border border-[#dddddd] rounded shadow-sm">

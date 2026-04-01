@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PlaySquare, Link as LinkIcon, Plus, Loader2, CheckCircle2 } from 'lucide-react';
+import { PlaySquare, Link as LinkIcon, Plus, Loader2, CheckCircle2, Trash2 } from 'lucide-react';
 
 export default function AdminAdsManager() {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -26,6 +26,27 @@ export default function AdminAdsManager() {
       console.error("Failed to load tasks");
     } finally {
       setIsLoading(false);
+    }
+  };
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this ad?")) return;
+
+    try {
+      const res = await fetch('/api/admin/tasks', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }) // Pass the ad's database ID here
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        // Refresh your ads table here
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert("Network Error");
     }
   };
 
@@ -185,6 +206,14 @@ export default function AdminAdsManager() {
                             <a href={task.url} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline truncate max-w-[200px] block">
                               {task.url}
                             </a>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(task._id)}
+                              className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              Delete
+                            </button>
                           </div>
                         </div>
                       </td>

@@ -13,7 +13,7 @@ import {
   CircleHelp,
   Loader2
 } from 'lucide-react';
-import Logo from '../Logo';
+
 
 const navItems = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
@@ -54,7 +54,7 @@ export default function Sidebar() {
 
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-[#dddddd] bg-white">
-        <Logo className="h-8 w-auto" />
+        <img src='landingpagelogo.png' alt='SleepStream Logo' className='h-20 w-25' />
       </div>
 
       {/* Navigation Links */}

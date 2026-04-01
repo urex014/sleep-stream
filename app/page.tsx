@@ -14,9 +14,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-white text-[#333333] font-sans selection:bg-[#337ab7] selection:text-white">
 
       {/* --- MODERN NAVBAR --- */}
-      <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-sm px-6 md:px-12 py-4 flex justify-between items-center border-b border-[#eeeeee] shadow-sm">
+      <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md px-6 md:px-12 py-4 flex justify-between items-center border-b border-[#eeeeee] shadow-sm">
         <div className="flex items-center gap-2 text-[#333333] font-bold text-xl tracking-normal">
-          <Logo className="h-9 w-auto" />
+          <img src="landingpagelogo.png" className='h-15 w-25'></img>
         </div>
         <div className="flex items-center gap-6">
           <button
@@ -76,74 +76,84 @@ export default function LandingPage() {
       </section>
 
       {/* --- THE CONCEPT (Modern Grid with Images) --- */}
-      <section className="py-24 bg-[#fbfcfd]">
+      <section className="py-24 bg-[#fbfcfd] border-y border-[#eeeeee]">
         <div className="max-w-6xl mx-auto px-6">
 
-          <div className="text-center mb-16">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#337ab7] mb-2">How It Works</h2>
-            <p className="text-4xl font-extrabold text-[#222222] tracking-tight">Earning Naira is as easy as 1-2-3</p>
+          {/* Section Header */}
+          <div className="text-center mb-20 max-w-2xl mx-auto">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-[#337ab7] mb-2">The Process</h2>
+            <p className="text-5xl font-extrabold text-[#222222] tracking-tight leading-tight">
+              Your path to passive income in Nigeria
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* --- Modern Alternating Layout --- */}
+          <div className="space-y-24 md:space-y-32">
 
-            {/* Step 1 */}
-            <div className="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] border border-[#eeeeee] transition-all hover:shadow-[0_8px_30px_rgb(51,122,183,0.1)] group">
-              <div className="w-full h-48 relative mb-8 rounded-lg overflow-hidden border border-[#eeeeee]">
-                {/* Conceptual Image: Signup/Register */}
+            {/* Step 1: Text Left, Image Right */}
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-12 md:gap-20 items-center">
+              {/* Text Block */}
+              <div className="space-y-5 order-2 md:order-1">
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#337ab7] text-white font-bold text-2xl shadow-lg">1</span>
+                  <h3 className="text-[#222222] font-extrabold text-3xl tracking-tight leading-snug">Create Free Account</h3>
+                </div>
+                <p className="text-[#555555] text-lg leading-relaxed pl-16">
+                  Sign up in seconds on any device. No credit card required. Instantly unlock access to your personalized ads dashboard and start exploring available tasks.
+                </p>
+              </div>
+              {/* Image Block */}
+              <div className="w-full h-[300px] md:h-[400px] relative order-1 md:order-2 rounded-3xl overflow-hidden shadow-2xl border border-[#eeeeee]">
                 <img
                   src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=600&auto=format&fit=crop"
                   alt="Registering on phone"
-                  
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#337ab7] text-white font-bold text-sm">1</span>
-                <h3 className="text-[#222222] font-bold text-xl tracking-tight">Create Free Account</h3>
-              </div>
-              <p className="text-[#666666] text-base leading-relaxed">
-                Sign up in seconds. No credit card required. Get instant access to your personalized ads dashboard.
-              </p>
             </div>
 
-            {/* Step 2 */}
-            <div className="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] border border-[#eeeeee] transition-all hover:shadow-[0_8px_30px_rgb(51,122,183,0.1)] group">
-              <div className="w-full h-48 relative mb-8 rounded-lg overflow-hidden border border-[#eeeeee]">
-                {/* Conceptual Image: Watching Media/Laptop */}
+            {/* Step 2: Image Left, Text Right (Zig-Zag) */}
+            <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-12 md:gap-20 items-center">
+              {/* Image Block */}
+              <div className="w-full h-[300px] md:h-[400px] relative rounded-3xl overflow-hidden shadow-2xl border border-[#eeeeee]">
                 <img
                   src="https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?q=80&w=600&auto=format&fit=crop"
                   alt="Watching videos on laptop"
-                  
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#337ab7] text-white font-bold text-sm">2</span>
-                <h3 className="text-[#222222] font-bold text-xl tracking-tight">Complete Daily Tasks</h3>
+              {/* Text Block */}
+              <div className="space-y-5">
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#337ab7] text-white font-bold text-2xl shadow-lg">2</span>
+                  <h3 className="text-[#222222] font-extrabold text-3xl tracking-tight leading-snug">Complete Daily Tasks</h3>
+                </div>
+                <p className="text-[#555555] text-lg leading-relaxed pl-16">
+                  Log in daily to find fresh opportunities. Click high-value PTC links, visit sponsored websites, or watch short videos. Simply wait for the secure timer to finish and get rewarded instantly.
+                </p>
               </div>
-              <p className="text-[#666666] text-base leading-relaxed">
-                Click PTC links or watch short sponsored videos. Wait for the timer to finish and get rewarded instantly.
-              </p>
             </div>
 
-            {/* Step 3 */}
-            <div className="bg-white p-8 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.05)] border border-[#eeeeee] transition-all hover:shadow-[0_8px_30px_rgb(51,122,183,0.1)] group">
-              <div className="w-full h-48 relative mb-8 rounded-lg overflow-hidden border border-[#eeeeee]">
-                {/* Conceptual Image: Cash/Wallet/Success */}
+            {/* Step 3: Text Left, Image Right */}
+            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-12 md:gap-20 items-center">
+              {/* Text Block */}
+              <div className="space-y-5 order-2 md:order-1">
+                <div className="flex items-center gap-4">
+                  <span className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#5cb85c] text-white font-bold text-2xl shadow-lg">3</span>
+                  <h3 className="text-[#222222] font-extrabold text-3xl tracking-tight leading-snug">Withdraw Your Funds</h3>
+                </div>
+                <p className="text-[#555555] text-lg leading-relaxed pl-16">
+                  Once your dashboard reaches the minimum threshold, request a payout. Withdraw your hard-earned funds directly to your local Nigerian bank account or secure crypto wallet.
+                </p>
+              </div>
+              {/* Image Block */}
+              <div className="w-full h-[300px] md:h-[400px] relative order-1 md:order-2 rounded-3xl overflow-hidden shadow-2xl border border-[#eeeeee]">
                 <img
-                  src="https://images.unsplash.com/photo-1621504450181-5d356f63d3ee?q=80&w=600&auto=format&fit=crop"
-                  alt="Naira currency concept"
-                  
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  src="/nigga-smiling.jpg"
+                  alt="Withdrawal happiness"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="flex items-center justify-center w-8 h-8 rounded-full bg-[#5cb85c] text-white font-bold text-sm">3</span>
-                <h3 className="text-[#222222] font-bold text-xl tracking-tight">Withdraw Your Funds</h3>
-              </div>
-              <p className="text-[#666666] text-base leading-relaxed">
-                Once you hit the threshold, withdraw your earnings directly to your local Nigerian bank account or crypto wallet.
-              </p>
             </div>
 
           </div>

@@ -14,13 +14,15 @@ import {
   Menu,
   X,
   Loader2,
-  PlaySquare
+  PlaySquare,
+  ShoppingBag
 } from 'lucide-react';
 
 const navItems = [
   { label: 'Overview', href: '/admin', icon: LayoutDashboard },
   { label: 'Payout Requests', href: '/admin/withdrawals', icon: Wallet },  // Updated to payouts
   { label: 'Generate Codes', href: "/admin/codes", icon: Code2 },
+  {label: 'Register Vendor', href: "/admin/vendors", icon: ShoppingBag},
   { label: 'Push Notifications', href: '/admin/notifications', icon: Bell },
   { label:"post ads", href:"/admin/ads", icon: PlaySquare }
 ];
