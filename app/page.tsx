@@ -34,30 +34,26 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      {/* --- HERO SECTION with blurred background image --- */}
-      <section className="relative pt-32 min-h-screen pb-24 px-6 overflow-hidden border-b border-[#eeeeee]">
-        {/* Background Image with 30% blur applied via CSS */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero-bg.jpg" 
-            alt="background"
-            fill
-            priority
-            className="object-cover object-center filter blur-[1px] scale-110 opacity-80"
-          />
-          {/* Subtle gradient overlay to enhance readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/80 to-white/20"></div>
-        </div>
+	      {/* --- HERO SECTION with blurred background image --- */}
+	      <section className="relative pt-32 min-h-screen pb-24 px-6 overflow-hidden border-b border-[#eeeeee] flex items-center">
+	        {/* Background Image with 30% blur applied via CSS */}
+	        <div className="absolute inset-0 z-0">
+	          <Image
+	            src="/hero-bg.jpg" 
+	            alt="background"
+	            fill
+	            priority
+	            className="object-cover object-center filter blur-[1px] scale-110 opacity-80"
+	          />
+	          {/* Subtle gradient overlay to enhance readability */}
+	          <div className="absolute inset-0 bg-gradient-to-b from-white via-white/80 to-white/20"></div>
+	        </div>
+	        <div className="relative z-10 w-full max-w-5xl mx-auto text-center">
 
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-[#d9edf7] border border-[#bce8f1] text-[#31708f] px-4 py-1.5 rounded-full text-xs font-bold mb-6 shadow-inner">
-            <Star className="w-3.5 h-3.5 fill-[#31708f]" /> Now open to all users in Nigeria
-          </div>
-
-          <h1 className="text-5xl md:text-6xl font-extrabold text-[#222222] leading-tight mb-6 tracking-tight">
-            Get Paid Daily for <br />
-            Your <span className="text-[#337ab7]">Attention.</span>
-          </h1>
+	          <h1 className="text-5xl md:text-6xl font-extrabold text-[#222222] leading-tight mb-6 tracking-tight">
+	            Get Paid Daily for <br />
+	            Your <span className="text-[#337ab7]">Attention.</span>
+	          </h1>
 
           <p className="text-xl text-[#555555] max-w-3xl mx-auto leading-relaxed mb-10">
             Turn your spare time into real earnings. View high-value PTC ads and sponsored videos. Simple tasks, instant rewards, and reliable payouts directly in Naira.

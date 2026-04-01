@@ -40,8 +40,8 @@ export default function AdminAdsManager() {
 
       const data = await res.json();
       if (res.ok) {
-        // Refresh your ads table here
         alert(data.message);
+        fetchTasks(); // Refresh the table
       } else {
         alert(data.message);
       }
