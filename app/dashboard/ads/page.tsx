@@ -279,58 +279,60 @@ export default function AdsManagerPage() {
       {/* TAB CONTENT: LINKS */}
       {activeTab === 'links' && (
         <div className="bg-white border border-[#dddddd] rounded shadow-sm overflow-hidden">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-[#f9f9f9] text-[#777777] text-xs uppercase font-bold border-b border-[#dddddd]">
-              <tr>
-                <th className="px-6 py-3">Task Description</th>
-                <th className="px-6 py-3 text-center">Timer</th>
-                <th className="px-6 py-3 text-center">Reward</th>
-                <th className="px-6 py-3 text-right">Action</th>
-              </tr>
-            </thead>
-            <tbody className="text-sm text-[#333333]">
-              {linkTasks.length === 0 ? (
+          <div className="w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
+            <table className="min-w-[640px] w-full text-left border-collapse">
+              <thead className="bg-[#f9f9f9] text-[#777777] text-xs uppercase font-bold border-b border-[#dddddd]">
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-[#999999]">
-                    No PTC links available right now. Check back later!
-                  </td>
+                  <th className="px-6 py-3">Task Description</th>
+                  <th className="px-6 py-3 text-center">Timer</th>
+                  <th className="px-6 py-3 text-center">Reward</th>
+                  <th className="px-6 py-3 text-right">Action</th>
                 </tr>
-              ) : linkTasks.map((link) => {
-                const isCompleted = completedTasks.includes(link._id);
-                return (
-                  <tr key={link._id} className={`border-b border-[#eeeeee] transition-colors ${isCompleted ? 'bg-[#f9fdf7]' : 'hover:bg-[#f9f9f9]'}`}>
-                    <td className="px-6 py-4">
-                      <p className={`font-bold ${isCompleted ? 'text-[#999999] line-through' : 'text-[#337ab7]'}`}>
-                        {link.title}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4 text-center text-[#666666]">
-                      {link.duration}s
-                    </td>
-                    <td className="px-6 py-4 text-center font-bold text-[#5cb85c]">
-                      ₦{link.reward}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => handleStartTask(link)}
-                        disabled={isCompleted || dailyLimit.current >= dailyLimit.max}
-                        className={`px-4 py-1.5 rounded text-xs font-bold border transition-colors inline-flex items-center gap-1 ${isCompleted
-                          ? 'bg-transparent border-transparent text-[#3c763d] cursor-not-allowed'
-                          : 'bg-white border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6]'
-                          }`}
-                      >
-                        {isCompleted ? (
-                          <><CheckCircle2 className="w-4 h-4" /> Done</>
-                        ) : (
-                          <>Visit Link <ExternalLink className="w-3.5 h-3.5" /></>
-                        )}
-                      </button>
+              </thead>
+              <tbody className="text-sm text-[#333333]">
+                {linkTasks.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-12 text-center text-[#999999]">
+                      No PTC links available right now. Check back later!
                     </td>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ) : linkTasks.map((link) => {
+                  const isCompleted = completedTasks.includes(link._id);
+                  return (
+                    <tr key={link._id} className={`border-b border-[#eeeeee] transition-colors ${isCompleted ? 'bg-[#f9fdf7]' : 'hover:bg-[#f9f9f9]'}`}>
+                      <td className="px-6 py-4">
+                        <p className={`font-bold ${isCompleted ? 'text-[#999999] line-through' : 'text-[#337ab7]'}`}>
+                          {link.title}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-center text-[#666666]">
+                        {link.duration}s
+                      </td>
+                      <td className="px-6 py-4 text-center font-bold text-[#5cb85c]">
+                        ₦{link.reward}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => handleStartTask(link)}
+                          disabled={isCompleted || dailyLimit.current >= dailyLimit.max}
+                          className={`px-4 py-1.5 rounded text-xs font-bold border transition-colors inline-flex items-center gap-1 ${isCompleted
+                            ? 'bg-transparent border-transparent text-[#3c763d] cursor-not-allowed'
+                            : 'bg-white border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6]'
+                            }`}
+                        >
+                          {isCompleted ? (
+                            <><CheckCircle2 className="w-4 h-4" /> Done</>
+                          ) : (
+                            <>Visit Link <ExternalLink className="w-3.5 h-3.5" /></>
+                          )}
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

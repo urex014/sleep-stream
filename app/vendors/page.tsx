@@ -205,7 +205,6 @@ export default function VendorsPage() {
           </>
         )}
 
-        {/* SECURITY NOTE (Classic Bootstrap .alert-info) */}
         <div className="mt-12 bg-gradient-to-b from-[#d9edf7] to-[#c4e3f3] border border-[#bce8f1] rounded p-6 flex items-start gap-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_2px_4px_rgba(0,0,0,0.05)]">
           <ShieldCheck className="w-6 h-6 text-[#31708f] shrink-0 mt-0.5 drop-shadow-sm" />
           <div>
