@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, ArrowLeft, Loader2, CheckCircle2, Bot } from 'lucide-react';
+import { Mail, ArrowLeft, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -37,79 +38,104 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col justify-center items-center p-4 selection:bg-blue-500/30">
-      
-      {/* Brand Header */}
-      <Link href="/" className="flex items-center gap-2 font-bold text-slate-900 dark:text-white text-xl mb-8 hover:opacity-80 transition">
-        <div className="p-1.5 bg-blue-600 rounded-lg text-white shadow-md shadow-blue-500/20">
-          <Bot className="w-6 h-6" />
+    <div className="min-h-screen bg-[#e9ecef] flex flex-col justify-center items-center p-4 selection:bg-[#337ab7] selection:text-white text-[#333333] relative overflow-hidden">
+
+      {/* Subtle background decoration */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-[#e6ebf0] rounded-full mix-blend-multiply filter blur-3xl opacity-70 -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#e6ebf0] rounded-full mix-blend-multiply filter blur-3xl opacity-70 translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
+
+      <div className="w-full max-w-[420px] relative z-10">
+
+        {/* Brand Header */}
+        <div className="flex justify-center mb-8">
+          <Link href="/" className="flex items-center gap-2 font-bold text-2xl tracking-normal drop-shadow-sm hover:opacity-90 transition-opacity">
+            <img src="landingpagelogo-nobg.png" className='h-20 w-25'></img>
+          </Link>
         </div>
-        <span>Sleep Stream</span>
-      </Link>
 
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        
-        {!isSubmitted ? (
-          <>
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">Reset Password</h1>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">
-                Enter your email address and we'll send you a link to reset your password.
-              </p>
-            </div>
+        {/* Classic Container Panel */}
+        <div className="bg-[#fcfcfc] border-t-[5px] border-t-[#337ab7] border-x border-b border-[#cccccc] rounded-b shadow-[0_8px_20px_rgba(0,0,0,0.08)] p-8 relative">
 
-            {error && (
-              <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/50 text-red-600 dark:text-red-400 text-sm rounded-xl font-medium text-center">
-                {error}
+          {/* Glossy Header Highlight */}
+          <div className="absolute top-0 left-0 right-0 h-4 bg-gradient-to-b from-white to-transparent opacity-50 pointer-events-none"></div>
+
+          {!isSubmitted ? (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-extrabold text-[#222222] tracking-tight" style={{ textShadow: '1px 1px 0px #ffffff' }}>Reset Password</h1>
+                <p className="text-[#555555] mt-1 text-sm font-medium">
+                  Enter your email address to receive a secure reset link.
+                </p>
               </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Email Address</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-3.5 w-5 h-5 text-slate-400" />
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none text-slate-900 dark:text-white transition-all font-medium"
-                  />
+              {/* Error Alert */}
+              {error && (
+                <div className="bg-gradient-to-b from-[#f2dede] to-[#e8c4c4] border border-[#ebccd1] text-[#a94442] px-4 py-3 rounded text-sm mb-6 font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)] flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 mt-0.5 shrink-0" />
+                  <span style={{ textShadow: '0 1px 0 rgba(255,255,255,0.4)' }}>{error}</span>
                 </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-[#333333] mb-1.5" style={{ textShadow: '1px 1px 0px #ffffff' }}>Email Address</label>
+                  <div className="relative flex rounded shadow-[inset_0_2px_4px_rgba(0,0,0,0.08)] bg-white border border-[#b3b3b3]">
+                    <div className="flex items-center justify-center px-3 bg-[#e6e6e6] border-r border-[#cccccc] rounded-l text-[#555555] shadow-[inset_0_1px_0_rgba(255,255,255,0.7)]">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="john@example.com"
+                      className="w-full bg-transparent text-[#333333] py-2.5 px-3 outline-none focus:bg-[#fafffa] font-medium"
+                    />
+                  </div>
+                </div>
+
+                {/* Glossy 3D Primary Button */}
+                <button
+                  type="submit"
+                  disabled={isLoading || !email}
+                  className="w-full bg-gradient-to-b from-[#337ab7] via-[#2e6da4] to-[#286090] hover:from-[#286090] hover:to-[#204d74] border border-[#204d74] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.3)] active:translate-y-[1px]"
+                  style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.4)' }}
+                >
+                  {isLoading ? <Loader2 className="w-5 h-5 animate-spin drop-shadow-sm" /> : 'Send Reset Link'}
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="text-center py-4">
+              <div className="w-16 h-16 bg-gradient-to-b from-[#dff0d8] to-[#c8e5bc] border border-[#d6e9c6] text-[#3c763d] rounded-full flex items-center justify-center mx-auto mb-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_2px_5px_rgba(0,0,0,0.1)]">
+                <CheckCircle2 className="w-8 h-8 drop-shadow-sm" />
+              </div>
+              <h2 className="text-2xl font-extrabold text-[#222222] mb-2 tracking-tight" style={{ textShadow: '1px 1px 0px #ffffff' }}>Check Your Email</h2>
+              <p className="text-[#555555] text-sm mb-6 leading-relaxed font-medium">
+                We've sent a password reset link to <br />
+                <span className="font-bold text-[#333333] bg-[#eeeeee] px-2 py-0.5 rounded border border-[#cccccc] inline-block mt-1">{email}</span>. <br />
+                The link will expire in 15 minutes.
+              </p>
+
+              {/* Classic Beveled Divider */}
+              <div className="my-6">
+                <div className="border-t border-[#cccccc] border-b border-b-white h-0"></div>
               </div>
 
               <button
-                type="submit"
-                disabled={isLoading || !email}
-                className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 disabled:opacity-70 disabled:cursor-not-allowed"
+                onClick={() => setIsSubmitted(false)}
+                className="text-sm font-bold text-[#337ab7] hover:text-[#23527c] hover:underline transition-colors drop-shadow-sm"
               >
-                {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Send Reset Link'}
+                Didn't receive the email? Try again
               </button>
-            </form>
-          </>
-        ) : (
-          <div className="text-center py-6 animate-in zoom-in-95 duration-300">
-            <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle2 className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Check your email</h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 leading-relaxed">
-              We've sent a password reset link to <br/><span className="font-bold text-slate-700 dark:text-slate-300">{email}</span>. The link will expire in 15 minutes.
-            </p>
-            <button 
-              onClick={() => setIsSubmitted(false)}
-              className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              Didn't receive the email? Try again
-            </button>
-          </div>
-        )}
+          )}
+        </div>
 
-        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
-          <Link href="/login" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group">
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Login
+        {/* Bottom Navigation */}
+        <div className="text-center mt-6 bg-gradient-to-b from-[#ffffff] to-[#e6e6e6] border border-[#cccccc] rounded shadow-[0_1px_3px_rgba(0,0,0,0.05)] py-3">
+          <Link href="/login" className="inline-flex items-center gap-1.5 text-sm font-bold text-[#555555] hover:text-[#337ab7] transition-colors" style={{ textShadow: '1px 1px 0px #ffffff' }}>
+            <ArrowLeft className="w-4 h-4" /> Back to Login
           </Link>
         </div>
 

@@ -1,21 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { Bot, Mail, Lock, User, ArrowRight, Gift, ChevronLeft, KeyRound, ShieldCheck, Loader2 } from 'lucide-react';
-import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import Logo from '@/components/Logo';
+	import React, { useState, useEffect, Suspense } from 'react';
+	import { Bot, Mail, Lock, User, ArrowRight, Gift, ChevronLeft, KeyRound, ShieldCheck, Loader2, Eye, EyeOff } from 'lucide-react';
+	import Link from 'next/link';
+	import { useRouter, useSearchParams } from 'next/navigation';
+	import Logo from '@/components/Logo';
 
 // 1. Create the Form Component separately to handle SearchParams safely
 function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+	  const [currentSlide, setCurrentSlide] = useState(0);
+	  const [isLoading, setIsLoading] = useState(false);
+	  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+	  const [error, setError] = useState('');
+	  const [success, setSuccess] = useState('');
 
   const [formData, setFormData] = useState({
     username: '',
@@ -185,17 +186,26 @@ function SignupForm() {
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none border-r border-[#cccccc] bg-[#f5f5f5] rounded-l px-3">
                     <Lock className="w-4 h-4 text-[#777777]" />
                   </div>
-                  <input
-                    type="password"
-                    name="password"
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="••••••••"
-                    className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-3 outline-none transition-colors"
-                  />
-                </div>
-              </div>
+	                  <input
+	                    type={isPasswordVisible ? 'text' : 'password'}
+	                    name="password"
+	                    required
+	                    value={formData.password}
+	                    onChange={handleChange}
+	                    placeholder="••••••••"
+	                    className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-10 outline-none transition-colors"
+	                  />
+	                  <button
+	                    type="button"
+	                    onClick={() => setIsPasswordVisible((v) => !v)}
+	                    aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+	                    aria-pressed={isPasswordVisible}
+	                    className="absolute inset-y-0 right-0 flex items-center px-3 text-[#777777] hover:text-[#333333]"
+	                  >
+	                    {isPasswordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+	                  </button>
+	                </div>
+	              </div>
 
               {/* Access Code */}
               <div className="space-y-2 mt-6">

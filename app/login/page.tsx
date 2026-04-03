@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Mail, Lock, ArrowRight, ChevronLeft, Bot, ShieldCheck, BarChart3, Loader2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, ChevronLeft, Bot, ShieldCheck, BarChart3, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import Logo from '@/components/Logo';
@@ -11,6 +11,7 @@ export default function LoginPage() {
 
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   // --- FORM STATE ---
   const [formData, setFormData] = useState({
@@ -37,6 +38,11 @@ export default function LoginPage() {
   // --- HANDLERS ---
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.type]: e.target.value });
+    setError(''); // Clear error when user types
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, password: e.target.value });
     setError(''); // Clear error when user types
   };
 
@@ -169,13 +175,22 @@ export default function LoginPage() {
                     <Lock className="w-4 h-4 text-[#777777]" />
                   </div>
                   <input
-                    type="password"
+                    type={isPasswordVisible ? 'text' : 'password'}
                     value={formData.password}
-                    onChange={handleChange}
+                    onChange={handlePasswordChange}
                     placeholder="••••••••"
                     required
-                    className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-3 outline-none transition-colors"
+                    className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-10 outline-none transition-colors"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordVisible((v) => !v)}
+                    aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+                    aria-pressed={isPasswordVisible}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-[#777777] hover:text-[#333333]"
+                  >
+                    {isPasswordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
 

@@ -16,7 +16,7 @@ import {
   PlayCircleIcon
 } from 'lucide-react';
 import NotificationBell from '../NotificationBell';
-import Logo from '../Logo';
+
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
@@ -126,7 +126,7 @@ export default function Navbar() {
           <div className="absolute left-0 top-0 bottom-0 w-3/4 max-w-xs bg-[#f8f9fa] border-r border-[#dddddd] shadow-lg flex flex-col">
 
             <div className="h-[72px] flex items-center justify-between px-6 border-b border-[#dddddd] bg-white">
-              <Logo className="h-8 w-auto" />
+              <img src="/landingpagelogo-nobg.png" alt="Sleepstream" className="h-13 w-15" />
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-1.5 text-[#999999] hover:text-[#a94442] hover:bg-[#f2dede] rounded transition-colors"
