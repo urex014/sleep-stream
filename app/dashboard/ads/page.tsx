@@ -33,22 +33,24 @@ export default function AdsManagerPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch User Limits & Balances
+        // 1. Fetch User Auth
         const dashRes = await fetch('/api/user/dashboard');
         if (dashRes.status === 401) return router.push('/login');
-        const dashData = await dashRes.json();
 
-        if (dashData.success) {
-          const totalTasksToday = dashData.user.adsWatchedToday + dashData.user.linksClickedToday;
-          setDailyLimit({ current: totalTasksToday, max: 20 });
+        // 2. Fetch User's Completed Ads History
+        const historyRes = await fetch('/api/user/ads/complete');
+        const historyData = await historyRes.json();
+
+        if (historyData.success) {
+          setCompletedTasks(historyData.completedAds); // <--- This restores their history on refresh!
+          setDailyLimit({ current: historyData.totalTasksToday, max: 20 });
         }
 
-        // Fetch the Ads created in the Admin Panel
+        // 3. Fetch the Ads created in the Admin Panel
         const tasksRes = await fetch('/api/admin/tasks');
         const tasksData = await tasksRes.json();
 
         if (tasksData.success) {
-          // Only show Active tasks
           const activeAds = tasksData.tasks.filter((t: any) => t.status === 'Active');
           setTasks(activeAds);
         }

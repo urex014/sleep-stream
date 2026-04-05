@@ -54,7 +54,7 @@ export default function Sidebar() {
 
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-[#dddddd] bg-white">
-        <img src='landingpagelogo.png' alt='SleepStream Logo' className='h-20 w-25' />
+        <img src='landingpagelogo.png' alt='SleepStream' className='h-20 w-25' />
       </div>
 
       {/* Navigation Links */}

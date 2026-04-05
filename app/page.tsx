@@ -210,6 +210,7 @@ export default function LandingPage() {
             <strong className="text-white bg-[#337ab7] px-3 py-1.5 rounded-full text-sm font-bold shadow-inner">₦1,800</strong>
             instantly when they become active.
           </p>
+          <a href="/faq" className="inline-flex items-center gap-1.5 mt-4 text-sm text-[#337ab7] hover:underline"> click here to learn more <ArrowRight className="w-4 h-4" /> </a>
           <p className="text-xs text-[#777777] mt-6">
             &copy; {new Date().getFullYear()} SleepStream Enterprise. All rights reserved. Payouts subject to minimum thresholds.
           </p>

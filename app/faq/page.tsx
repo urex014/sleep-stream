@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ChevronDown, Search, MessageCircle, Send, HelpCircle } from 'lucide-react';
+import { ChevronDown, Search, MessageCircle, Send, HelpCircle, ArrowBigLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FAQPage() {
@@ -45,9 +45,9 @@ export default function FAQPage() {
       answer: "We implement daily task limits to maintain a healthy, sustainable ecosystem for both our users and our advertisers.  Advertisers pay for genuine engagement.If users were allowed to click hundreds of ads non- stop, the quality of that engagement drops, which harms the platform.By pacing the tasks, we ensure advertisers get real value, which in turn guarantees we can continue paying you reliably.Additionally, limits prevent automated bots from draining the reward pools, keeping the platform fair for real humans."
     },
     {
-      category: "General",
-      question: "Can i also be a code vendor?",
-      answer: "Yes, the vendor registration will be available to all eligible users in the coming weeks. As a code vendor, you can earn by selling ad codes to advertisers. Stay tuned for the official launch announcement! "
+      category:"General",
+      question:"Can i also be a code vendor?",
+      answer:"Yes, the vendor registration will be available to all eligible users in the coming weeks. As a code vendor, you can earn by selling ad codes to advertisers. Stay tuned for the official launch announcement! "
     }
   ];
 
@@ -57,10 +57,14 @@ export default function FAQPage() {
   );
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 font-sans text-[#333333]">
+    <div className="min-w-screen bg-white mx-auto space-y-8 pb-16 font-sans text-[#333333]">
 
       {/* 1. HERO HEADER & SEARCH (Classic Jumbotron Style) */}
       <div className="bg-[#337ab7] border border-[#2e6da4] rounded shadow-sm p-10 md:p-14 text-center text-white">
+        <Link href="/" className="absolute top-4 left-4 p-2 rounded-full bg-[#286090] border border-[#1e4b73] text-white hover:bg-[#204d74] transition-colors">
+          <ArrowBigLeft className='w-10 h-10'/>
+        </Link>
+        
 
         <div className="inline-flex items-center justify-center w-16 h-16 bg-[#286090] border border-[#1e4b73] text-white rounded-full mb-4 shadow-sm">
           <HelpCircle className="w-8 h-8" />

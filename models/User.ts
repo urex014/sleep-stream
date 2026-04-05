@@ -21,6 +21,8 @@ const UserSchema = new Schema({
   dailyAdsWatched: { type: Number, default: 0 },
   dailyLinksClicked: { type: Number, default: 0 },
   lastTaskDate: { type: Date, default: null },
+  completedAds: { type: [String], default: [] },
+  lastAdReset: { type: Date, default: Date.now },
 
   // --- Referral System ---
   referralCode: { type: String, unique: true }, // The code they share

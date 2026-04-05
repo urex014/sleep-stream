@@ -177,7 +177,7 @@ export default function WalletPage() {
             </h2>
           </div>
 
-          <div className="flex flex-col gap-2 w-full md:w-auto">
+          {/* <div className="flex flex-col gap-2 w-full md:w-auto">
             <div className="flex items-center justify-between gap-4 bg-[#286090] border border-[#1e4b73] px-4 py-2 rounded text-sm w-full">
               <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-[#5cb85c]" /> Available</span>
               <strong className="text-base">₦{wallet.available.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong>
@@ -186,7 +186,7 @@ export default function WalletPage() {
               <span className="flex items-center gap-2"><Lock className="w-4 h-4 text-[#f0ad4e]" /> Locked</span>
               <strong className="text-base">₦{wallet.locked.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Dual Wallet Breakdown */}
