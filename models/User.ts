@@ -18,7 +18,7 @@ const UserSchema = new Schema({
   referralBalance: { type: Number, default: 0.00 },
 
   // --- Tier System ---
-  tier: { type: Number, default: 1 },
+  tier: { type: Number, default: 1, required: true }, // 1 to 5
   tierExpiresAt: { type: Date, default: null }, // To track the 20-day limit
 
   // --- PTC Tracking (Watch-To-Earn) ---

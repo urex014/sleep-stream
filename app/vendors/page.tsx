@@ -19,9 +19,15 @@ import {
   Mail
 } from 'lucide-react';
 import Link from 'next/link';
-import { usePaystackPayment } from 'react-paystack';
 
+// 1. Import dynamic from Next.js
 import dynamic from 'next/dynamic';
+
+// 2. Safely import PaystackButton so it ONLY loads in the browser
+const PaystackButton = dynamic(
+  () => import('react-paystack').then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
 
 export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -39,17 +45,7 @@ export default function VendorsPage() {
   const [purchaseError, setPurchaseError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const CODE_PRICE = 5000; 
-
-  // --- PAYSTACK CONFIGURATION ---
-  const config = {
-    reference: (new Date()).getTime().toString(),
-    email: buyerEmail,
-    amount: CODE_PRICE * 100,
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY as string,
-  };
-
-  const initializePayment = usePaystackPayment(config);
+  const CODE_PRICE = 5000;
 
   const handlePaystackSuccess = async (reference: any) => {
     setIsProcessingCode(true);
@@ -77,13 +73,6 @@ export default function VendorsPage() {
 
   const handlePaystackClose = () => {
     console.log('Payment closed');
-  };
-
-  const initiatePurchase = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!buyerEmail) return setPurchaseError("Please enter your email first.");
-    setPurchaseError("");
-    initializePayment({ onSuccess: handlePaystackSuccess, onClose: handlePaystackClose });
   };
 
   const copyToClipboard = () => {
@@ -117,6 +106,16 @@ export default function VendorsPage() {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
+  };
+
+  // Props for the dynamic Paystack Button
+  const paystackProps = {
+    email: buyerEmail,
+    amount: CODE_PRICE * 100,
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY as string,
+    text: `Pay ₦${CODE_PRICE.toLocaleString()}`,
+    onSuccess: handlePaystackSuccess,
+    onClose: handlePaystackClose,
   };
 
   return (
@@ -178,7 +177,7 @@ export default function VendorsPage() {
               <p className="text-[#555555] font-bold">Verifying payment & generating code...</p>
             </div>
           ) : (
-            <form onSubmit={initiatePurchase}>
+            <div>
               {purchaseError && (
                 <div className="bg-[#f2dede] border border-[#ebccd1] text-[#a94442] px-4 py-2.5 rounded text-sm mb-4 font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.5)]">
                   {purchaseError}
@@ -194,20 +193,33 @@ export default function VendorsPage() {
                     type="email"
                     required
                     value={buyerEmail}
-                    onChange={(e) => setBuyerEmail(e.target.value)}
+                    onChange={(e) => {
+                      setBuyerEmail(e.target.value);
+                      setPurchaseError(''); // Clear error when typing
+                    }}
                     placeholder="Enter email to begin..."
                     className="w-full bg-transparent text-[#333333] py-2.5 px-3 outline-none focus:bg-[#fafffa] font-medium"
                   />
                 </div>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px]"
-                style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.3)' }}
-              >
-                <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} Automatically
-              </button>
-            </form>
+
+              {/* Conditional rendering to prevent click without email */}
+              {buyerEmail && buyerEmail.includes('@') ? (
+                <PaystackButton
+                  {...paystackProps}
+                  className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px] [text-shadow:0_-1px_0_rgba(0,0,0,0.3)]"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setPurchaseError("Please enter a valid email address first.")}
+                  className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px]"
+                  style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.3)' }}
+                >
+                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} Automatically
+                </button>
+              )}
+            </div>
           )}
         </div>
 

@@ -70,7 +70,7 @@ export async function POST(req: Request) {
       userId: user._id,
       type: 'Deposit',
       wallet: 'System', // This matches the updated Transaction schema
-      method: 'Paystack Upgrade',
+      method: 'Tier Upgrade',
       amount: paystackData.data.amount / 100,
       status: 'Success',
       reference: reference
