@@ -17,6 +17,10 @@ const UserSchema = new Schema({
   adsBalance: { type: Number, default: 2000.00 }, // Welcome Bonus goes here!
   referralBalance: { type: Number, default: 0.00 },
 
+  // --- Tier System ---
+  tier: { type: Number, default: 1 },
+  tierExpiresAt: { type: Date, default: null }, // To track the 20-day limit
+
   // --- PTC Tracking (Watch-To-Earn) ---
   dailyAdsWatched: { type: Number, default: 0 },
   dailyLinksClicked: { type: Number, default: 0 },
@@ -25,8 +29,8 @@ const UserSchema = new Schema({
   lastAdReset: { type: Date, default: Date.now },
 
   // --- Referral System ---
-  referralCode: { type: String, unique: true }, // The code they share
-  referredBy: { type: String, default: null }, // The code they used to join
+  referralCode: { type: String, unique: true },
+  referredBy: { type: String, default: null },
 
   // --- Password Reset ---
   resetPasswordToken: { type: String },

@@ -17,17 +17,19 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { title, type, url, reward, duration } = await req.json();
+    // REMOVED 'reward' from the incoming data
+    const { title, type, url, duration } = await req.json();
 
-    if (!title || !type || !url || !reward || !duration) {
+    // REMOVED 'reward' from the validation check
+    if (!title || !type || !url || !duration) {
       return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
     }
 
+    // Create the task WITHOUT a hardcoded reward
     const newTask = await Task.create({
       title,
       type,
       url,
-      reward: Number(reward),
       duration: Number(duration)
     });
 
@@ -37,6 +39,7 @@ export async function POST(req: Request) {
   }
 }
 
+// DELETE: Remove an Ad
 export async function DELETE(req: Request) {
   try {
     await connectDB();

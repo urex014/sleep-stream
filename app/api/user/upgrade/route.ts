@@ -63,7 +63,7 @@ export async function POST(req: Request) {
     await Transaction.create({
       userId: user._id,
       type: 'Deposit',
-      wallet: 'Main',
+      wallet: 'System',
       method: 'Paystack Upgrade',
       amount: paystackData.data.amount / 100, // Convert kobo back to Naira for your DB
       status: 'Success',

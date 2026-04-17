@@ -2,8 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Zap, CheckCircle2, TrendingUp, Loader2, ArrowUpRight } from 'lucide-react';
-import { PaystackButton } from 'react-paystack';
 import { useRouter } from 'next/navigation';
+
+import dynamic from 'next/dynamic';
+
+// Force Paystack to load ONLY on the client-side (browser)
+const PaystackButton = dynamic(
+  () => import('react-paystack').then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
 
 export default function UpgradePage() {
   const router = useRouter();
@@ -23,7 +30,12 @@ export default function UpgradePage() {
     // Fetch current user data to know what tier they are on
     const fetchUser = async () => {
       try {
-        const res = await fetch('/api/user/dashboard'); // Use your existing user fetch route
+        const res = await fetch('/api/user/dashboard', {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache'
+          }
+        });
         const data = await res.json();
         if (data.success) {
           setUser(data.user);
@@ -160,8 +172,7 @@ export default function UpgradePage() {
                     {/* Paystack Button injected safely */}
                     <PaystackButton
                       {...componentProps}
-                      className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-1.5 transition-all active:translate-y-[1px]"
-                      style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.3)' }}
+                            className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-1.5 transition-all active:translate-y-[1px] [text-shadow:0_-1px_0_rgba(0,0,0,0.3)]"
                     />
                   </div>
                 )}

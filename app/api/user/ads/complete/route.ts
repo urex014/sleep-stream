@@ -19,23 +19,20 @@ export async function GET() {
     if (!user) return NextResponse.json({ success: false }, { status: 404 });
 
     // --- DAILY RESET LOGIC ---
-    // --- DAILY RESET LOGIC ---
     const now = new Date();
     const lastReset = new Date(user.lastAdReset || Date.now());
 
     if (now.toDateString() !== lastReset.toDateString()) {
-      user.adsWatchedToday = 0;
-      user.linksClickedToday = 0;
-      // user.completedAds = []; <-- REMOVED THIS LINE!
+      user.dailyAdsWatched = 0;   // FIXED SCHEMA NAME
+      user.dailyLinksClicked = 0; // FIXED SCHEMA NAME
       user.lastAdReset = now;
-      await user.save(); // Don't forget to save the reset state
-      // (Make sure `await user.save();` is still here in the GET route)
+      await user.save();
     }
 
     return NextResponse.json({
       success: true,
       completedAds: user.completedAds || [],
-      totalTasksToday: (user.adsWatchedToday || 0) + (user.linksClickedToday || 0)
+      totalTasksToday: (user.dailyAdsWatched || 0) + (user.dailyLinksClicked || 0)
     });
 
   } catch (error) {
@@ -43,12 +40,13 @@ export async function GET() {
   }
 }
 
-// 
 // POST: Securely verify and complete a task
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { taskId, reward, type, title } = await req.json();
+
+    // REMOVED `reward` from here. The frontend cannot be trusted with money.
+    const { taskId, type, title } = await req.json();
 
     const token = (await cookies()).get('token')?.value;
     if (!token) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
@@ -59,47 +57,67 @@ export async function POST(req: Request) {
     const user = await User.findById(userId);
     if (!user) return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
 
+    // --- SECURITY CHECK 1: TIER EXPIRATION ---
+    // If they bought a tier, make sure the 20 days haven't passed!
+    if (user.tierExpiresAt && new Date() > new Date(user.tierExpiresAt)) {
+      return NextResponse.json({
+        success: false,
+        message: 'Your current Tier package has expired. Please upgrade to continue earning.'
+      }, { status: 403 });
+    }
+
     // --- DAILY RESET LOGIC (Failsafe) ---
     const now = new Date();
     const lastReset = new Date(user.lastAdReset || Date.now());
 
     if (now.toDateString() !== lastReset.toDateString()) {
-      user.adsWatchedToday = 0;
-      user.linksClickedToday = 0;
-      // CRITICAL FIX: Removed user.completedAds = []; from here!
+      user.dailyAdsWatched = 0;   // FIXED SCHEMA NAME
+      user.dailyLinksClicked = 0; // FIXED SCHEMA NAME
       user.lastAdReset = now;
     }
 
-    // --- SECURITY CHECK: HAS THIS AD BEEN CLAIMED? ---
+    // --- SECURITY CHECK 2: HAS THIS AD BEEN CLAIMED? ---
     if (user.completedAds && user.completedAds.includes(taskId)) {
-      // Updated message to reflect permanent status
-      return NextResponse.json({ success: false, message: 'You have already claimed this ad.' }, { status: 400 }); 
+      return NextResponse.json({ success: false, message: 'You have already claimed this ad.' }, { status: 400 });
     }
 
-    // --- SECURITY CHECK: DAILY LIMIT ---
+    // --- SECURITY CHECK 3: DAILY LIMIT ---
     const dailyLimit = 20;
-    const todayTasks = (user.adsWatchedToday || 0) + (user.linksClickedToday || 0);
+    const todayTasks = (user.dailyAdsWatched || 0) + (user.dailyLinksClicked || 0);
 
     if (todayTasks >= dailyLimit) {
       return NextResponse.json({ success: false, message: 'Daily limit reached.' }, { status: 400 });
     }
 
+    // --- DYNAMIC TIER-BASED REWARD CALCULATION ---
+    let earnedAmount = 0;
+    switch (user.tier) {
+      case 1: earnedAmount = 37.5; break; // Starter (750 total)
+      case 2: earnedAmount = 87.5; break; // Pro (1750 total)
+      case 3: earnedAmount = 150.0; break; // Elite (3000 total)
+      case 4: earnedAmount = 225.0; break; // Master (4500 total)
+      case 5: earnedAmount = 300.0; break; // Grandmaster (6000 total)
+      default: earnedAmount = 37.5; // Fallback
+    }
+
     // --- CREDIT USER ---
-    const earnedAmount = Number(reward);
     user.adsBalance = (user.adsBalance || 0) + earnedAmount;
 
-    // Add the taskId to the history array so they can't click it again
+    // Add the taskId to the history array
     if (!user.completedAds) user.completedAds = [];
     user.completedAds.push(taskId);
 
+    // Update the specific trackers
     if (type === 'video') {
-      user.adsWatchedToday = (user.adsWatchedToday || 0) + 1;
+      user.dailyAdsWatched = (user.dailyAdsWatched || 0) + 1;
     } else {
-      user.linksClickedToday = (user.linksClickedToday || 0) + 1;
+      user.dailyLinksClicked = (user.dailyLinksClicked || 0) + 1;
     }
+    user.lastTaskDate = new Date();
 
     await user.save();
 
+    // Log the transaction securely
     await Transaction.create({
       userId: user._id,
       type: 'Earning',
@@ -109,7 +127,7 @@ export async function POST(req: Request) {
       status: 'Success'
     });
 
-    return NextResponse.json({ success: true, message: 'Reward credited successfully.' });
+    return NextResponse.json({ success: true, message: `₦${earnedAmount} credited successfully.` });
 
   } catch (error: any) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });

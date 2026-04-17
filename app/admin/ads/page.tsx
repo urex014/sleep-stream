@@ -1,19 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { PlaySquare, Link as LinkIcon, Plus, Loader2, CheckCircle2, Trash2 } from 'lucide-react';
+import { PlaySquare, Link as LinkIcon, Plus, Loader2, CheckCircle2, Trash2, Zap } from 'lucide-react';
 
 export default function AdminAdsManager() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form State
+  // Form State - Removed `reward`
   const [formData, setFormData] = useState({
     title: '',
     type: 'video',
     url: '',
-    reward: '',
     duration: '30'
   });
 
@@ -28,6 +27,7 @@ export default function AdminAdsManager() {
       setIsLoading(false);
     }
   };
+
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this ad?")) return;
 
@@ -35,13 +35,13 @@ export default function AdminAdsManager() {
       const res = await fetch('/api/admin/tasks', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id }) // Pass the ad's database ID here
+        body: JSON.stringify({ id })
       });
 
       const data = await res.json();
       if (res.ok) {
         alert(data.message);
-        fetchTasks(); // Refresh the table
+        fetchTasks();
       } else {
         alert(data.message);
       }
@@ -68,8 +68,8 @@ export default function AdminAdsManager() {
 
       if (res.ok) {
         alert("Ad Published Successfully!");
-        setFormData({ title: '', type: 'video', url: '', reward: '', duration: '30' });
-        fetchTasks(); // Refresh the table
+        setFormData({ title: '', type: 'video', url: '', duration: '30' });
+        fetchTasks();
       } else {
         alert(data.message);
       }
@@ -138,30 +138,22 @@ export default function AdminAdsManager() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Reward (₦)</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="e.g. 50"
-                    value={formData.reward}
-                    onChange={(e) => setFormData({ ...formData, reward: e.target.value })}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none focus:border-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timer (Sec)</label>
-                  <select
-                    value={formData.duration}
-                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                    className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none focus:border-blue-500"
-                  >
-                    <option value="15">15 Seconds</option>
-                    <option value="30">30 Seconds</option>
-                    <option value="60">60 Seconds</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">Timer (Sec)</label>
+                <select
+                  value={formData.duration}
+                  onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
+                  className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none focus:border-blue-500"
+                >
+                  <option value="15">15 Seconds</option>
+                  <option value="30">30 Seconds</option>
+                  <option value="60">60 Seconds</option>
+                </select>
+              </div>
+
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded p-3 text-sm text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                <Zap className="w-4 h-4 shrink-0 mt-0.5" />
+                <p>Rewards are calculated automatically based on the user's active tier.</p>
               </div>
 
               <button
@@ -188,7 +180,7 @@ export default function AdminAdsManager() {
                   <tr>
                     <th className="px-6 py-4">Ad Details</th>
                     <th className="px-6 py-4 text-center">Timer</th>
-                    <th className="px-6 py-4 text-center">Reward</th>
+                    <th className="px-6 py-4 text-center">Payout System</th>
                     <th className="px-6 py-4 text-right">Status</th>
                   </tr>
                 </thead>
@@ -220,12 +212,12 @@ export default function AdminAdsManager() {
                       <td className="px-6 py-4 text-center text-slate-500 font-mono">
                         {task.duration}s
                       </td>
-                      <td className="px-6 py-4 text-center font-bold text-emerald-600 dark:text-emerald-400">
-                        ₦{task.reward}
+                      <td className="px-6 py-4 text-center text-xs font-semibold text-slate-500">
+                        Dynamic by Tier
                       </td>
                       <td className="px-6 py-4 text-right">
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700">
-                          <CheckCircle2 className="w-3 h-3" /> {task.status}
+                          <CheckCircle2 className="w-3 h-3" /> {task.status || 'Active'}
                         </span>
                       </td>
                     </tr>

@@ -21,6 +21,14 @@ import {
 import Link from 'next/link';
 import { usePaystackPayment } from 'react-paystack';
 
+import dynamic from 'next/dynamic';
+
+// Force Paystack to load ONLY on the client-side (browser)
+const PaystackButton = dynamic(
+  () => import('react-paystack').then((mod) => mod.PaystackButton),
+  { ssr: false }
+);
+
 export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [vendors, setVendors] = useState<any[]>([]);
@@ -37,7 +45,7 @@ export default function VendorsPage() {
   const [purchaseError, setPurchaseError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const CODE_PRICE = 5000; // Set your code price in Naira here
+  const CODE_PRICE = 5000; 
 
   // --- PAYSTACK CONFIGURATION ---
   const config = {
