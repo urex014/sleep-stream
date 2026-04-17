@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
-import Transaction from '@/models/Transaction'; // Assuming you log transactions
+import Transaction from '@/models/Transaction';
 
 export async function POST(req: Request) {
   try {
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     // 3. Double-check the amount paid matches the Tier price (Security measure)
     const expectedPrices: { [key: number]: number } = {
-      2: 25000 * 100, // Paystack returns data in kobo
+      2: 25000 * 100,
       3: 50000 * 100,
       4: 80000 * 100,
       5: 100000 * 100,
@@ -50,22 +50,28 @@ export async function POST(req: Request) {
     }
 
     // 4. Update the User's Tier and reset their Ad Cycle
-    user.tier = tierLevel;
+    user.tier = Number(tierLevel); // Force it to be a number just in case
 
-    // Optional: Reset their daily limit metrics since they just bought a new package
-    user.adsWatchedToday = 0;
+    // CRITICAL FIX: Calculate the 20-day expiration date
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 20);
+    user.tierExpiresAt = expiryDate;
+
+    // CRITICAL FIX: Use the EXACT names from your Mongoose UserSchema
+    user.dailyAdsWatched = 0;
+    user.dailyLinksClicked = 0;
     user.completedAds = [];
     user.lastAdReset = new Date();
 
-    await user.save();
+    await user.save(); // Now this will successfully save to the database!
 
     // 5. Log the Transaction
     await Transaction.create({
       userId: user._id,
       type: 'Deposit',
-      wallet: 'System',
+      wallet: 'System', // This matches the updated Transaction schema
       method: 'Paystack Upgrade',
-      amount: paystackData.data.amount / 100, // Convert kobo back to Naira for your DB
+      amount: paystackData.data.amount / 100,
       status: 'Success',
       reference: reference
     });

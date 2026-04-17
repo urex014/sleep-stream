@@ -23,12 +23,6 @@ import { usePaystackPayment } from 'react-paystack';
 
 import dynamic from 'next/dynamic';
 
-// Force Paystack to load ONLY on the client-side (browser)
-const PaystackButton = dynamic(
-  () => import('react-paystack').then((mod) => mod.PaystackButton),
-  { ssr: false }
-);
-
 export default function VendorsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [vendors, setVendors] = useState<any[]>([]);
