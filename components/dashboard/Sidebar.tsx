@@ -11,7 +11,8 @@ import {
   Settings,
   LogOut,
   CircleHelp,
-  Loader2
+  Loader2,
+  Upload
 } from 'lucide-react';
 
 
@@ -19,6 +20,7 @@ const navItems = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
   { label: 'Watch Ads', href: '/dashboard/ads', icon: PlaySquare },
   { label: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
+  {label: 'Upgrade-tier', href:'/dashboard/upgrade', icon: Upload },
   { label: 'Referrals', href: '/dashboard/referrals', icon: Users },
   { label: 'FAQ', href: '/dashboard/faq', icon: CircleHelp },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
@@ -54,7 +56,7 @@ export default function Sidebar() {
 
       {/* Logo Area */}
       <div className="h-[72px] flex items-center px-6 border-b border-[#dddddd] bg-white">
-        <img src='landingpagelogo-nobg.png' alt='SleepStream' className='h-20 w-25' />
+        <img src='/landingpagelogo-nobg.png' alt='SleepStream' className='h-20 w-25' />
       </div>
 
       {/* Navigation Links */}

@@ -7,7 +7,6 @@ const TransactionSchema = new mongoose.Schema({
   method: { type: String, required: true }, 
   amount: { type: Number, required: true },
   status: { type: String, enum: ['Pending', 'Success', 'Failed'], default: 'Success' },
-  destination: { type: String }, // For withdrawals bank or crytpo wallet 
 }, { timestamps: true });
 
 export default mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);

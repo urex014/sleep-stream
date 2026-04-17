@@ -23,7 +23,7 @@ export default function LoginPage() {
 
   // --- CAROUSEL LOGIC ---
   const slides = [
-    { id: 1, icon: Bot, title: "Automate your earnings", description: "Deploy intelligent bots that work 24/7 to maximize your ad revenue while you sleep." },
+    { id: 1, icon: Bot, title: "Automate your earnings", description: " Earn from the comfort of your homes." },
     { id: 2, icon: ShieldCheck, title: "Bank-Grade Security", description: "Your funds and data are protected by industry-leading encryption and security protocols." },
     { id: 3, icon: BarChart3, title: "Real-Time Analytics", description: "Track your daily profits, referral bonuses, and withdrawals with our live dashboard." }
   ];

@@ -73,7 +73,7 @@ export default function FAQPage() {
           How can we help?
         </h1>
         <p className="text-[#c4e3f3] text-base max-w-xl mx-auto mb-8">
-          Everything you need to know about automation, earnings, and managing your Sleep Stream account.
+          Everything you need to know about earnings and managing your Sleep Stream account.
         </p>
 
         {/* Classic Search Bar */}

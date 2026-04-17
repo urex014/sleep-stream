@@ -13,6 +13,7 @@ import {
   CircleHelp,
   LogOut,
   Loader2,
+  Upload,
   PlayCircleIcon
 } from 'lucide-react';
 import NotificationBell from '../NotificationBell';
@@ -34,6 +35,7 @@ export default function Navbar() {
     { label: 'View ads', href: '/dashboard/ads', icon: PlayCircleIcon },
     { label: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
     { label: 'Referrals', href: '/dashboard/referrals', icon: Users },
+    { label: 'Upgrade-tier', href: '/dashboard/upgraet-tier', icon: Upload },
     { label: 'FAQ', href: '/dashboard/faq', icon: CircleHelp },
     { label: 'Settings', href: '/dashboard/settings', icon: Settings },
   ];

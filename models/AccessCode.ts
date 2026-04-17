@@ -2,10 +2,10 @@ import mongoose, { Schema, model, models } from 'mongoose';
 
 const AccessCodeSchema = new Schema({
   code: { type: String, required: true, unique: true },
-  status: { type: String, enum: ['Active', 'Used'], default: 'Active' },
+  status: { type: String, enum: ['Active', 'Sold', 'Used'], default: 'Active' }, // <-- Added 'Sold'
   generatedBy: { type: String, default: 'Admin' },
   usedBy: { type: Schema.Types.ObjectId, ref: 'User', default: null },
-  value: { type: Number, default: 5 }, // Tier 0 Value
+  value: { type: Number, default: 5 },
 }, { timestamps: true });
 
 const AccessCode = models.AccessCode || model('AccessCode', AccessCodeSchema);

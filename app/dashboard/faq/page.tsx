@@ -69,7 +69,7 @@ export default function FAQPage() {
           How can we help?
         </h1>
         <p className="text-[#c4e3f3] text-base max-w-xl mx-auto mb-8">
-          Everything you need to know about automation, earnings, and managing your Sleep Stream account.
+          Everything you need to know about earnings and managing your Sleep Stream account.
         </p>
 
         {/* Classic Search Bar */}
@@ -139,7 +139,7 @@ export default function FAQPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="https://t.me/sleepstream_support" target="_blank">
+          <Link href="https://t.me/Urex014" target="_blank">
           <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-white border border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6] hover:border-[#adadad] font-bold transition-colors shadow-sm text-sm">
             <Send className="w-4 h-4 text-[#337ab7]" /> Telegram Support
           </button>
