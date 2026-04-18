@@ -23,26 +23,47 @@ export default function AdsManagerPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [dailyLimit, setDailyLimit] = useState({ current: 0, max: 20 });
+  const [userTier, setUserTier] = useState<number>(1); // Added Tier State
 
   // Task Execution States
   const [activeTask, setActiveTask] = useState<any | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isVerifying, setIsVerifying] = useState(false);
 
+  // --- HARDCODED TIER MATH ---
+  // Calculates exactly how much they earn per ad based on (Daily Earnings / 20)
+  const getRewardForTier = (tier: number) => {
+    switch (tier) {
+      case 1: return 37.5; // 750 / 20
+      case 2: return 87.5; // 1750 / 20
+      case 3: return 150.0; // 3000 / 20
+      case 4: return 225.0; // 4500 / 20
+      case 5: return 300.0; // 6000 / 20
+      default: return 37.5;
+    }
+  };
+
+  const adReward = getRewardForTier(userTier);
+
   // --- 1. FETCH DASHBOARD & TASKS ---
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Fetch User Auth
-        const dashRes = await fetch('/api/user/dashboard');
+        // 1. Fetch User Auth & Tier
+        const dashRes = await fetch('/api/user/dashboard', { cache: 'no-store' });
         if (dashRes.status === 401) return router.push('/login');
+
+        const dashData = await dashRes.json();
+        if (dashData.success) {
+          setUserTier(dashData.user.tier || 1); // Save the tier to state
+        }
 
         // 2. Fetch User's Completed Ads History
         const historyRes = await fetch('/api/user/ads/complete');
         const historyData = await historyRes.json();
 
         if (historyData.success) {
-          setCompletedTasks(historyData.completedAds); // <--- This restores their history on refresh!
+          setCompletedTasks(historyData.completedAds);
           setDailyLimit({ current: historyData.totalTasksToday, max: 20 });
         }
 
@@ -51,7 +72,7 @@ export default function AdsManagerPage() {
         const tasksData = await tasksRes.json();
 
         if (tasksData.success) {
-          const activeAds = tasksData.tasks.filter((t: any) => t.status === 'Active');
+          const activeAds = tasksData.tasks.filter((t: any) => t.status === 'Active' || !t.status);
           setTasks(activeAds);
         }
       } catch (error) {
@@ -90,9 +111,9 @@ export default function AdsManagerPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           taskId: activeTask._id,
-          reward: activeTask.reward,
           type: activeTask.type,
           title: activeTask.title
+          // NOTE: 'reward' has been removed! The backend calculates it securely now.
         })
       });
 
@@ -101,7 +122,9 @@ export default function AdsManagerPage() {
       if (res.ok && data.success) {
         setCompletedTasks(prev => [...prev, activeTask._id]);
         setDailyLimit(prev => ({ ...prev, current: prev.current + 1 }));
-        alert(`Success! ₦${activeTask.reward} has been added to your Ads Balance.`);
+
+        // We use data.message because the backend now returns exactly how much they earned
+        alert(data.message || `Success! ₦${adReward} has been added to your Ads Balance.`);
       } else {
         alert(data.message || "Failed to verify task.");
       }
@@ -122,7 +145,6 @@ export default function AdsManagerPage() {
     setActiveTask(task);
     setTimeLeft(task.duration);
 
-    // Optional: Open link in new tab immediately if it's a website task
     if (task.type === 'link' || task.type === 'video') {
       window.open(task.url, '_blank');
     }
@@ -144,7 +166,6 @@ export default function AdsManagerPage() {
     );
   }
 
-  // Filter tasks for tabs
   const videoTasks = tasks.filter(t => t.type === 'video');
   const linkTasks = tasks.filter(t => t.type === 'link');
 
@@ -172,28 +193,8 @@ export default function AdsManagerPage() {
         <div className="flex items-center gap-3">
           <AlertCircle className="w-6 h-6 shrink-0" />
           <div>
-            <h4 className="font-bold text-[15px]">Daily Limits Apply</h4>
+            <h4 className="font-bold text-[15px]">Daily Limits Apply (Tier {userTier})</h4>
             <p className="text-sm">You can complete a maximum of {dailyLimit.max} tasks per day based on your current account standing.</p>
-            <div className="relative inline-flex mt-2 group">
-              <button
-                type="button"
-                className="text-sm font-bold text-[#337ab7] underline decoration-dotted underline-offset-2 hover:text-[#286090] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#337ab7]/40 rounded"
-                aria-describedby="daily-limit-learn-more"
-              >
-                Learn more
-              </button>
-              <div
-                id="daily-limit-learn-more"
-                role="tooltip"
-                className="pointer-events-none absolute left-0 top-full mt-2 w-[320px] rounded border border-[#bce8f1] bg-white px-3 py-2 text-xs text-[#333333] shadow-md opacity-0 invisible translate-y-1 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 z-20"
-              >
-                <p className="font-bold text-[#31708f]">What does this mean?</p>
-                <p className="mt-1 text-[#666666]">
-                  To keep the platform fair and prevent bot abuse, Basic accounts are limited to 20 tasks per day. By pacing the rewards, we ensure there are enough ads for everyone in the community! Want to bypass this limit? Account upgrades are launching soon!
-                </p>
-              </div>
-            </div>
-            
           </div>
         </div>
         <div className="bg-white border border-[#bce8f1] px-4 py-2 rounded text-center shrink-0 min-w-[120px]">
@@ -251,7 +252,7 @@ export default function AdsManagerPage() {
                 <div className="p-4 flex-1 flex flex-col">
                   <h3 className="font-bold text-[#333333] text-sm mb-2 line-clamp-2">{ad.title}</h3>
                   <div className="flex items-center justify-between mb-4 mt-auto">
-                    <span className="text-[#5cb85c] font-bold text-lg">₦{ad.reward}</span>
+                    <span className="text-[#5cb85c] font-bold text-lg">₦{adReward}</span>
                     <span className="text-xs text-[#777777] font-bold flex items-center gap-1">
                       <Clock className="w-3 h-3" /> {ad.duration} sec
                     </span>
@@ -311,7 +312,7 @@ export default function AdsManagerPage() {
                         {link.duration}s
                       </td>
                       <td className="px-6 py-4 text-center font-bold text-[#5cb85c]">
-                        ₦{link.reward}
+                        ₦{adReward}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <button
@@ -401,7 +402,7 @@ export default function AdsManagerPage() {
 
               <div className="mt-4 text-center">
                 <p className="text-xs text-[#777777]">
-                  Do not close this window, or you will forfeit your ₦{activeTask.reward} reward.
+                  Do not close this window, or you will forfeit your ₦{adReward} reward.
                 </p>
               </div>
             </div>
