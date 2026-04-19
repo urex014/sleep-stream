@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import connectDB from '@/lib/db';
-import Task from '@/models/Task'; // Make sure this matches your Task/Ad model name
+import Task from '@/models/Tasks' // Make sure this matches your Task/Ad model name
 
 export async function GET() {
   try {
