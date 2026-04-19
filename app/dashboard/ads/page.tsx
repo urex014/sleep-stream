@@ -69,7 +69,7 @@ export default function AdsManagerPage() {
         }
 
         // 3. Fetch the Ads created in the Admin Panel
-        const tasksRes = await fetch('/api/admin/tasks');
+        const tasksRes = await fetch('/api/user/tasks');
         const tasksData = await tasksRes.json();
 
         if (tasksData.success) {
