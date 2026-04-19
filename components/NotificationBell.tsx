@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, X } from 'lucide-react';
+import { Bell, X, Circle } from 'lucide-react';
 
 export default function NotificationBell() {
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -23,7 +24,7 @@ export default function NotificationBell() {
   const markAsRead = async (id: string) => {
     // Optimistic Update
     setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
-    
+
     try {
       await fetch('/api/user/notifications', {
         method: 'PUT',
@@ -43,49 +44,83 @@ export default function NotificationBell() {
   }, []);
 
   return (
-    <div className="relative">
-      <button 
+    <div className="relative font-sans">
+      {/* Bell Button */}
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-all"
+        className="relative p-2 text-[#777777] hover:text-[#333333] hover:bg-[#eeeeee] rounded transition-colors focus:outline-none"
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-950 animate-pulse"></span>
+          <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#d9534f] rounded-full border border-white animate-pulse shadow-sm"></span>
         )}
       </button>
 
+      {/* Dropdown Menu */}
       {isOpen && (
         <>
+          {/* Invisible Overlay to close when clicking outside */}
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
-          <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-            <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 dark:text-white">Notifications</h3>
-              <button onClick={() => setIsOpen(false)}><X className="w-4 h-4 text-slate-400" /></button>
+
+          {/* The Dropdown Panel (Classic Bootstrap Dropdown Style) */}
+          <div className="absolute right-0 mt-1 w-80 bg-white border border-[#cccccc] shadow-[0_6px_12px_rgba(0,0,0,0.175)] rounded z-50 overflow-hidden">
+
+            {/* Header */}
+            <div className="p-3 border-b border-[#eeeeee] bg-[#f5f5f5] flex justify-between items-center shadow-[inset_0_1px_0_rgba(255,255,255,1)]">
+              <h3 className="font-bold text-[#333333] text-sm">Notifications</h3>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-[#999999] hover:text-[#a94442] transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            
-            <div className="max-h-80 overflow-y-auto">
+
+            {/* Notification List */}
+            <div className="max-h-80 overflow-y-auto bg-white">
               {notifications.length === 0 ? (
-                <div className="p-8 text-center text-slate-400 text-sm">No new notifications.</div>
+                <div className="p-8 text-center text-[#999999] text-sm bg-[#f9f9f9]">
+                  No new notifications.
+                </div>
               ) : (
                 notifications.map(n => (
-                  <div 
-                    key={n._id} 
-                    className={`p-4 border-b border-slate-50 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer ${!n.isRead ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                  <div
+                    key={n._id}
+                    className={`p-3 border-b border-[#eeeeee] transition-colors cursor-pointer hover:bg-[#f9f9f9]
+                      ${!n.isRead ? 'bg-[#f4f8fa] border-l-[3px] border-l-[#337ab7]' : 'bg-white border-l-[3px] border-l-transparent'}
+                    `}
                     onClick={() => markAsRead(n._id)}
                   >
-                    <div className="flex gap-2 mb-1">
-                      {/* Dot for unread */}
-                      {!n.isRead && <div className="mt-1.5 w-2 h-2 bg-blue-500 rounded-full shrink-0"></div>}
-                      <h4 className={`text-sm font-bold ${!n.isRead ? 'text-slate-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'}`}>
+                    <div className="flex justify-between items-start mb-1">
+                      <h4 className={`text-sm font-bold truncate pr-2 ${!n.isRead ? 'text-[#337ab7]' : 'text-[#555555]'}`}>
                         {n.title}
                       </h4>
+                      {!n.isRead && <Circle className="w-2 h-2 fill-[#337ab7] text-[#337ab7] shrink-0 mt-1.5" />}
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed pl-4">{n.message}</p>
-                    <p className="text-[10px] text-slate-400 pl-4 mt-2">{new Date(n.createdAt).toLocaleDateString()}</p>
+
+                    <p className="text-xs text-[#666666] leading-relaxed line-clamp-2">
+                      {n.message}
+                    </p>
+
+                    <p className="text-[10px] font-bold text-[#999999] mt-2 uppercase tracking-wider">
+                      {new Date(n.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </p>
                   </div>
                 ))
               )}
             </div>
+
+            {/* Optional Footer Link */}
+            {notifications.length > 0 && (
+              <div className="border-t border-[#eeeeee] bg-[#f9f9f9] p-2 text-center">
+                <button
+                  className="text-xs font-bold text-[#337ab7] hover:underline"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Close Menu
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}

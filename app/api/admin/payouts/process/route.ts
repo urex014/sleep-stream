@@ -50,7 +50,7 @@ export async function POST(req: Request) {
 
       const user = await User.findById(transaction.userId);
       if (user) {
-        user.balance += transaction.amount; // REFUND
+        user.adsBalance = (user.adsBalance || 0) + transaction.amount;
         await user.save();
       }
 

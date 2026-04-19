@@ -8,6 +8,7 @@ const TransactionSchema = new mongoose.Schema({
   amount: { type: Number, required: true },
   reference: { type: String }, // Added to track Paystack IDs
   status: { type: String, enum: ['Pending', 'Success', 'Failed'], default: 'Success' },
+  destination: { type: String },
 }, { timestamps: true });
 
 export default mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);

@@ -41,21 +41,51 @@ export async function POST(req: Request) {
     const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
     const userId = decoded.id || decoded.userId;
 
-    // 2. Verify payment with Paystack
-    const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
-    });
+    // 2. VERIFY PAYMENT (Smart Router)
+    if (reference.startsWith('AD_FEE_')) {
+      // -----------------------------------------
+      // NOWPAYMENTS VERIFIER
+      // -----------------------------------------
+      const npRes = await fetch(`https://api.nowpayments.io/v1/payment?order_id=${reference}`, {
+        headers: { Authorization: `Bearer ${process.env.NOWPAYMENTS_API_KEY}` },
+      });
 
-    const paystackData = await paystackRes.json();
+      const npData = await npRes.json();
+      const payments = npData.data || [];
 
-    if (!paystackData.status || paystackData.data.status !== 'success') {
-      return NextResponse.json({ success: false, message: 'Payment verification failed.' }, { status: 400 });
-    }
+      const successfulPayment = payments.find(
+        (p: any) => p.payment_status === 'finished' || p.payment_status === 'confirmed' || p.payment_status === 'sending'
+      );
 
-    // Ensure they actually paid the 5000 Naira (500000 kobo)
-    if (paystackData.data.amount < 500000) {
-      return NextResponse.json({ success: false, message: 'Payment amount mismatch.' }, { status: 400 });
+      if (!successfulPayment) {
+        return NextResponse.json({
+          success: false,
+          message: 'Crypto payment is still confirming on the blockchain. Please wait 1-2 minutes and click Publish again.'
+        }, { status: 400 });
+      }
+
+      if (successfulPayment.price_amount < 5000) {
+        return NextResponse.json({ success: false, message: 'Payment amount mismatch.' }, { status: 400 });
+      }
+
+    } else {
+      // -----------------------------------------
+      // PAYSTACK VERIFIER (Currently inactive on frontend, but ready here!)
+      // -----------------------------------------
+      const paystackRes = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` },
+      });
+
+      const paystackData = await paystackRes.json();
+
+      if (!paystackData.status || paystackData.data.status !== 'success') {
+        return NextResponse.json({ success: false, message: 'Card verification failed.' }, { status: 400 });
+      }
+
+      if (paystackData.data.amount < 500000) { // 5000 Naira in Kobo
+        return NextResponse.json({ success: false, message: 'Payment amount mismatch.' }, { status: 400 });
+      }
     }
 
     // 3. Create the Task (Pending Review)

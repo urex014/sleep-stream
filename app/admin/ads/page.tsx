@@ -12,7 +12,7 @@ export default function AdminAdsManager() {
   const [formData, setFormData] = useState({
     title: 'AD',
     type: 'video',
-    url: 'https://11745.xml.4armn.com/direct-link?pubid=1008816&siteid=394383',
+    url: 'https://wrathful-piano.com/2mVIh0',
     duration: '30'
   });
 
