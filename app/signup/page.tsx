@@ -7,10 +7,12 @@
 	import { useRouter, useSearchParams } from 'next/navigation';
 	import Logo from '@/components/Logo';
 
+
 // 1. Create the Form Component separately to handle SearchParams safely
 function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const urlRefCode = searchParams.get('ref');
 
 	  const [currentSlide, setCurrentSlide] = useState(0);
 	  const [isLoading, setIsLoading] = useState(false);
@@ -26,11 +28,19 @@ function SignupForm() {
     referralCode: ''
   });
 
-  //checking for referal code in url bar
   useEffect(() => {
-    const refCode = searchParams.get('ref');
-    if (refCode) {
-      setFormData(prev => ({ ...prev, referralCode: refCode }));
+    const urlCode = searchParams.get('ref');
+
+    if (urlCode) {
+      // 1. If it's in the URL, save to memory AND put it in the form data
+      localStorage.setItem('sleepstream_referral', urlCode);
+      setFormData(prev => ({ ...prev, referralCode: urlCode }));
+    } else {
+      // 2. If it's NOT in the URL, pull from memory and put it in the form data
+      const savedCode = localStorage.getItem('sleepstream_referral');
+      if (savedCode) {
+        setFormData(prev => ({ ...prev, referralCode: savedCode }));
+      }
     }
   }, [searchParams]);
 

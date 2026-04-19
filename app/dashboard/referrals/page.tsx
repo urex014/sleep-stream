@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   Gift,
   Wallet,
-  Clock,
   Loader2,
   ArrowRight,
   TrendingUp
@@ -25,35 +24,55 @@ export default function ReferralsPage() {
     totalEarned: 0,
     totalInvites: 0,
     activeReferrals: 0,
-    bonusPerReferral: 1800 // Set to 1800 Naira
+    bonusPerReferral: 1800 // Hardcoded to match our backend engine
   });
   const [referralHistory, setReferralHistory] = useState<any[]>([]);
 
-  // --- FETCH DATA ---
+  // --- SINGLE UNIFIED FETCH EFFECT ---
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAllData = async () => {
       try {
-        const res = await fetch('/api/user/dashboard/referral');
-        const data = await res.json();
+        // We run both fetch requests at the same time for speed using Promise.all
+        const [dashRes, historyRes] = await Promise.all([
+          fetch('/api/user/dashboard/referral', { cache: 'no-store' }).catch(() => null),
+          fetch('/api/user/referrals', { cache: 'no-store' }).catch(() => null)
+        ]);
 
-        if (data.success) {
-          setStats(data.stats);
-          setReferralHistory(data.history);
+        // Process Dashboard Stats & Link
+        if (dashRes && dashRes.ok) {
+          const dashData = await dashRes.json();
+          if (dashData.success) {
+            setStats({
+              totalEarned: dashData.stats?.totalEarned || 0,
+              totalInvites: dashData.stats?.totalInvites || 0,
+              activeReferrals: dashData.stats?.activeReferrals || 0,
+              bonusPerReferral: 1800
+            });
 
-          // Generate Link Dynamically
-          const origin = typeof window !== 'undefined' && window.location.origin
-            ? window.location.origin
-            : '';
-          setReferralLink(`${origin}/signup?ref=${data.referralCode}`);
+            // Generate Link Dynamically
+            const origin = typeof window !== 'undefined' && window.location.origin
+              ? window.location.origin
+              : '';
+            setReferralLink(`${origin}/signup?ref=${dashData.referralCode}`);
+          }
         }
+
+        // Process the new Referral History table data
+        if (historyRes && historyRes.ok) {
+          const historyData = await historyRes.json();
+          if (historyData.success) {
+            setReferralHistory(historyData.history);
+          }
+        }
+
       } catch (error) {
-        console.error("Failed to load referrals");
+        console.error("Failed to load referrals data:", error);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Only stop loading after EVERYTHING is done
       }
     };
 
-    fetchData();
+    fetchAllData();
   }, []);
 
   const handleCopy = () => {
@@ -64,7 +83,7 @@ export default function ReferralsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#337ab7] animate-spin" />
       </div>
     );

@@ -4,6 +4,7 @@ import User from '@/models/User';
 import AccessCode from '@/models/AccessCode';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { processReferralRewards } from '@/lib/referrals';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 const REFERRAL_BONUS = 1800; // Amount to pay the referrer
@@ -52,6 +53,10 @@ export async function POST(req: Request) {
       balance: 0,
       referralBalance: 0
     });
+
+    if (newUser.referredBy) {
+      processReferralRewards(newUser._id).catch(err => console.error("Referral Engine Error:", err));
+    }
 
     // 7. Mark Access Code as Used
     codeDoc.status = 'Used';

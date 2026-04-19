@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,6 +31,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          id="richads-script"
+          src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js"
+          data-pubid="1008816"
+          data-siteid="394383"
+          data-cfasync="false"
+          strategy="afterInteractive" // Loads right after the page becomes interactive
+        />
+        {/* <script src="https://richinfo.co/richpartners/pops/js/richads-pu-ob.js" data-pubid="1008816" data-siteid="394383" async data-cfasync="false"></script> */}
         {children}
       </body>
     </html>

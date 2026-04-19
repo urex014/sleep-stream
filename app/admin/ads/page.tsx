@@ -10,9 +10,9 @@ export default function AdminAdsManager() {
 
   // Form State - Removed `reward`
   const [formData, setFormData] = useState({
-    title: '',
+    title: 'AD',
     type: 'video',
-    url: '',
+    url: 'https://11745.xml.4armn.com/direct-link?pubid=1008816&siteid=394383',
     duration: '30'
   });
 
@@ -109,8 +109,9 @@ export default function AdminAdsManager() {
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                   className="w-full p-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg outline-none focus:border-blue-500"
                 >
-                  <option value="video">YouTube Video</option>
                   <option value="link">Website Link (PTC)</option>
+                  {/* <option value="video">YouTube Video</option> */}
+                  
                 </select>
               </div>
 

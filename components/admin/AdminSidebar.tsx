@@ -24,7 +24,8 @@ const navItems = [
   { label: 'Generate Codes', href: "/admin/codes", icon: Code2 },
   {label: 'Register Vendor', href: "/admin/vendors", icon: ShoppingBag},
   { label: 'Push Notifications', href: '/admin/notifications', icon: Bell },
-  { label:"post ads", href:"/admin/ads", icon: PlaySquare }
+  { label:"post ads", href:"/admin/ads", icon: PlaySquare },
+  {label:'Manage Ads', href: '/admin/ad-req', icon: ShieldAlert}
 ];
 
 export default function AdminSidebar() {
