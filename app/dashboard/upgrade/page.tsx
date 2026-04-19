@@ -69,7 +69,7 @@ export default function UpgradePage() {
         toast.error(data.message || 'Upgrade failed. Please contact support.');
       }
     } catch (error) {
-      Toaster.error('Network error. Please contact support with your reference code.');
+      toast.error('Network error. Please contact support with your reference code.');
     } finally {
       setProcessingTier(null);
     }
