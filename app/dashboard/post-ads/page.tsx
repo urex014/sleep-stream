@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import toast from 'react-hot-toast';
 
 // Force Paystack to load ONLY on the client-side
 const PaystackButton = dynamic(
@@ -103,15 +104,15 @@ export default function PostAdsPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        alert("Your ad has been successfully submitted and is pending admin review!");
+        toast.success("Your ad has been successfully submitted and is pending admin review!");
         setAdForm({ title: '', url: '', duration: '15', reference: '' });
         setHasPaid(false);
         fetchDashboardData(); // Refresh history table
       } else {
-        alert(data.message || "Failed to submit ad.");
+        toast.error(data.message || "Failed to submit ad.");
       }
     } catch (error) {
-      alert("Network error while submitting ad.");
+      toast.error("Network error while submitting ad.");
     } finally {
       setIsSubmittingAd(false);
     }

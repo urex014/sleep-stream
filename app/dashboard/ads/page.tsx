@@ -13,6 +13,7 @@ import {
   Loader2
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function AdsManagerPage() {
   const router = useRouter();
@@ -124,12 +125,12 @@ export default function AdsManagerPage() {
         setDailyLimit(prev => ({ ...prev, current: prev.current + 1 }));
 
         // We use data.message because the backend now returns exactly how much they earned
-        alert(data.message || `Success! ₦${adReward} has been added to your Ads Balance.`);
+        toast.success(data.message || `Success! ₦${adReward} has been added to your Ads Balance.`);
       } else {
-        alert(data.message || "Failed to verify task.");
+        toast.error(data.message || "Failed to verify task.");
       }
     } catch (error) {
-      alert("Network error while verifying task. Please try again.");
+      toast.error("Network error while verifying task. Please try again.");
     } finally {
       setIsVerifying(false);
       setActiveTask(null);
@@ -139,7 +140,7 @@ export default function AdsManagerPage() {
   // --- HANDLERS ---
   const handleStartTask = (task: any) => {
     if (dailyLimit.current >= dailyLimit.max) {
-      alert("You have reached your daily ad limit. Come back tomorrow!");
+      toast.error("You have reached your daily ad limit. Come back tomorrow!");
       return;
     }
     setActiveTask(task);

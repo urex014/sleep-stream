@@ -13,6 +13,7 @@ import {
   Copy,
   Check
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
 
@@ -82,7 +83,7 @@ export default function SettingsPage() {
       if (copyResetTimeoutRef.current) clearTimeout(copyResetTimeoutRef.current);
       copyResetTimeoutRef.current = setTimeout(() => setIsUserIdCopied(false), 1500);
     } catch (error) {
-      alert('Failed to copy. Please try again.');
+      toast.error('Failed to copy. Please try again.');
     }
   };
 
@@ -95,10 +96,10 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fullName: profile.fullName, email: profile.email }),
       });
-      if (res.ok) alert("Profile Updated Successfully");
-      else alert("Update failed. Please try again.");
+      if (res.ok) toast.success("Profile Updated Successfully");
+      else toast.error("Update failed. Please try again.");
     } catch (error) {
-      alert("Network Error");
+      toast.error("Network Error");
     } finally {
       setIsSaving(false);
     }

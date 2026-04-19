@@ -5,6 +5,7 @@ import { ShieldCheck, Zap, CheckCircle2, TrendingUp, Loader2, ArrowUpRight } fro
 import { useRouter } from 'next/navigation';
 
 import dynamic from 'next/dynamic';
+import toast from 'react-hot-toast';
 
 // Force Paystack to load ONLY on the client-side (browser)
 const PaystackButton = dynamic(
@@ -62,13 +63,13 @@ export default function UpgradePage() {
 
       const data = await res.json();
       if (data.success) {
-        alert(`Congratulations! You have been upgraded to Tier ${tierLevel}.`);
+        toast.success(`Congratulations! You have been upgraded to Tier ${tierLevel}.`);
         window.location.reload(); // Refresh to update dashboard limits
       } else {
-        alert(data.message || 'Upgrade failed. Please contact support.');
+        toast.error(data.message || 'Upgrade failed. Please contact support.');
       }
     } catch (error) {
-      alert('Network error. Please contact support with your reference code.');
+      Toaster.error('Network error. Please contact support with your reference code.');
     } finally {
       setProcessingTier(null);
     }

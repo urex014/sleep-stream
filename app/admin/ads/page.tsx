@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { PlaySquare, Link as LinkIcon, Plus, Loader2, CheckCircle2, Trash2, Zap } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AdminAdsManager() {
   const [tasks, setTasks] = useState<any[]>([]);
@@ -11,8 +12,8 @@ export default function AdminAdsManager() {
   // Form State - Removed `reward`
   const [formData, setFormData] = useState({
     title: 'AD',
-    type: 'video',
-    url: 'https://wrathful-piano.com/2mVIh0',
+    type: 'url',
+    url: 'https://omg10.com/4/10899505',
     duration: '30'
   });
 
@@ -40,13 +41,13 @@ export default function AdminAdsManager() {
 
       const data = await res.json();
       if (res.ok) {
-        alert(data.message);
+        toast(data.message);
         fetchTasks();
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast.error("Network Error");
     }
   };
 
@@ -67,14 +68,14 @@ export default function AdminAdsManager() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("Ad Published Successfully!");
-        setFormData({ title: '', type: 'video', url: '', duration: '30' });
+        toast("Ad Published Successfully!");
+        // setFormData({ title: '', type: 'url', url: 'https://omg10.com/4/10899505', duration: '30' });
         fetchTasks();
       } else {
-        alert(data.message);
+        toast(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast.error("Network Error");
     } finally {
       setIsSubmitting(false);
     }

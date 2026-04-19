@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Plus, Loader2, Store, Link as LinkIcon, Trash2, CheckCircle2, XCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AdminVendorsManager() {
   const [vendors, setVendors] = useState<any[]>([]);
@@ -49,14 +50,14 @@ export default function AdminVendorsManager() {
       const data = await res.json();
 
       if (res.ok) {
-        alert(data.message);
+        toast(data.message);
         setFormData({ name: '', methods: '', platform: 'WhatsApp', link: '', status: 'Online', rating: '5.0/5', verified: true });
         fetchVendors(); // Refresh the table
       } else {
-        alert(data.message);
+        toast(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast("Network Error");
     } finally {
       setIsSubmitting(false);
     }
@@ -77,10 +78,10 @@ export default function AdminVendorsManager() {
       if (res.ok) {
         fetchVendors(); // Refresh the table
       } else {
-        alert(data.message);
+        toast(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast("Network Error");
     } finally {
       setIsDeleting(null);
     }

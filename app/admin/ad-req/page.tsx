@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldAlert, ExternalLink, CheckCircle, XCircle, Loader2, List, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function AdminAdsModerationPage() {
   const router = useRouter();
@@ -49,10 +50,10 @@ export default function AdminAdsModerationPage() {
         // Refresh the table locally without reloading the whole page
         setCampaigns(prev => prev.map(camp => camp._id === taskId ? { ...camp, status: newStatus } : camp));
       } else {
-        alert(data.message || "Update failed.");
+        toast(data.message || "Update failed.");
       }
     } catch (error) {
-      alert("Network error.");
+      toast.error("Network error.");
     } finally {
       setProcessingId(null);
     }

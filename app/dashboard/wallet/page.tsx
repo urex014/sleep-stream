@@ -8,6 +8,7 @@ import {
   Users, PlaySquare, ArrowRightLeft
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function WalletPage() {
   const router = useRouter();
@@ -60,31 +61,31 @@ export default function WalletPage() {
   // --- 2. HANDLERS ---
   const handleWithdraw = async () => {
     const amountNum = parseFloat(amount);
-    if (!amountNum || amountNum <= 0) return alert("Please enter a valid amount.");
+    if (!amountNum || amountNum <= 0) return toast.error("Please enter a valid amount.");
 
     // Enforce Thresholds
     if (withdrawSource === 'ads' && amountNum < MIN_ADS_WITHDRAWAL) {
-      return alert(`Minimum withdrawal for Ads Wallet is ₦${MIN_ADS_WITHDRAWAL.toLocaleString()}`);
+      return toast.error(`Minimum withdrawal for Ads Wallet is ?${MIN_ADS_WITHDRAWAL.toLocaleString()}`);
     }
     if (withdrawSource === 'referrals' && amountNum < MIN_REF_WITHDRAWAL) {
-      return alert(`Minimum withdrawal for Referral Wallet is ₦${MIN_REF_WITHDRAWAL.toLocaleString()}`);
+      return toast.error(`Minimum withdrawal for Referral Wallet is ?${MIN_REF_WITHDRAWAL.toLocaleString()}`);
     }
 
     // Enforce Available Balances
     if (withdrawSource === 'ads' && amountNum > wallet.adsBalance) {
-      return alert("Insufficient funds in your Ads Wallet.");
+      return toast.error("Insufficient funds in your Ads Wallet.");
     }
     if (withdrawSource === 'referrals' && amountNum > wallet.referralBalance) {
-      return alert("Insufficient funds in your Referral Wallet.");
+      return toast.error("Insufficient funds in your Referral Wallet.");
     }
 
     let finalDestination = '';
     if (actionType === 'crypto') {
-      if (!cryptoAddress) return alert("Please enter your wallet address.");
+      if (!cryptoAddress) return toast.error("Please enter your wallet address.");
       finalDestination = cryptoAddress;
     } else {
       if (!bankDetails.bankName || !bankDetails.accountNumber || !bankDetails.accountHolder) {
-        return alert("Please fill out all bank details.");
+        return toast.error("Please fill out all bank details.");
       }
       finalDestination = `${bankDetails.bankName} | ${bankDetails.accountNumber} | ${bankDetails.accountHolder}`;
     }
@@ -104,17 +105,17 @@ export default function WalletPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Withdrawal Request Sent! Status: Pending");
+        toast.success("Withdrawal Request Sent! Status: Pending");
         setAmount('');
         setCryptoAddress('');
         setBankDetails({ bankName: '', accountNumber: '', accountHolder: '' });
         setActionType(null);
         fetchWalletData();
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast.error("Network Error");
     } finally {
       setIsProcessing(false);
     }
@@ -122,8 +123,8 @@ export default function WalletPage() {
 
   const handleTransfer = async () => {
     const amountNum = parseFloat(amount);
-    if (!amountNum || amountNum <= 0) return alert("Please enter a valid amount.");
-    if (amountNum > wallet.referralBalance) return alert("Insufficient funds in your Referral Wallet.");
+    if (!amountNum || amountNum <= 0) return toast.error("Please enter a valid amount.");
+    if (amountNum > wallet.referralBalance) return toast.error("Insufficient funds in your Referral Wallet.");
 
     setIsProcessing(true);
     try {
@@ -134,15 +135,15 @@ export default function WalletPage() {
       });
       const data = await res.json();
       if (res.ok) {
-        alert("Transfer Successful! Funds have been moved to your Ads Wallet.");
+        toast.success("Transfer Successful! Funds have been moved to your Ads Wallet.");
         setAmount('');
         setActionType(null);
         fetchWalletData();
       } else {
-        alert(data.message);
+        toast.error(data.message);
       }
     } catch (error) {
-      alert("Network Error");
+      toast.error("Network Error");
     } finally {
       setIsProcessing(false);
     }
@@ -500,3 +501,4 @@ export default function WalletPage() {
     </div>
   );
 }
+
