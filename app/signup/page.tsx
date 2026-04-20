@@ -237,7 +237,7 @@ function SignupForm() {
                   />
                 </div>
                 <p className="text-xs text-[#777777] mt-1">
-                  Don't have a code? <Link href="/vendors" className="text-[#337ab7] font-bold hover:underline">Buy one from a vendor</Link>.
+                  Don't have a code? <Link href="/vendors" className="text-[#337ab7] font-bold underline">click <span className="font-bold text-blue-800">HERE</span> to buy one from a vendor</Link>.
                 </p>
               </div>
 
