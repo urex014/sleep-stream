@@ -228,13 +228,15 @@ export default function WalletPage() {
                   <Wallet className="w-8 h-8 text-[#337ab7]" />
                   <span className="font-bold text-[#333333] text-sm">Crypto Wallet</span>
                 </button>
-
                 <button
-                  onClick={() => setActionType('fiat')}
-                  className="flex flex-col items-center justify-center gap-3 p-6 rounded bg-[#f9f9f9] border border-[#dddddd] hover:border-[#66afe9] hover:bg-[#f4f9fc] transition-colors shadow-sm"
+                  type="button"
+                  disabled
+                  aria-disabled="true"
+                  className="flex flex-col items-center justify-center gap-3 p-6 rounded bg-[#f3f3f3] border border-[#e3e3e3] text-[#999999] cursor-not-allowed shadow-sm opacity-70"
                 >
-                  <Landmark className="w-8 h-8 text-[#337ab7]" />
-                  <span className="font-bold text-[#333333] text-sm">Local Bank</span>
+                  <Landmark className="w-8 h-8 text-[#999999]" />
+                  <span className="font-bold text-sm">Local Bank</span>
+                  <span className="text-xs font-medium uppercase tracking-wide text-[#aaaaaa]">Coming Soon</span>
                 </button>
 
                 <button
