@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Wallet, ArrowUpRight, History,
   AlertCircle, Landmark, Loader2, ChevronLeft,
-  Users, PlaySquare, ArrowRightLeft, AlertTriangle
+  Users, PlaySquare, ArrowRightLeft, AlertTriangle, Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -231,6 +231,17 @@ export default function WalletPage() {
                 <ArrowUpRight className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight">Manage Funds</h3>
+              {/* --- WITHDRAWAL STATUS BANNER --- */}
+              <div className={`mb-8 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold border ${
+                isOpen 
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                  : 'bg-amber-50 text-amber-700 border-amber-200'
+              }`}>
+                <Clock className="w-4 h-4" />
+                {isOpen 
+                  ? "Withdrawals are currently OPEN!" 
+                  : "Next Payout Window: Friday, 6:00 PM - 9:00 PM"}
+              </div>
               <p className="text-slate-500 text-center max-w-md mb-10 text-sm leading-relaxed">
                 Withdraw your earnings to your bank or crypto wallet, or instantly transfer referral earnings into your Ads Wallet.
               </p>
