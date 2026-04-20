@@ -231,7 +231,7 @@ export default function VendorsPage() {
         </div>
 
         {/* --- MANUAL VENDORS SECTION --- */}
-        <div className="mb-8 flex justify-between items-end">
+        {/* <div className="mb-8 flex justify-between items-end">
           <h2 className="text-xl font-bold text-[#222222]">Manual Vendors</h2>
           <div className="relative w-64">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -245,7 +245,7 @@ export default function VendorsPage() {
               className="w-full pl-9 pr-4 py-2 bg-white border border-[#cccccc] rounded focus:border-[#66afe9] outline-none text-[#333333] text-sm shadow-[inset_0_1px_1px_rgba(0,0,0,0.075)]"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* LOADING STATE */}
         {isLoading ? (
