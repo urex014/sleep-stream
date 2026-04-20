@@ -139,16 +139,16 @@ export default function FAQPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="https://t.me/sleepstream_support" target="_blank">
+          <Link href="https://t.me/SLEEPSTREAMNG" target="_blank">
           <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-white border border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6] hover:border-[#adadad] font-bold transition-colors shadow-sm text-sm">
             <Send className="w-4 h-4 text-[#337ab7]" /> Telegram Support
           </button>
           </Link>
-          <Link href="https://wa.me/09014442677" target="_blank">
+          {/* <Link href="https://wa.me/" target="_blank">
           <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-[#5cb85c] border border-[#4cae4c] text-white hover:bg-[#449d44] font-bold transition-colors shadow-sm text-sm">
             <MessageCircle className="w-4 h-4" /> WhatsApp Support
           </button>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
