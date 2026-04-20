@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Wallet, ArrowUpRight, History,
   AlertCircle, Landmark, Loader2, ChevronLeft,
-  Users, PlaySquare, ArrowRightLeft
+  Users, PlaySquare, ArrowRightLeft, AlertTriangle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -38,6 +38,24 @@ export default function WalletPage() {
   // Distinct destination fields
   const [cryptoAddress, setCryptoAddress] = useState('');
   const [bankDetails, setBankDetails] = useState({ bankName: '', accountNumber: '', accountHolder: '' });
+  
+  // --- TIME LOCK STATE ---
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(()=>{
+    const checkTimeWindow = () => {
+      const nigeriaTime = new Date(new Date().toLocaleString('en-US', {timeZone: "Africa/Lagos"}));
+      const day = nigeriaTime.getDay(); // 0 (Sun) to 6 (Sat)
+      const hour = nigeriaTime.getHours(); // 0 to 23
+
+      const isFriday = day === 5;
+      const isCorrectTime = hour >= 18 && hour < 21;
+      setIsOpen(isFriday && isCorrectTime);
+    }
+    checkTimeWindow()
+    const interval = setInterval(checkTimeWindow, 60 * 1000); // Check every minute
+    return ()=>clearInterval(interval)
+  }, [])
 
   // --- 1. FETCH DATA ---
   const fetchWalletData = async () => {
@@ -163,7 +181,6 @@ export default function WalletPage() {
       {/* --- PREMIUM BALANCE PANEL --- */}
       <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 rounded-3xl shadow-xl p-8 md:p-10 text-white overflow-hidden">
         
-        {/* Decorative background blurs */}
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
 
@@ -181,7 +198,6 @@ export default function WalletPage() {
           </div>
         </div>
 
-        {/* Dual Wallet Breakdown */}
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-5 mt-8">
           <div className="bg-white/5 border border-white/10 hover:bg-white/10 transition-colors rounded-2xl p-5 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-2">
@@ -222,6 +238,7 @@ export default function WalletPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                 <button
                   onClick={() => setActionType('crypto')}
+                  disabled
                   className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-indigo-500 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                 >
                   <div className="p-3 bg-slate-50 group-hover:bg-indigo-50 rounded-xl transition-colors">
@@ -327,7 +344,19 @@ export default function WalletPage() {
                 <p className="text-slate-500 mt-2">Select a source wallet and enter your withdrawal details.</p>
               </div>
 
-              <div className="space-y-8">
+              {/* TIME LOCK WARNING */}
+              {!isOpen && (
+                <div className="mb-8 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl">
+                  <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
+                  <div>
+                    <h4 className="font-bold">Withdrawals are currently closed.</h4>
+                    <p className="text-sm mt-1 font-medium">Our payout window is strictly open on <strong>Fridays from 6:00 PM to 9:00 PM</strong>. Please come back during this window.</p>
+                  </div>
+                </div>
+              )}
+
+              {/* FORM CONTAINER - Blurs out when closed */}
+              <div className={`space-y-8 ${!isOpen ? 'opacity-50 pointer-events-none' : ''}`}>
 
                 {/* 1. Wallet Source Selection */}
                 <div>
@@ -460,6 +489,7 @@ export default function WalletPage() {
                 <button
                   onClick={handleWithdraw}
                   disabled={
+                    !isOpen ||
                     isProcessing ||
                     !amount ||
                     (parseFloat(amount) < currentMinThreshold) ||
@@ -468,7 +498,7 @@ export default function WalletPage() {
                   }
                   className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold py-4 rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                 >
-                  {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : "Confirm Withdrawal"}
+                  {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : !isOpen ? "Withdrawals Closed" : "Confirm Withdrawal"}
                 </button>
               </div>
             </div>

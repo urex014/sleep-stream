@@ -42,6 +42,18 @@ export async function POST(req: Request) {
 
     const withdrawAmount = Number(amount);
 
+    //2.5 
+    const nigeriaTime = new Date(new Date().toLocaleString("en-US", { timeZone: "Africa/Lagos" }));
+    const currentDay = nigeriaTime.getDay(); // 0 (Sun) to 5 (fri)
+    const currentHour = nigeriaTime.getHours() //0 to 23
+
+    const isFriday = currentDay === 5;
+    const isTimeWindow = currentHour >= 18 && currentHour <21;
+
+    if(!isFriday || !isTimeWindow) {
+      return NextResponse.json({ success: false, message: 'Withdrawals are only allowed on Fridays between 6 PM and 9 PM WAT' }, { status: 403 });
+    }
+
     // 3. Minimum Threshold & Balance Validation
     if (walletType === 'Ads' || walletType === 'ads') {
       if (withdrawAmount < 20000) {
