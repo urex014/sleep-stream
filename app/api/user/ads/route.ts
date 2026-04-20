@@ -18,8 +18,7 @@ export async function GET() {
     // We do NOT check for an 'admin' role here!
     const activeAds = await Task.find({ 
       $or: [
-        { status: 'Active' },
-        { status: { $exists: false } } // Catch older ads that might not have a status
+        { status: 'Active' } 
       ] 
     }).sort({ createdAt: -1 });
 

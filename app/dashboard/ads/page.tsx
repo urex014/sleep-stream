@@ -18,7 +18,7 @@ import toast from 'react-hot-toast';
 export default function AdsManagerPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'videos' | 'links'>('videos');
+  const [activeTab, setActiveTab] = useState<'videos' | 'links'>('links');
 
   // Dynamic Data States
   const [tasks, setTasks] = useState<any[]>([]);
@@ -47,34 +47,42 @@ export default function AdsManagerPage() {
   const adReward = getRewardForTier(userTier);
 
   // --- 1. FETCH DASHBOARD & TASKS ---
+  // --- 1. FETCH DASHBOARD & TASKS ---
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // 1. Fetch User Auth & Tier
+        console.log("1. Starting data fetch...");
+        
+        // Fetch User Auth
         const dashRes = await fetch('/api/user/dashboard', { cache: 'no-store' });
         if (dashRes.status === 401) return router.push('/login');
-
         const dashData = await dashRes.json();
-        if (dashData.success) {
-          setUserTier(dashData.user.tier || 1); // Save the tier to state
-        }
+        if (dashData.success) setUserTier(dashData.user.tier || 1);
 
-        // 2. Fetch User's Completed Ads History
-        const historyRes = await fetch('/api/user/ads/complete');
+        // Fetch History
+        const historyRes = await fetch('/api/user/ads/complete', { cache: 'no-store' });
         const historyData = await historyRes.json();
-
         if (historyData.success) {
-          setCompletedTasks(historyData.completedAds);
-          setDailyLimit({ current: historyData.totalTasksToday, max: 20 });
+          setCompletedTasks(historyData.completedAds || []);
+          setDailyLimit({ current: historyData.totalTasksToday || 0, max: 20 });
         }
 
-        // 3. Fetch the Ads created in the Admin Panel
-        const tasksRes = await fetch('/api/user/tasks');
+        // Fetch Ads
+        console.log("2. Fetching Ads from API...");
+        const tasksRes = await fetch('/api/user/ads', { cache: 'no-store' });
         const tasksData = await tasksRes.json();
+        
+        // 🚨 THIS IS THE MOST IMPORTANT CONSOLE LOG 🚨
+        console.log("3. RAW API RESPONSE:", tasksData); 
 
         if (tasksData.success) {
-          const activeAds = tasksData.tasks.filter((t: any) => t.status === 'Active' || !t.status);
-          setTasks(activeAds);
+          // This catches the data whether your API named it 'tasks', 'ads', or 'data'
+          const adArray = tasksData.tasks || tasksData.ads || tasksData.data || tasksData.activeAds || [];
+          
+          console.log("4. EXTRACTED AD ARRAY:", adArray);
+          setTasks(adArray);
+        } else {
+          console.error("API returned false success:", tasksData);
         }
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -146,11 +154,11 @@ export default function AdsManagerPage() {
     setActiveTask(task);
     setTimeLeft(task.duration);
 
-    if (task.type === 'link' || task.type === 'video') {
+    // Added 'url' to the allowed types to open a new tab!
+    if (task.type === 'url' || task.type === 'link' || task.type === 'video') {
       window.open(task.url, '_blank');
     }
   };
-
   const cancelTask = () => {
     if (isVerifying) return; // Prevent canceling while API is calling
     if (confirm("Are you sure you want to cancel? You will not receive the reward.")) {
@@ -167,8 +175,8 @@ export default function AdsManagerPage() {
     );
   }
 
-  const videoTasks = tasks.filter(t => t.type === 'video');
-  const linkTasks = tasks.filter(t => t.type === 'link');
+  const videoTasks = tasks.filter(t => t.type?.toLowerCase() === 'video');
+  const linkTasks = tasks.filter(t => t.type?.toLowerCase()  === 'url');
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-16 font-sans text-[#333333]">
