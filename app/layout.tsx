@@ -4,6 +4,7 @@ import "./globals.css";
 import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SleepStream",
-  description: "Automate your ads revenue with bots. ",
+  description: "View ads for passive income. ",
   icons: {
     icon: "/favicon.ico",
   },
@@ -33,6 +34,8 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <SpeedInsights/>
+        <Analytics/>
         <Toaster />
         {children}
       </body>
