@@ -33,8 +33,8 @@ const UserSchema = new Schema({
   referredBy: { type: String, default: null },
 
   // --- Password Reset ---
-  resetPasswordToken: { type: String },
-  resetPasswordExpire: { type: Date },
+  forgotPasswordToken: { type: String },
+  forgotPasswordTokenExpiry: { type: Date },
 
 }, { timestamps: true });
 

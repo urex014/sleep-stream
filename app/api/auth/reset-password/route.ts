@@ -1,49 +1,45 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
-import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs'; // Assuming you use bcrypt to hash passwords!
 
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { token, password } = await req.json();
+    const { token, newPassword } = await req.json();
 
-    if (!token || !password) {
-      return NextResponse.json({ success: false, message: 'Invalid request' }, { status: 400 });
+    if (!token || !newPassword) {
+      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
     }
 
-    if (password.length < 6) {
-      return NextResponse.json({ success: false, message: 'Password must be at least 6 characters' }, { status: 400 });
-    }
-
-    // 1. Recreate the hash from the URL token to match what's in the database
+    // 1. Hash the token from the URL so it matches what we saved in the DB
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
-    // 2. Find the user with this token AND ensure it hasn't expired yet
+    // 2. Find the user with this token, ensuring it hasn't expired
     const user = await User.findOne({
-      resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: Date.now() }, // Expiration must be greater than current time
+      forgotPasswordToken: hashedToken,
+      forgotPasswordTokenExpiry: { $gt: Date.now() }, // $gt means "greater than" right now
     });
 
     if (!user) {
-      return NextResponse.json({ success: false, message: 'Invalid or expired reset token' }, { status: 400 });
+      return NextResponse.json({ success: false, message: "Token is invalid or has expired." }, { status: 400 });
     }
 
-    // 3. Hash the new password
+    // 3. Hash the new password and save it
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    user.password = await bcrypt.hash(newPassword, salt);
 
-    // 4. Clear the reset token fields so they can't be used again
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-
+    // 4. Delete the tokens so they can't be used again!
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordTokenExpiry = undefined;
+    
     await user.save();
 
-    return NextResponse.json({ success: true, message: 'Password has been reset successfully.' });
+    return NextResponse.json({ success: true, message: "Password successfully updated!" });
 
-  } catch (error: any) {
-    console.error("Reset Password Error:", error);
-    return NextResponse.json({ success: false, message: 'Internal server error' }, { status: 500 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
   }
 }
