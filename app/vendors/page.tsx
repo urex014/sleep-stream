@@ -226,7 +226,7 @@ export default function VendorsPage() {
         {/* Divider */}
         <div className="flex items-center gap-4 mb-10 max-w-2xl mx-auto">
           <div className="flex-1 border-t border-[#cccccc]"></div>
-          <span className="text-[#999999] font-bold text-sm uppercase tracking-wider">OR BUY MANUALLY</span>
+          {/* <span className="text-[#999999] font-bold text-sm uppercase tracking-wider">OR BUY MANUALLY</span> */}
           <div className="flex-1 border-t border-[#cccccc]"></div>
         </div>
 
