@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Zap, CheckCircle2, TrendingUp, Loader2, ArrowUpRight } from 'lucide-react';
+import { ShieldCheck, TrendingUp, Loader2, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-
 import dynamic from 'next/dynamic';
 import toast from 'react-hot-toast';
 
@@ -77,8 +77,8 @@ export default function UpgradePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
-        <Loader2 className="w-10 h-10 text-[#337ab7] animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
       </div>
     );
   }
@@ -86,31 +86,34 @@ export default function UpgradePage() {
   const currentTierLevel = user?.tier || 1;
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] text-[#333333] font-sans pb-20">
+    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-20 selection:bg-indigo-500 selection:text-white animate-in fade-in duration-500">
 
-      {/* Glossy Page Header */}
-      <div className="bg-gradient-to-b from-[#ffffff] to-[#f5f5f5] border-b border-[#dddddd] shadow-[0_2px_4px_rgba(0,0,0,0.02)] py-12 px-6 mb-10">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-[#d9edf7] text-[#31708f] rounded-full mb-4 border border-[#bce8f1] shadow-[inset_0_2px_4px_rgba(255,255,255,0.8)]">
-            <TrendingUp className="w-8 h-8" />
+      {/* --- PREMIUM HEADER --- */}
+      <div className="relative bg-white border-b border-slate-200 py-16 px-6 mb-12 overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+        
+        <div className="relative max-w-3xl mx-auto text-center z-10">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl mb-6 shadow-sm border border-indigo-100">
+            <TrendingUp className="w-7 h-7" />
           </div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-[#222222] tracking-tight mb-3" style={{ textShadow: '1px 1px 0px #ffffff' }}>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-4">
             Upgrade Your Earning Power
           </h1>
-          <p className="text-lg text-[#666666] max-w-2xl mx-auto font-medium leading-relaxed">
+          <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto">
             Boost your daily limits and maximize your return. All packages are valid for a strict 20-day cycle.
           </p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 lg:gap-8 items-start">
           {TIERS.map((tier) => {
             const isCurrentTier = currentTierLevel === tier.level;
             const isLowerTier = currentTierLevel > tier.level;
-            const maxEarnings = tier.dailyEarn * 20; // 20 ads/day for 20 days
+            const maxEarnings = tier.dailyEarn * 20; // 20 days
 
-            // Paystack Props Configuration for this specific tier
+            // Paystack Props Configuration
             const componentProps = {
               email: user?.email || 'user@sleepstream.com',
               amount: tier.price * 100, // Paystack uses Kobo
@@ -123,69 +126,87 @@ export default function UpgradePage() {
             return (
               <div
                 key={tier.level}
-                className={`bg-white rounded-lg p-6 relative flex flex-col shadow-[0_4px_10px_rgba(0,0,0,0.05)] border-t-[5px] border-x border-b border-[#cccccc] transition-transform hover:-translate-y-1
-                  ${isCurrentTier ? 'border-t-[#337ab7] shadow-[0_8px_20px_rgba(51,122,183,0.15)] scale-105 z-10' : 'border-t-[#777777]'}
+                className={`relative flex flex-col bg-white rounded-3xl p-6 md:p-8 transition-all duration-300
+                  ${isCurrentTier 
+                    ? 'border-2 border-indigo-500 shadow-xl shadow-indigo-500/10 xl:scale-105 z-10 bg-indigo-50/10' 
+                    : 'border border-slate-200 shadow-sm hover:shadow-md hover:border-indigo-200 hover:-translate-y-1 z-0'
+                  }
+                  ${isLowerTier ? 'opacity-75 grayscale-[20%]' : ''}
                 `}
               >
-                {/* Glossy Header Highlight */}
-                <div className="absolute top-0 left-0 right-0 h-8 bg-gradient-to-b from-white to-transparent opacity-60 pointer-events-none rounded-t"></div>
-
+                {/* Current Tier Badge */}
                 {isCurrentTier && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#337ab7] text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">
-                    Current Tier
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-indigo-600 text-white text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest shadow-sm">
+                    Current Plan
                   </div>
                 )}
 
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-extrabold text-[#222222] mb-1">{tier.name}</h3>
+                <div className="text-center mb-8">
+                  <h3 className="text-lg font-bold text-slate-500 tracking-tight mb-2 uppercase">{tier.name}</h3>
                   <div className="flex items-center justify-center items-baseline gap-1">
-                    <span className="text-2xl font-black text-[#337ab7]">₦{tier.price.toLocaleString()}</span>
+                    <span className={`text-4xl font-extrabold tracking-tight ${isCurrentTier ? 'text-indigo-600' : 'text-slate-900'}`}>
+                      ₦{tier.price.toLocaleString()}
+                    </span>
                   </div>
+                  {tier.price === 0 && <span className="text-sm text-slate-400 font-medium">Free forever</span>}
                 </div>
 
                 <div className="flex-1 space-y-4 mb-8">
-                  <div className="flex justify-between items-center border-b border-[#eeeeee] pb-2">
-                    <span className="text-sm font-bold text-[#777777]">Daily Earn</span>
-                    <span className="text-sm font-extrabold text-[#3c763d]">₦{tier.dailyEarn.toLocaleString()}</span>
+                  <div className="flex justify-between items-center bg-slate-50 p-3 rounded-xl">
+                    <span className="text-sm font-semibold text-slate-600 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Daily Earn
+                    </span>
+                    <span className="text-sm font-bold text-emerald-600">₦{tier.dailyEarn.toLocaleString()}</span>
                   </div>
-                  <div className="flex justify-between items-center border-b border-[#eeeeee] pb-2">
-                    <span className="text-sm font-bold text-[#777777]">Duration</span>
-                    <span className="text-sm font-bold text-[#222222]">{tier.duration} Days</span>
+                  <div className="flex justify-between items-center p-3">
+                    <span className="text-sm font-semibold text-slate-600 flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-indigo-500" /> Total ROI (20d)
+                    </span>
+                    <span className="text-sm font-bold text-slate-900">₦{maxEarnings.toLocaleString()}</span>
                   </div>
-                  
+                  <div className="flex justify-between items-center p-3 border-t border-slate-100">
+                    <span className="text-sm font-semibold text-slate-500">Duration</span>
+                    <span className="text-sm font-bold text-slate-700">{tier.duration} Days</span>
+                  </div>
                 </div>
 
                 {/* Upgrade Buttons */}
-                {processingTier === tier.level ? (
-                  <button disabled className="w-full bg-[#eeeeee] border border-[#cccccc] text-[#777777] font-bold py-3 rounded flex items-center justify-center gap-2">
-                    <Loader2 className="w-5 h-5 animate-spin" /> Processing...
-                  </button>
-                ) : tier.level === 1 ? (
-                  <button disabled className="w-full bg-[#f9f9f9] border border-[#dddddd] text-[#999999] font-bold py-3 rounded cursor-not-allowed shadow-inner">
-                    {isCurrentTier ? 'Active' : 'Free Tier'}
-                  </button>
-                ) : isCurrentTier || isLowerTier ? (
-                  <button disabled className="w-full bg-[#f9f9f9] border border-[#dddddd] text-[#999999] font-bold py-3 rounded cursor-not-allowed shadow-inner">
-                    {isCurrentTier ? 'Currently Active' : 'Completed'}
-                  </button>
-                ) : (
-                  <div className="w-full">
-                    {/* Paystack Button injected safely */}
-                    <PaystackButton
-                      {...componentProps}
-                            className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-1.5 transition-all active:translate-y-[1px] [text-shadow:0_-1px_0_rgba(0,0,0,0.3)]"
-                    />
-                  </div>
-                )}
+                <div className="mt-auto">
+                  {processingTier === tier.level ? (
+                    <button disabled className="w-full bg-slate-100 text-slate-400 font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all">
+                      <Loader2 className="w-5 h-5 animate-spin" /> Processing...
+                    </button>
+                  ) : tier.level === 1 ? (
+                    <button disabled className="w-full bg-slate-50 border border-slate-200 text-slate-400 font-semibold py-3.5 rounded-xl cursor-not-allowed transition-all">
+                      {isCurrentTier ? 'Active' : 'Free Tier'}
+                    </button>
+                  ) : isCurrentTier || isLowerTier ? (
+                    <button disabled className="w-full bg-slate-50 border border-slate-200 text-slate-400 font-semibold py-3.5 rounded-xl cursor-not-allowed transition-all">
+                      {isCurrentTier ? 'Currently Active' : 'Completed'}
+                    </button>
+                  ) : (
+                    <div className="w-full transition-all hover:scale-[1.02] active:scale-[0.98]">
+                      {/* Paystack Button injected safely */}
+                      <PaystackButton
+                        {...componentProps}
+                        className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-xl shadow-sm hover:shadow flex items-center justify-center gap-2 transition-colors"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
         </div>
 
-        {/* Security Footer */}
-        <div className="mt-12 max-w-2xl mx-auto bg-[#f9f9f9] border border-[#dddddd] rounded p-4 flex items-center justify-center gap-3 shadow-[inset_0_1px_0_rgba(255,255,255,1)]">
-          <ShieldCheck className="w-5 h-5 text-[#5cb85c]" />
-          <p className="text-sm text-[#555555] font-medium">All payments are secured and processed directly by Paystack.</p>
+        {/* --- SECURITY FOOTER --- */}
+        <div className="mt-16 max-w-xl mx-auto bg-white border border-slate-200 rounded-2xl p-5 flex items-center justify-center gap-3 shadow-sm">
+          <div className="p-2 bg-emerald-50 rounded-lg">
+            <ShieldCheck className="w-6 h-6 text-emerald-600" />
+          </div>
+          <p className="text-sm text-slate-500 font-medium leading-snug">
+            All payments are secured with bank-grade encryption and processed directly by <span className="font-bold text-slate-700">Paystack</span>.
+          </p>
         </div>
       </div>
     </div>
