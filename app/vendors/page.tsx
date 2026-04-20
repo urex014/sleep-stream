@@ -255,7 +255,7 @@ export default function VendorsPage() {
         ) : (
           <>
             {/* VENDORS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vendors.map((vendor) => (
                 <div
                   key={vendor._id || vendor.id}
@@ -313,7 +313,7 @@ export default function VendorsPage() {
 
                 </div>
               ))}
-            </div>
+            </div> */}
 
             {vendors.length === 0 && (
               <div className="text-center py-16 bg-white border border-[#dddddd] rounded shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
