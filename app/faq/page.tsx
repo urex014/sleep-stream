@@ -27,7 +27,7 @@ export default function FAQPage() {
     {
       category: "Withdrawals",
       question: "When are withdrawals processed?",
-      answer: "Withdrawal requests are automatically processed and disbursed to your account on random days"
+      answer: "Withdrawal requests are automatically processed and disbursed to your account on weekends. All withdrawal requests should be made during the week"
     },
     {
       category: "Referrals",
