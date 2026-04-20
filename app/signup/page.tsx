@@ -268,7 +268,7 @@ function SignupForm() {
               {/* Submit Button */}
               <button
                 disabled={isLoading}
-                className="w-full bg-[#5cb85c] hover:bg-[#449d44] border border-[#4cae4c] text-white font-bold py-2.5 rounded shadow-sm mt-6 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full bg-[#5cb85c] hover:bg-[#449d44] border border-[#4cae4c] text-white font-semibold py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 mt-2 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Creating account...</>

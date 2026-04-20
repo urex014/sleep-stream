@@ -83,158 +83,180 @@ export default function ReferralsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#337ab7] animate-spin" />
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-indigo-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-16 font-sans text-[#333333]">
+    <div className="max-w-6xl mx-auto space-y-8 pb-16 font-sans text-slate-800 selection:bg-indigo-500 selection:text-white animate-in fade-in duration-500">
 
-      {/* HEADER */}
-      <div className="border-b border-[#dddddd] pb-4 mb-6">
-        <h1 className="text-3xl font-bold text-[#222222]">Partner Program</h1>
-        <p className="text-[#666666] mt-1 text-sm">Invite friends and earn capital instantly.</p>
+      {/* --- HEADER --- */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-6 border-b border-slate-200">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">Partner Program</h1>
+          <p className="text-slate-500 mt-2 text-sm sm:text-base">Invite friends and earn capital instantly.</p>
+        </div>
       </div>
 
-      {/* 1. HERO JUMBOTRON PANEL */}
-      <div className="bg-[#f9f9f9] border border-[#dddddd] rounded shadow-sm p-8 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-        {/* Top colored border */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-[#337ab7]"></div>
+      {/* --- 1. HERO JUMBOTRON PANEL --- */}
+      <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-10 relative overflow-hidden group hover:shadow-md transition-shadow">
+        
+        {/* Subtle background glow */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50 rounded-full blur-3xl -z-10 -mr-20 -mt-20 transition-opacity opacity-50 group-hover:opacity-100"></div>
 
-        <div className="flex-1 text-center md:text-left">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-[#cccccc] text-[#337ab7] text-[11px] font-bold uppercase tracking-wider rounded mb-4">
+        <div className="flex-1 text-center md:text-left z-10 w-full">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-600 text-[11px] font-bold uppercase tracking-widest rounded-lg mb-5">
             <Gift className="w-3.5 h-3.5" /> Referral Link
           </div>
-          <h2 className="text-2xl font-bold text-[#222222] mb-2">
+          <h2 className="text-3xl font-bold text-slate-900 mb-3 tracking-tight">
             Share your unique link.
           </h2>
-          <p className="text-[#666666] text-sm mb-6 max-w-md mx-auto md:mx-0">
-            When your friends sign up and activate a task, you get paid <strong className="text-[#333333]">₦{stats.bonusPerReferral.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> instantly.
+          <p className="text-slate-500 text-base mb-8 max-w-md mx-auto md:mx-0 leading-relaxed">
+            When your friends sign up and activate a task, you get paid <strong className="text-slate-900 font-bold">₦{stats.bonusPerReferral.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong> instantly.
           </p>
 
-          {/* Classic Input Group */}
-          <div className="flex shadow-sm max-w-lg mx-auto md:mx-0">
-            <div className="flex-1 bg-white border border-[#cccccc] border-r-0 px-4 py-2.5 flex items-center rounded-l overflow-hidden">
-              <span className="text-[#555555] font-mono text-sm truncate w-full select-all">
+          {/* Modern Input Group */}
+          <div className="flex items-center w-full max-w-lg mx-auto md:mx-0 bg-slate-50 border-2 border-slate-200 rounded-2xl overflow-hidden focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/10 transition-all">
+            <div className="flex-1 px-5 py-4 overflow-hidden">
+              <span className="text-slate-600 font-mono text-sm truncate block select-all">
                 {referralLink || "Generating link..."}
               </span>
             </div>
             <button
               onClick={handleCopy}
-              className={`font-bold px-6 py-2.5 rounded-r border flex items-center justify-center gap-2 transition-colors shrink-0
+              className={`h-full px-6 py-4 font-semibold text-sm flex items-center justify-center gap-2 transition-all shrink-0 border-l-2 border-slate-200
                 ${copied
-                  ? 'bg-[#5cb85c] border-[#4cae4c] text-white'
-                  : 'bg-[#337ab7] hover:bg-[#286090] border-[#2e6da4] text-white'
+                  ? 'bg-emerald-500 text-white border-l-emerald-500'
+                  : 'bg-white hover:bg-indigo-50 text-indigo-600 hover:text-indigo-700 active:bg-indigo-100'
                 }`}
             >
               {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              {copied ? "Copied!" : "Copy"}
+              {copied ? "Copied!" : "Copy Link"}
             </button>
           </div>
         </div>
 
-        {/* Right Visual (Hidden on mobile) */}
-        <div className="hidden md:flex flex-col items-center justify-center p-6 bg-white border border-[#dddddd] rounded shadow-sm text-center min-w-[200px]">
-          <p className="text-[#777777] text-xs font-bold uppercase tracking-wider mb-2">Your Reward</p>
-          <div className="text-3xl font-bold text-[#5cb85c]">
-            ₦{stats.bonusPerReferral.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        {/* Right Visual Badge */}
+        <div className="hidden md:flex flex-col items-center justify-center p-8 bg-slate-50/80 border border-slate-200 rounded-3xl text-center min-w-[220px] shrink-0">
+          <div className="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center mb-4">
+            <Gift className="w-6 h-6" />
           </div>
-          <p className="text-[10px] text-[#999999] uppercase font-bold mt-2">Per active user</p>
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Your Reward</p>
+          <div className="text-3xl font-bold text-emerald-600 tracking-tight">
+            ₦{stats.bonusPerReferral.toLocaleString(undefined, { minimumFractionDigits: 0 })}
+          </div>
+          <p className="text-[11px] text-slate-500 font-medium uppercase mt-2 bg-white px-2 py-1 rounded-md border border-slate-200">Per active user</p>
         </div>
       </div>
 
-      {/* 2. STATS & ACTION GRID */}
+      {/* --- 2. STATS & ACTION GRID --- */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        {/* Earnings Card */}
-        <div className="md:col-span-2 bg-white border border-[#dddddd] rounded shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="text-center sm:text-left">
-            <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
-              <Wallet className="w-4 h-4 text-[#337ab7]" />
-              <p className="font-bold text-[#777777] uppercase tracking-wider text-xs">Available Earnings</p>
+        {/* Premium Earnings Card */}
+        <div className="md:col-span-2 bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 rounded-3xl shadow-lg p-8 md:p-10 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden text-white">
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
+          
+          <div className="text-center sm:text-left z-10">
+            <div className="flex items-center justify-center sm:justify-start gap-2.5 mb-3">
+              <div className="p-2 bg-white/10 rounded-xl backdrop-blur-sm">
+                <Wallet className="w-4 h-4 text-indigo-200" />
+              </div>
+              <p className="font-semibold text-slate-300 uppercase tracking-wider text-xs">Available Earnings</p>
             </div>
-            <div className="text-4xl font-bold text-[#222222]">
+            <div className="text-4xl md:text-5xl font-bold tracking-tight">
               ₦{stats.totalEarned.toLocaleString(undefined, { minimumFractionDigits: 2 })}
             </div>
           </div>
 
-          <div className="w-full sm:w-auto bg-[#f9f9f9] border border-[#eeeeee] p-4 rounded text-center sm:text-left shrink-0">
-            <p className="text-xs text-[#666666] font-bold mb-3">Ready to cash out?</p>
+          <div className="w-full sm:w-auto bg-white/10 backdrop-blur-md border border-white/10 p-5 rounded-2xl text-center sm:text-left shrink-0 z-10">
+            <p className="text-xs text-indigo-100 font-medium mb-3">Ready to cash out?</p>
             <button
               onClick={() => router.push('/dashboard/wallet')}
-              className="w-full sm:w-auto bg-white border border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6] font-bold px-4 py-2 rounded text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
+              className="w-full sm:w-auto bg-white text-indigo-900 hover:bg-indigo-50 font-semibold px-6 py-3 rounded-xl text-sm transition-colors flex items-center justify-center gap-2 shadow-sm"
             >
-              Withdraw Funds <ArrowRight className="w-4 h-4 text-[#777777]" />
+              Withdraw Funds <ArrowRight className="w-4 h-4 text-indigo-600" />
             </button>
           </div>
         </div>
 
         {/* Network Stats Card */}
-        <div className="bg-white border border-[#dddddd] rounded shadow-sm p-6 flex flex-col justify-center text-center sm:text-left">
-          <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
-            <Users className="w-4 h-4 text-[#337ab7]" />
-            <p className="font-bold text-[#777777] uppercase tracking-wider text-xs">Total Network</p>
+        <div className="bg-white border border-slate-200 rounded-3xl shadow-sm p-8 flex flex-col justify-center text-center sm:text-left hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-center sm:justify-start gap-2.5 mb-4">
+            <div className="p-2 bg-indigo-50 rounded-xl">
+              <Users className="w-5 h-5 text-indigo-600" />
+            </div>
+            <p className="font-semibold text-slate-500 uppercase tracking-wider text-xs">Total Network</p>
           </div>
-          <div className="flex items-baseline justify-center sm:justify-start gap-1">
-            <span className="text-4xl font-bold text-[#222222]">{stats.totalInvites}</span>
-            <span className="text-[#999999] text-xs font-bold uppercase">clicks</span>
+          <div className="flex items-baseline justify-center sm:justify-start gap-1.5">
+            <span className="text-4xl font-bold text-slate-900 tracking-tight">{stats.totalInvites}</span>
+            <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">clicks</span>
           </div>
-          <p className="text-xs text-[#5cb85c] font-bold mt-3 flex items-center justify-center sm:justify-start gap-1">
-            <TrendingUp className="w-3.5 h-3.5" /> {stats.activeReferrals} Active Conversions
-          </p>
+          
+          <div className="mt-5 pt-5 border-t border-slate-100">
+            <p className="text-xs text-emerald-600 font-semibold flex items-center justify-center sm:justify-start gap-1.5 bg-emerald-50 w-fit sm:mx-0 mx-auto px-3 py-1.5 rounded-lg">
+              <TrendingUp className="w-3.5 h-3.5" /> {stats.activeReferrals} Active Conversions
+            </p>
+          </div>
         </div>
 
       </div>
 
-      {/* 3. RECENT REFERRALS LIST (Classic Bootstrap Table) */}
-      <div className="bg-white border border-[#dddddd] rounded shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-[#dddddd] bg-[#f5f5f5] flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-[#777777]" />
-            <h3 className="font-bold text-[#333333] text-base">Network History</h3>
+      {/* --- 3. RECENT REFERRALS TABLE --- */}
+      <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-slate-50 rounded-xl">
+              <Users className="w-5 h-5 text-slate-500" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-lg tracking-tight">Network History</h3>
           </div>
-          <span className="text-[11px] font-bold bg-white border border-[#cccccc] text-[#666666] px-2 py-1 rounded">
+          <span className="text-[11px] font-bold bg-slate-100 text-slate-500 px-3 py-1.5 rounded-lg">
             {referralHistory.length} Records
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse min-w-[500px]">
-            <thead className="bg-[#f9f9f9] text-[#777777] text-xs uppercase font-bold border-b border-[#dddddd]">
+            <thead className="bg-slate-50/50 text-slate-500 text-xs uppercase font-bold tracking-wider border-b border-slate-100">
               <tr>
-                <th className="px-6 py-3 whitespace-nowrap">User</th>
-                <th className="px-6 py-3 whitespace-nowrap">Date Joined</th>
-                <th className="px-6 py-3 whitespace-nowrap">Status</th>
-                <th className="px-6 py-3 text-right whitespace-nowrap">Commission</th>
+                <th className="px-6 py-4 whitespace-nowrap">User</th>
+                <th className="px-6 py-4 whitespace-nowrap">Date Joined</th>
+                <th className="px-6 py-4 whitespace-nowrap">Status</th>
+                <th className="px-6 py-4 text-right whitespace-nowrap">Commission</th>
               </tr>
             </thead>
-            <tbody className="text-sm text-[#333333]">
+            <tbody className="text-sm text-slate-700">
               {referralHistory.map((ref) => (
-                <tr key={ref.id} className="border-b border-[#eeeeee] hover:bg-[#f9f9f9] transition-colors">
-                  <td className="px-6 py-4 font-bold text-[#222222] whitespace-nowrap">
+                <tr key={ref.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors group">
+                  <td className="px-6 py-4 font-bold text-slate-900 whitespace-nowrap">
                     {ref.name}
                   </td>
-                  <td className="px-6 py-4 text-[#666666] whitespace-nowrap">
+                  <td className="px-6 py-4 text-slate-500 font-medium whitespace-nowrap">
                     {ref.date}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-block px-2 py-1 rounded text-[11px] font-bold text-white
-                      ${ref.status === 'Active' ? 'bg-[#5cb85c]' : 'bg-[#999999]'}`}
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide
+                      ${ref.status === 'Active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}
                     >
                       {ref.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right font-bold text-[#3c763d] text-base whitespace-nowrap">
+                  <td className="px-6 py-4 text-right font-bold text-emerald-600 text-base whitespace-nowrap">
                     {ref.reward > 0 ? `+₦${ref.reward.toLocaleString(undefined, { minimumFractionDigits: 2 })}` : '—'}
                   </td>
                 </tr>
               ))}
               {referralHistory.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-[#999999] bg-[#f9f9f9]">
-                    No referrals yet. Share your link to start building your network!
+                  <td colSpan={4} className="px-6 py-16 text-center text-slate-400 font-medium bg-white">
+                    <div className="flex flex-col items-center justify-center gap-3">
+                      <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mb-1">
+                        <Users className="w-6 h-6 text-slate-300" />
+                      </div>
+                      No referrals yet. Share your link to start building your network!
+                    </div>
                   </td>
                 </tr>
               )}

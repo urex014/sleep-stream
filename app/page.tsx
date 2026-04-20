@@ -206,7 +206,7 @@ export default function LandingPage() {
             Create Your Free Account <ArrowRight className="w-5 h-5" />
           </button>
           <p className="text-sm text-[#7a8b9c] mt-6 flex items-center justify-center gap-2 font-medium">
-            <CheckCircle2 className="w-4 h-4 text-[#5cb85c]" /> Payouts processed every Wed, Sat & Sun
+            <CheckCircle2 className="w-4 h-4 text-[#5cb85c]" /> Payouts processed every Weekend
           </p>
         </div>
       </section>

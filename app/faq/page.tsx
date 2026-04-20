@@ -144,11 +144,12 @@ export default function FAQPage() {
             <Send className="w-4 h-4 text-[#337ab7]" /> Telegram Support
           </button>
           </Link>
-          {/* <Link href="https://wa.me/" target="_blank">
+          
+          <Link href="mailto:sleepstreamngn@zohomail.com" target="_blank">
           <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-[#5cb85c] border border-[#4cae4c] text-white hover:bg-[#449d44] font-bold transition-colors shadow-sm text-sm">
-            <MessageCircle className="w-4 h-4" /> WhatsApp Support
+            <MessageCircle className="w-4 h-4" /> Email Support
           </button>
-          </Link> */}
+          </Link>
         </div>
       </div>
 
