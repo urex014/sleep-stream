@@ -210,20 +210,12 @@ export default function VendorsPage() {
               </div>
 
               {/* Conditional rendering to prevent click without email */}
-              {true ? (
-                <>
-                  <button
-                    type="button"
-                    disabled
-                    className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 cursor-not-allowed opacity-60"
-                    style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.3)' }}
-                  >
-                    <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()}
-                  </button>
-                  <p className="mt-3 text-center text-sm font-medium text-[#666666]">
-                    Scroll down and purchase codes manually for now.
-                  </p>
-                </>
+              {/* TODO: disable the button for now and add a message to scroll down and purchase codes manually. */}
+              {buyerEmail && buyerEmail.includes('@') ? (
+                <PaystackButton
+                  {...paystackProps}
+                  className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px] [text-shadow:0_-1px_0_rgba(0,0,0,0.3)]"
+                />
               ) : (
                 <button
                   type="button"
