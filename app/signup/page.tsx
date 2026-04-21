@@ -276,7 +276,13 @@ function SignupForm() {
                   <>Validate & Create Account <ArrowRight className="w-4 h-4" /></>
                 )}
               </button>
+              
             </form>
+            <Link href="https://t.me/void0145">
+                            <button className="mt-6 inline-flex items-center justify-center rounded border border-[#bcdff1] bg-gradient-to-b from-[#f4fbff] to-[#e6f4fb] px-4 py-2 text-sm font-bold text-[#337ab7] shadow-sm transition-all hover:border-[#8ec7e6] hover:from-[#eef8fe] hover:to-[#dff0f8] hover:text-[#23527c]">
+                              click here for issues with activation code
+                            </button>
+                          </Link>
           </div>
 
           <div className="text-center pt-6">

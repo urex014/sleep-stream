@@ -167,6 +167,12 @@ export default function VendorsPage() {
                   {copied ? <CheckCircle2 className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
                 </button>
               </div>
+              <p className="text-md text-[#555555] font-medium mb-4">Your code has been emailed to <span className="font-bold">{buyerEmail}</span>. Please check your inbox (and spam folder) for details.</p>
+              <Link href="https://t.me/void0145">
+                <button className="inline-flex items-center justify-center rounded border border-[#bcdff1] bg-gradient-to-b from-[#f4fbff] to-[#e6f4fb] px-4 py-2 text-sm font-bold text-[#337ab7] shadow-sm transition-all hover:border-[#8ec7e6] hover:from-[#eef8fe] hover:to-[#dff0f8] hover:text-[#23527c]">
+                  click here for issues with activation code
+                </button>
+              </Link>
               <p className="text-sm text-[#555555] font-medium">
                 Copy this code and return to the <Link href="/signup" className="text-[#337ab7] hover:underline font-bold">Signup Page</Link> to activate your account.
               </p>
@@ -216,7 +222,7 @@ export default function VendorsPage() {
                   className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px]"
                   style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.3)' }}
                 >
-                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} Automatically
+                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} 
                 </button>
               )}
             </div>

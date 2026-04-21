@@ -36,6 +36,7 @@ export async function sendPurchaseEmail(userEmail: string, generatedCode: string
       subject: 'Your Sleepstream Code is Here! 🚀',
       html: htmlTemplate,
     });
+    console.log("email sent successfully to", userEmail);
 
     return { success: true };
   } catch (error) {
