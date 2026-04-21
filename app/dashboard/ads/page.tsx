@@ -35,7 +35,7 @@ export default function AdsManagerPage() {
   // --- HARDCODED TIER MATH ---
   const getRewardForTier = (tier: number) => {
     switch (tier) {
-      case 1: return 40.0; 
+      case 1: return 37.5; 
       case 2: return 93.75; 
       case 3: return 187.5;
       case 4: return 300.0;
@@ -185,6 +185,7 @@ export default function AdsManagerPage() {
         >
           <Plus className="w-5 h-5" /> Post Ads
         </button>
+        <p className="text-red-500 mt-2 text-sm font-bold sm:text-base">Click on PTC links to view ads</p>
       </div>
 
       {/* --- STATUS PANEL --- */}
