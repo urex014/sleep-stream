@@ -63,7 +63,7 @@ export async function POST(req: Request) {
 
     // --- 4. FIRE THE BACKUP EMAIL 🚀 ---
     // Notice there is no 'await' here. The email sends in the background!
-    sendPurchaseEmail(email, availableCode.code, "Sleepstream Access Code");
+    await sendPurchaseEmail(email, availableCode.code, "Sleepstream Access Code");
 
     // --- 5. SEND SUCCESS TO USER ---
     return NextResponse.json({

@@ -3,14 +3,14 @@ import nodemailer from 'nodemailer';
 export async function sendPurchaseEmail(userEmail: string, generatedCode: string, itemName: string = "Your Access Code") {
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+          host: process.env.SMTP_HOST, 
+          port: Number(process.env.SMTP_PORT),
+          secure:true,
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        });
 
     // A beautiful, professional HTML template for the digital receipt
     const htmlTemplate = `
