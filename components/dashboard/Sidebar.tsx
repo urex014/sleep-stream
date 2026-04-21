@@ -21,7 +21,7 @@ const navItems = [
   { label: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
   { label: 'Upgrade Tier', href: '/dashboard/upgrade', icon: Upload },
   { label: 'Referrals', href: '/dashboard/referrals', icon: Users },
-  { label: 'FAQ', href: '/dashboard/faq', icon: CircleHelp },
+  { label: 'FAQ/Support', href: '/dashboard/faq', icon: CircleHelp },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ];
 
