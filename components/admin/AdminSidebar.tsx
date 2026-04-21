@@ -26,6 +26,7 @@ const navItems = [
   { label: 'Push Notifications', href: '/admin/notifications', icon: Bell },
   { label:"post ads", href:"/admin/ads", icon: PlaySquare },
   {label:"purchased-codes", href:"/admin/purchased-codes", icon: Code2},
+  {label:"users", href:"/admin/users", icon: Users},
   {label:'Manage Ads', href: '/admin/ad-req', icon: ShieldAlert}
 ];
 
