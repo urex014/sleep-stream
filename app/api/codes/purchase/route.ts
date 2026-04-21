@@ -18,8 +18,8 @@ export async function POST(req: Request) {
       headers: {
         // ALWAYS use your Secret Key here, never your Public Key!
         Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`, 
-        'Cache-Control': 'no-cache',
       },
+      cache:'no-store'
     });
     
     const verifyData = await verifyRes.json();

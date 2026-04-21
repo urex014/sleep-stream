@@ -35,11 +35,11 @@ export default function AdsManagerPage() {
   // --- HARDCODED TIER MATH ---
   const getRewardForTier = (tier: number) => {
     switch (tier) {
-      case 1: return 37.5; 
-      case 2: return 87.5; 
-      case 3: return 150.0;
-      case 4: return 225.0;
-      case 5: return 300.0;
+      case 1: return 40.0; 
+      case 2: return 93.75; 
+      case 3: return 187.5;
+      case 4: return 300.0;
+      case 5: return 375.0;
       default: return 37.5;
     }
   };

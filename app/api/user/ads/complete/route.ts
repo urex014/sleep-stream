@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
@@ -93,10 +94,10 @@ export async function POST(req: Request) {
     let earnedAmount = 0;
     switch (user.tier) {
       case 1: earnedAmount = 37.5; break; // Starter (750 total)
-      case 2: earnedAmount = 87.5; break; // Pro (1750 total)
-      case 3: earnedAmount = 150.0; break; // Elite (3000 total)
-      case 4: earnedAmount = 225.0; break; // Master (4500 total)
-      case 5: earnedAmount = 300.0; break; // Grandmaster (6000 total)
+      case 2: earnedAmount = 93.75; break; // Pro (1875 total) ROI: 37500
+      case 3: earnedAmount = 187.5; break; // Elite (3750 total) ROI: 75000
+      case 4: earnedAmount = 300.0; break; // Master (6000 total) ROI: 120000
+      case 5: earnedAmount = 375.0; break; // Grandmaster (7500 total) ROI: 150000
       default: earnedAmount = 37.5; // Fallback
     }
 

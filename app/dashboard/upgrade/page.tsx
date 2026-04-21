@@ -21,10 +21,10 @@ export default function UpgradePage() {
 
   const TIERS = [
     { level: 1, name: 'Tier 1', price: 0, dailyEarn: 750, duration: 20 },
-    { level: 2, name: 'Tier 2', price: 25000, dailyEarn: 1750, duration: 20 },
-    { level: 3, name: 'Tier 3', price: 50000, dailyEarn: 3000, duration: 20 },
-    { level: 4, name: 'Tier 4', price: 80000, dailyEarn: 4500, duration: 20 },
-    { level: 5, name: 'Tier 5', price: 100000, dailyEarn: 6000, duration: 20 },
+    { level: 2, name: 'Tier 2', price: 25000, dailyEarn: 1875, duration: 20 },
+    { level: 3, name: 'Tier 3', price: 50000, dailyEarn: 3750, duration: 20 },
+    { level: 4, name: 'Tier 4', price: 80000, dailyEarn: 6000, duration: 20 },
+    { level: 5, name: 'Tier 5', price: 100000, dailyEarn: 7500, duration: 20 },
   ];
 
   useEffect(() => {
