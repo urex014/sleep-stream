@@ -226,12 +226,12 @@ export default function VendorsPage() {
         {/* Divider */}
         <div className="flex items-center gap-4 mb-10 max-w-2xl mx-auto">
           <div className="flex-1 border-t border-[#cccccc]"></div>
-          {/* <span className="text-[#999999] font-bold text-sm uppercase tracking-wider">OR BUY MANUALLY</span> */}
+          <span className="text-[#999999] font-bold text-sm uppercase tracking-wider">OR BUY MANUALLY</span>
           <div className="flex-1 border-t border-[#cccccc]"></div>
         </div>
 
         {/* --- MANUAL VENDORS SECTION --- */}
-        {/* <div className="mb-8 flex justify-between items-end">
+         <div className="mb-8 flex justify-between items-end">
           <h2 className="text-xl font-bold text-[#222222]">Manual Vendors</h2>
           <div className="relative w-64">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -245,7 +245,7 @@ export default function VendorsPage() {
               className="w-full pl-9 pr-4 py-2 bg-white border border-[#cccccc] rounded focus:border-[#66afe9] outline-none text-[#333333] text-sm shadow-[inset_0_1px_1px_rgba(0,0,0,0.075)]"
             />
           </div>
-        </div> */}
+        </div> 
 
         {/* LOADING STATE */}
         {isLoading ? (
@@ -255,7 +255,7 @@ export default function VendorsPage() {
         ) : (
           <>
             {/* VENDORS GRID */}
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {vendors.map((vendor) => (
                 <div
                   key={vendor._id || vendor.id}
@@ -313,7 +313,7 @@ export default function VendorsPage() {
 
                 </div>
               ))}
-            </div> */}
+            </div> 
 
             {vendors.length === 0 && (
               <div className="text-center py-16 bg-white border border-[#dddddd] rounded shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)]">
