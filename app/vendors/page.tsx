@@ -217,7 +217,7 @@ export default function VendorsPage() {
               </div>
 
               {/* Conditional rendering to prevent click without email */}
-              <div className="space-y-3 mt-4">
+              {/* <div className="space-y-3 mt-4">
                 <button
                   type="button"
                   disabled
@@ -228,7 +228,7 @@ export default function VendorsPage() {
                 <div className="bg-[#fcf8e3] border border-[#faebcc] text-[#8a6d3b] px-4 py-3 rounded text-sm text-center font-bold shadow-sm">
                   Card payments are temporarily paused. Please scroll down to purchase manually from a verified vendor below!
                 </div>
-              </div>
+              </div> */}
               {buyerEmail && buyerEmail.includes('@') ? (
                 <PaystackButton
                   {...paystackProps}
