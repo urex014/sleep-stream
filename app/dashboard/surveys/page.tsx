@@ -30,8 +30,8 @@ export default function SurveysPage() {
   return (
     <div className="space-y-4 h-[calc(100vh-100px)] flex flex-col">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Premium Surveys</h1>
-        <p className="text-slate-500 text-sm">Complete high-paying market research to earn rewards.</p>
+        <h1 className="text-2xl font-bold text-slate-900">Surveys</h1>
+        <p className="text-slate-500 text-sm">Complete paying market research to earn rewards.</p>
       </div>
 
       {/* Embed the CPX Survey Wall */}
