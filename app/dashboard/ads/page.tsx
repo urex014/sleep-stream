@@ -211,19 +211,6 @@ export default function AdsManagerPage() {
       {/* --- MODERN SEGMENTED TABS --- */}
       <div className="flex p-1.5 bg-slate-100/80 border border-slate-200 rounded-2xl w-full sm:w-fit mb-8">
         <button
-          onClick={() => setActiveTab('videos')}
-          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2.5 ${
-            activeTab === 'videos'
-              ? 'bg-white text-slate-900 shadow-sm'
-              : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
-          }`}
-        >
-          <PlaySquare className="w-4 h-4" /> Video Ads 
-          <span className={`px-2 py-0.5 rounded-md text-xs ${activeTab === 'videos' ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-200 text-slate-500'}`}>
-            {videoTasks.length}
-          </span>
-        </button>
-        <button
           onClick={() => setActiveTab('links')}
           className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2.5 ${
             activeTab === 'links'
@@ -231,9 +218,22 @@ export default function AdsManagerPage() {
               : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
           }`}
         >
-          <MousePointerClick className="w-4 h-4" /> PTC Links
+          <MousePointerClick className="w-4 h-4" /> PTC ads 
           <span className={`px-2 py-0.5 rounded-md text-xs ${activeTab === 'links' ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-200 text-slate-500'}`}>
             {linkTasks.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab('videos')}
+          className={`flex-1 sm:flex-none px-6 py-2.5 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2.5 ${
+            activeTab === 'videos'
+              ? 'bg-white text-slate-900 shadow-sm'
+              : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'
+          }`}
+        >
+          <PlaySquare className="w-4 h-4" /> Video ads
+          <span className={`px-2 py-0.5 rounded-md text-xs ${activeTab === 'videos' ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-200 text-slate-500'}`}>
+            {videoTasks.length}
           </span>
         </button>
       </div>

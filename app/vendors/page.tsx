@@ -210,10 +210,23 @@ export default function VendorsPage() {
               </div>
 
               {/* Conditional rendering to prevent click without email */}
-              {/* TODO: disable the button for now and add a message to scroll down and purchase codes manually. */}
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  disabled
+                  className="w-full bg-gradient-to-b from-[#93b993] via-[#84ab84] to-[#789d78] border border-[#6f926f] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_3px_5px_rgba(0,0,0,0.12)] flex items-center justify-center gap-2 cursor-not-allowed opacity-70"
+                  style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.25)' }}
+                >
+                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay â‚¦{CODE_PRICE.toLocaleString()}
+                </button>
+                <p className="text-sm text-[#666666] text-center font-medium">
+                  Scroll down to purchase codes manually for now.
+                </p>
+              </div>
               {buyerEmail && buyerEmail.includes('@') ? (
                 <PaystackButton
                   {...paystackProps}
+                
                   className="w-full bg-gradient-to-b from-[#5cb85c] via-[#4cae4c] to-[#419641] hover:from-[#47a447] hover:to-[#398439] border border-[#398439] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.4),0_3px_5px_rgba(0,0,0,0.15)] flex items-center justify-center gap-2 transition-all active:shadow-[inset_0_3px_5px_rgba(0,0,0,0.2)] active:translate-y-[1px] [text-shadow:0_-1px_0_rgba(0,0,0,0.3)]"
                 />
               ) : (

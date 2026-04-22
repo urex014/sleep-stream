@@ -77,7 +77,7 @@ function ResetPasswordForm() {
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder=".........."
               className="w-full px-4 pr-12 text-slate-800 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
               required
             />
@@ -98,7 +98,7 @@ function ResetPasswordForm() {
               type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder=".........."
               className="w-full text-slate-800 px-4 pr-12 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
               required
             />
@@ -115,7 +115,7 @@ function ResetPasswordForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 mt-4 disabled:opacity-70"
+          className="w-full bg-blue-300 hover:bg-blue-300 text-white font-bold py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 mt-4 disabled:opacity-70"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Password"}
         </button>

@@ -4,74 +4,104 @@ import User from '@/models/User';
 import Transaction from '@/models/Transaction';
 import crypto from 'crypto';
 
-export async function POST(req: Request) {
+// CPX Research Postbacks are usually GET requests
+export async function GET(req: Request) {
   try {
     await connectDB();
     
-    // 1. Parse the incoming data from the Survey Provider
-    // Providers like BitLabs usually send this as a URL-encoded string or JSON
-    const body = await req.text();
-    const data = JSON.parse(body);
-
-    // Variables depend on the specific provider, but generally look like this:
-    const { uid, val, tx_id, status } = data; 
-    // uid = Your user's _id
-    // val = The amount they earned (Payout)
-    // tx_id = The unique transaction ID from the survey company
-    // status = 'COMPLETE' (or similar)
-
-    // --- SECURITY CHECK 1: IS IT ACTUALLY FROM THE PROVIDER? ---
-    // Hackers will try to find this URL and send fake "success" messages.
-    // Providers always send a "Signature" in the headers to prove it's really them.
-    const signature = req.headers.get('X-Provider-Signature');
+    // 1. Grab the data from the CPX URL parameters
+    const { searchParams } = new URL(req.url);
     
-    // You recreate the hash using your Secret Key (provided by the survey network)
-    const expectedSignature = crypto
-      .createHmac('sha1', process.env.SURVEY_SECRET_KEY || '')
-      .update(body)
+    const status = searchParams.get('status');
+    const trans_id = searchParams.get('trans_id'); // CPX's unique transaction ID
+    const ext_user_id = searchParams.get('ext_user_id'); // This is your user's database _id
+    const amount_local = searchParams.get('amount_local'); // The payout in Naira
+    const hash = searchParams.get('hash'); // The security hash CPX sends
+
+    if (!trans_id || !ext_user_id || !amount_local || !hash) {
+      return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    }
+
+    // --- SECURITY CHECK: VERIFY IT IS ACTUALLY CPX ---
+    // CPX creates their hash by combining the trans_id and your secret hash using MD5
+    const secureHash = process.env.CPX_SECURE_HASH || '';
+    const expectedHash = crypto
+      .createHash('md5')
+      .update(`${trans_id}-${secureHash}`)
       .digest('hex');
 
-    if (signature !== expectedSignature) {
-      console.error("ALERT: Fake webhook attempt blocked!");
+    // If the hashes don't match, a hacker is trying to fake a survey completion!
+    if (hash !== expectedHash) {
+      console.error("ALERT: Fake CPX webhook blocked!");
       return NextResponse.json({ error: "Invalid signature" }, { status: 403 });
     }
 
-    // --- SECURITY CHECK 2: PREVENT DOUBLE CREDITING ---
-    // Check if you already processed this exact survey tx_id
-    const existingTx = await Transaction.findOne({ txHash: tx_id });
-    if (existingTx) {
-      return NextResponse.json({ message: "Already processed" }, { status: 200 });
-    }
+    // --- HANDLE THE MONEY (SUCCESS OR REVERSAL) ---
+    const user = await User.findById(ext_user_id);
+    if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    // --- CREDIT THE USER ---
-    if (status === 'COMPLETE') {
-      const user = await User.findById(uid);
-      if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
+    const earnedAmount = parseFloat(amount_local);
+    const existingTx = await Transaction.findOne({ txHash: trans_id });
 
-      const earnedAmount = parseFloat(val); // The amount in Naira
+    if (status === '1') {
+      // 🟢 STATUS 1: SUCCESSFUL COMPLETION
+      
+      // Prevent Double Crediting: Check if we already paid them for this
+      if (existingTx) {
+        return NextResponse.json({ message: "Already processed" }, { status: 200 }); 
+      }
 
       // Update their wallet
       user.adsBalance = (user.adsBalance || 0) + earnedAmount;
       await user.save();
 
-      // Log it in your transaction history
+      // Log it securely
       await Transaction.create({
         userId: user._id,
         type: 'Earning',
-        wallet: 'Ads', // Keep it in the Ads wallet
-        method: 'Survey Completed',
+        wallet: 'Ads', 
+        method: 'CPX Survey Completed',
         amount: earnedAmount,
         status: 'Success',
-        txHash: tx_id // Save their transaction ID to prevent double-spending
+        txHash: trans_id
       });
+
+    } else if (status === '2') {
+      // 🔴 STATUS 2: CHARGEBACK / REVERSAL (The user cheated or got rejected)
+      
+      // Check if we already reversed it so we don't deduct twice
+      if (existingTx && existingTx.status === 'Reversed') {
+        return NextResponse.json({ message: "Already reversed" }, { status: 200 });
+      }
+
+      // Deduct the money from their wallet safely
+      // Math.max(0, ...) ensures we never give the user a negative balance
+      user.adsBalance = Math.max(0, (user.adsBalance || 0) - earnedAmount);
+      await user.save();
+
+      // Update the transaction log to show it was reversed
+      if (existingTx) {
+        existingTx.status = 'Reversed';
+        await existingTx.save();
+      } else {
+        // If we somehow didn't have the original transaction, log the deduction anyway
+        await Transaction.create({
+          userId: user._id,
+          type: 'Deduction',
+          wallet: 'Ads', 
+          method: 'CPX Survey Chargeback',
+          amount: earnedAmount,
+          status: 'Reversed',
+          txHash: trans_id
+        });
+      }
     }
 
-    // 4. ALWAYS return a 200 OK so the provider knows you received it
+    // ALWAYS return a 200 OK so CPX knows the money was delivered/reversed
     return NextResponse.json({ status: "OK" }, { status: 200 });
 
   } catch (error) {
-    console.error("Survey Webhook Error:", error);
-    // Even on error, return 200 so the provider tries again later if needed
-    return NextResponse.json({ status: "Error processing" }, { status: 200 }); 
+    console.error("CPX Webhook Error:", error);
+    return NextResponse.json({ status: "Error processing" }, { status: 500 }); 
   }
 }
