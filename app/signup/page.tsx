@@ -52,6 +52,18 @@ function SignupForm() {
   ];
 
   useEffect(() => {
+    // Next.js safety check to ensure we are in the browser
+    if (typeof window !== 'undefined') {
+      const savedCode = localStorage.getItem('sleepstream_activation_code');
+      
+      // If a code exists, automatically put it in the input box!
+      if (savedCode) {
+        setFormData(prev => ({ ...prev, accessCode: savedCode }));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
     const timer = setInterval(() => setCurrentSlide((prev) => (prev + 1) % slides.length), 5000);
     return () => clearInterval(timer);
   }, [slides.length]);

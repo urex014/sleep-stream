@@ -229,7 +229,7 @@ export default function VendorsPage() {
                   Card payments are temporarily paused. Please scroll down to purchase manually from a verified vendor below!
                 </div>
               </div>
-              {/* {buyerEmail && buyerEmail.includes('@') ? (
+              {buyerEmail && buyerEmail.includes('@') ? (
                 <PaystackButton
                   {...paystackProps}
                 
@@ -244,7 +244,7 @@ export default function VendorsPage() {
                 >
                   <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} 
                 </button>
-              )} */}
+              )}
             </div>
           )}
         </div>
