@@ -10,7 +10,8 @@ import {
   ArrowRight,
   TrendingUp,
   Gift,
-  Bell
+  Bell,
+  HelpCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -45,6 +46,7 @@ export default function DashboardPage() {
         
         if (userDataRes.success) {
           setUserData(userDataRes.user);
+          // console.log("user data:",userDataRes.user);
         } else {
           console.error("Dashboard Error:", userDataRes.message);
         }
@@ -77,6 +79,8 @@ export default function DashboardPage() {
     
     return () => clearInterval(timer);
   }, [notifications]);
+
+
 
   if (isLoading) {
     return (
@@ -168,8 +172,16 @@ export default function DashboardPage() {
             onClick={() => router.push('/dashboard/wallet')}
             className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cccccc] rounded-xl text-sm font-bold text-[#333333] hover:bg-[#f5f5f5] active:bg-[#ebebeb] transition-all shadow-sm hover:shadow"
           >
-            <Wallet className="w-4 h-4 text-[#f0ad4e]" /> Withdraw Funds
+            <Wallet className="w-4 h-4 text-red-300" /> Withdraw Funds
           </button>
+
+          <button
+            onClick={() => router.push('/dashboard/surveys')}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cccccc] rounded-xl text-sm font-bold text-[#333333] hover:bg-[#f5f5f5] active:bg-[#ebebeb] transition-all shadow-sm hover:shadow"
+          >
+            <HelpCircle className="w-4 h-4 text-[#f0ad4e]" /> Take Surveys
+          </button>
+          
         </div>
 
         {/* --- DUAL WALLET OVERVIEW --- */}
@@ -179,7 +191,7 @@ export default function DashboardPage() {
           <div className="bg-white border border-[#dddddd]/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col h-full overflow-hidden">
             <div className="p-5 border-b border-[#dddddd]/60 bg-[#fbfbfb] flex justify-between items-center">
               <h3 className="font-bold text-[#333333] flex items-center gap-2">
-                <PlaySquare className="w-4 h-4 text-[#337ab7]" /> Ads Balance
+                <PlaySquare className="w-4 h-4 text-[#337ab7]" /> Ads & surveys Balance
               </h3>
               <span className="text-[11px] font-bold text-[#777777] uppercase tracking-wider bg-white px-2 py-1 rounded border border-[#dddddd]/60">Tasks & Clicks</span>
             </div>
@@ -273,6 +285,14 @@ export default function DashboardPage() {
               </div>
               <div className="text-2xl font-bold text-[#222222]">{userData.activeReferrals}</div>
               <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Active Referrals</div>
+            </div>
+
+            <div className="p-6 text-center hover:bg-[#fcfcfc] transition-colors">
+              <div className="w-12 h-12 rounded-full bg-[#5cb85c]/10 flex items-center justify-center mx-auto mb-3">
+                <HelpCircle className="w-6 h-6 text-red-300]" />
+              </div>
+              <div className="text-2xl font-bold text-[#222222]">{userData.surveysCompleted}</div>
+              <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Surveys Completed</div>
             </div>
           </div>
 

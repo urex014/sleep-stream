@@ -27,6 +27,7 @@ const UserSchema = new Schema({
   lastTaskDate: { type: Date, default: null },
   completedAds: { type: [String], default: [] },
   lastAdReset: { type: Date, default: Date.now },
+  surverysCompleted: { type: Number, default: 0 },
 
   // --- Referral System ---
   referralCode: { type: String, unique: true },

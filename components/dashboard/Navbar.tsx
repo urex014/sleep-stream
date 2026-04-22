@@ -32,6 +32,7 @@ export default function Navbar() {
   const navItems = [
     { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
     { label: 'Watch Ads', href: '/dashboard/ads', icon: PlayCircleIcon },
+    {label: 'Surveys/Offers', href: '/dashboard/surveys', icon: CircleHelp},
     { label: 'Wallet', href: '/dashboard/wallet', icon: Wallet },
     { label: 'Upgrade Tier', href: '/dashboard/upgrade', icon: Upload },
     { label: 'Referrals', href: '/dashboard/referrals', icon: Users },

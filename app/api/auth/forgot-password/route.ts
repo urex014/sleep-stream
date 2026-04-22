@@ -56,7 +56,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, message: "Reset link sent to your email." });
 
   } catch (error) {
-    console.log("there was an error")
+    // console.log("there was an error")
     console.error("SMTP ERROR DETAILS:", error); 
     return NextResponse.json({ success: false, message: "Server error" }, { status: 500 });
   }

@@ -72,6 +72,7 @@ export async function GET(req: Request) {
         adsWatchedToday: user.dailyAdsWatched || 0,
         linksClickedToday: user.dailyLinksClicked || 0,
         activeReferrals: activeReferrals,
+        surveysCompleted: user.surveysCompleted || 0,
         hasClaimedBonus: (user.adsBalance || 0) >= 2000
       }
     });

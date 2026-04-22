@@ -50,7 +50,7 @@ export default function AdsManagerPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log("1. Starting data fetch...");
+        
         
         // Fetch User Auth
         const dashRes = await fetch('/api/user/dashboard', { cache: 'no-store' });
@@ -67,15 +67,15 @@ export default function AdsManagerPage() {
         }
 
         // Fetch Ads
-        console.log("2. Fetching Ads from API...");
+        
         const tasksRes = await fetch('/api/user/ads', { cache: 'no-store' });
         const tasksData = await tasksRes.json();
         
-        console.log("3. RAW API RESPONSE:", tasksData); 
+        
 
         if (tasksData.success) {
           const adArray = tasksData.tasks || tasksData.ads || tasksData.data || tasksData.activeAds || [];
-          console.log("4. EXTRACTED AD ARRAY:", adArray);
+          
           setTasks(adArray);
         } else {
           console.error("API returned false success:", tasksData);
