@@ -61,6 +61,13 @@ export default function VendorsPage() {
 
       if (data.success) {
         setPurchasedCode(data.code);
+        
+        // --- NEW: SAVE CODE TO BROWSER FOR AUTO-FILL ---
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('sleepstream_activation_code', data.code);
+        }
+        // -----------------------------------------------
+        
       } else {
         setPurchaseError(data.message || 'Failed to retrieve code.');
       }
@@ -210,20 +217,19 @@ export default function VendorsPage() {
               </div>
 
               {/* Conditional rendering to prevent click without email */}
-              <div className="space-y-2">
+              <div className="space-y-3 mt-4">
                 <button
                   type="button"
                   disabled
-                  className="w-full bg-gradient-to-b from-[#93b993] via-[#84ab84] to-[#789d78] border border-[#6f926f] text-white font-bold text-base py-3 rounded shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_3px_5px_rgba(0,0,0,0.12)] flex items-center justify-center gap-2 cursor-not-allowed opacity-70"
-                  style={{ textShadow: '0 -1px 0 rgba(0,0,0,0.25)' }}
+                  className="w-full bg-[#eeeeee] border border-[#cccccc] text-[#999999] font-bold text-base py-3 rounded shadow-inner flex items-center justify-center gap-2 cursor-not-allowed"
                 >
-                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay â‚¦{CODE_PRICE.toLocaleString()}
+                  <CreditCard className="w-5 h-5 drop-shadow-sm" /> Auto-Purchase Currently Disabled
                 </button>
-                <p className="text-sm text-[#666666] text-center font-medium">
-                  Scroll down to purchase codes manually for now.
-                </p>
+                <div className="bg-[#fcf8e3] border border-[#faebcc] text-[#8a6d3b] px-4 py-3 rounded text-sm text-center font-bold shadow-sm">
+                  Card payments are temporarily paused. Please scroll down to purchase manually from a verified vendor below!
+                </div>
               </div>
-              {buyerEmail && buyerEmail.includes('@') ? (
+              {/* {buyerEmail && buyerEmail.includes('@') ? (
                 <PaystackButton
                   {...paystackProps}
                 
@@ -238,7 +244,7 @@ export default function VendorsPage() {
                 >
                   <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} 
                 </button>
-              )}
+              )} */}
             </div>
           )}
         </div>
