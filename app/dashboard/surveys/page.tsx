@@ -26,7 +26,7 @@ export default function SurveysPage() {
   // We swapped the BitLabs URL for the CPX URL.
   // Notice it now uses NEXT_PUBLIC_CPX_APP_ID and ext_user_id!
   // const OFFERWALL_URL = `https://offers.cpx-research.com/index.php?app_id=${process.env.NEXT_PUBLIC_CPX_APP_ID}&ext_user_id=${userId}`;
-  const OFFERWALL_URL=`https://offers.cpx-research.com/index.php?app_id=32617&ext_user_id=${userId}&secure_hash=${process.env.CPX_SECURE_HASH}`
+  const OFFERWALL_URL=`https://offers.cpx-research.com/index.php?app_id=32617&ext_user_id=${userId}`
 
   return (
     <div className="space-y-4 h-[calc(100vh-100px)] flex flex-col">
