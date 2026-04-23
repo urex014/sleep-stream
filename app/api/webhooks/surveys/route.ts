@@ -53,7 +53,9 @@ export async function GET(req: Request) {
 
       // Update their wallet
       user.adsBalance = (user.adsBalance || 0) + earnedAmount;
+      user.surveysCompleted = (user.surveysCompleted || 0) + 1; 
       await user.save();
+      
 
       // Log it securely
       await Transaction.create({
