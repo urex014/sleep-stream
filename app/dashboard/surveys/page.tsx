@@ -33,6 +33,7 @@ export default function SurveysPage() {
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Surveys</h1>
         <p className="text-slate-500 text-sm">Complete paying market research to earn rewards.</p>
+        <p className="text-red-500 text-sm font-bold">Turn off Ad Blocker Extensions to earn from surveys. </p>
       </div>
 
       {/* Embed the CPX Survey Wall */}
