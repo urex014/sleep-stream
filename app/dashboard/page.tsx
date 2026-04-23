@@ -144,7 +144,7 @@ export default function DashboardPage() {
         </div>
 
         {/* --- WELCOME BONUS ALERT --- */}
-        {userData.hasClaimedBonus && (
+        {/* {userData.hasClaimedBonus && (
           <div className="bg-[#dff0d8]/80 border border-[#d6e9c6] text-[#3c763d] px-5 py-4 rounded-xl shadow-sm flex items-start gap-3">
             <Gift className="w-5 h-5 shrink-0 mt-0.5" />
             <div>
@@ -152,7 +152,7 @@ export default function DashboardPage() {
               <p className="text-sm opacity-90">Your default balance has been credited. Complete daily ad tasks to reach the ₦20,000 withdrawal limit.</p>
             </div>
           </div>
-        )}
+        )} */}
 
         {/* --- QUICK ACTIONS --- */}
         <div className="flex flex-wrap gap-3 pb-2">
