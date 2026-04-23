@@ -60,9 +60,9 @@ function ResetPasswordForm() {
   };
 
   return (
-    <div className="p-8">
-      <div className="text-center mb-8">
-        <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="p-8 bg-transparent border">
+      <div className="text-center mb-8 ">
+        <div className="w-16 h-16 bg-white text-[#5cb85c] rounded-full flex items-center justify-center mx-auto mb-4">
           <KeyRound className="w-8 h-8" />
         </div>
         <h2 className="text-2xl font-bold text-slate-900">Set New Password</h2>
@@ -78,7 +78,7 @@ function ResetPasswordForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder=".........."
-              className="w-full px-4 pr-12 text-slate-800 py-3 rounded-xl border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+              className="w-full px-4 pr-12 text-slate-800 py-3 rounded-xl border-2 border-slate-200 focus:border-[#5cb85c] focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
               required
             />
             <button
@@ -115,7 +115,7 @@ function ResetPasswordForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-blue-300 hover:bg-blue-300 text-white font-bold py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 mt-4 disabled:opacity-70"
+          className="w-full bg-[#5cb85c] hover:bg-blue-300 text-white font-bold py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 mt-4 disabled:opacity-70"
         >
           {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Save Password"}
         </button>
@@ -128,7 +128,7 @@ function ResetPasswordForm() {
 export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+      <div className="max-w-md w-full bg-transparent rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
         <Suspense fallback={<div className="p-12 text-center text-slate-500"><Loader2 className="w-8 h-8 animate-spin mx-auto" /></div>}>
           <ResetPasswordForm />
         </Suspense>

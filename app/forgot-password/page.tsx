@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="w-16 h-16 bg-indigo-50 text-[#5cb85c] rounded-full flex items-center justify-center mx-auto mb-4">
             <Mail className="w-8 h-8" />
           </div>
           <h2 className="text-2xl font-bold text-slate-900">Forgot Password?</h2>
@@ -68,7 +68,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 rounded-xl transition-all flex justify-center items-center gap-2 disabled:opacity-70"
+              className="w-full bg-[#5cb85c] hover:bg-[#449d44] border border-[#4cae4c] text-white font-semibold py-3 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 mt-2 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Reset Password"}
             </button>

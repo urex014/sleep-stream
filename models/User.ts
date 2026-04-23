@@ -37,6 +37,25 @@ const UserSchema = new Schema({
   forgotPasswordToken: { type: String },
   forgotPasswordTokenExpiry: { type: Date },
 
+  // --- DAILY STREAK SYSTEM ---
+lastCheckInDate: { 
+  type: Date, 
+  default: null 
+},
+currentStreak: { 
+  type: Number, 
+  default: 0 
+},
+
+// --- LOYALTY LOCK SYSTEM ---
+lockedBalances: [{
+  amount: { type: Number, required: true },
+  bonusAmount: { type: Number, required: true },
+  lockDate: { type: Date, default: Date.now },
+  unlockDate: { type: Date, required: true },
+  status: { type: String, enum: ['Active', 'Claimed'], default: 'Active' }
+}],
+
 }, { timestamps: true });
 
 const User = models.User || model('User', UserSchema);
