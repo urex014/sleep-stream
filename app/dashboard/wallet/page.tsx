@@ -249,7 +249,7 @@ export default function WalletPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                 <button
                   onClick={() => setActionType('crypto')}
-                  disabled
+                  
                   className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-indigo-500 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                 >
                   <div className="p-3 bg-slate-50 group-hover:bg-indigo-50 rounded-xl transition-colors">

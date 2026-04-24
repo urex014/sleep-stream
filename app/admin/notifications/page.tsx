@@ -1,16 +1,35 @@
 'use client';
 
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import React, { useEffect, useState } from 'react';
 import { Send, Bell, Users, User, Loader2 } from 'lucide-react';
 
 export default function AdminNotifications() {
+  const [notifications, setNotifications] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     title: '',
     message: '',
     type: 'info',
     recipientId: '' // Empty = All Users
   });
+
+  const fetchNotifications = async () => {
+    try {
+      const res = await fetch('/api/user/notifications');
+      const data = await res.json();
+      if (data.success) {
+        setNotifications(data.notifications);
+      }
+    } catch (error) {
+      console.error("Failed to fetch notifications");
+    }
+  };
   const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +46,7 @@ export default function AdminNotifications() {
       if (res.ok) {
         alert("Notification Sent!");
         setFormData({ title: '', message: '', type: 'info', recipientId: '' });
+        fetchNotifications();
       } else {
         alert(data.message);
       }
@@ -138,6 +158,47 @@ export default function AdminNotifications() {
           </button>
 
         </form>
+
+        <div className="mt-8 border-t border-slate-200 dark:border-slate-800 pt-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Recent Notifications</h2>
+            <span className="text-sm text-slate-500">{notifications.length}</span>
+          </div>
+
+          {notifications.length > 0 ? (
+            <div className="space-y-3">
+              {notifications.map((notification, index) => (
+                <div
+                  key={notification.id || index}
+                  className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-4"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">
+                        {notification.title || 'Untitled notification'}
+                      </h3>
+                      <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                        {notification.message}
+                      </p>
+                    </div>
+                    <span className="rounded-full bg-indigo-100 dark:bg-indigo-900/30 px-2.5 py-1 text-xs font-medium capitalize text-indigo-700 dark:text-indigo-300">
+                      {notification.type || 'info'}
+                    </span>
+                  </div>
+                  {notification.createdAt && (
+                    <p className="mt-3 text-xs text-slate-400">
+                      {new Date(notification.createdAt).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-slate-200 dark:border-slate-800 px-4 py-8 text-center text-sm text-slate-500">
+              No notifications found.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

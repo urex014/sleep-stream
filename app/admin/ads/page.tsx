@@ -51,6 +51,27 @@ export default function AdminAdsManager() {
     }
   };
 
+  const handleDeleteAll = async () => {
+    if (!confirm("Are you sure you want to delete all ads?")) return;
+
+    try {
+      const res = await fetch('/api/admin/tasks', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        toast(data.message);
+        fetchTasks();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Network Error");
+    }
+  };
+
   useEffect(() => {
     fetchTasks();
   }, []);
@@ -175,6 +196,11 @@ export default function AdminAdsManager() {
             <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
               <h3 className="font-bold text-slate-900 dark:text-white">Active Campaigns on Platform</h3>
             </div>
+              <div >
+                <button onClick={handleDeleteAll} className="text-red-600 hover:text-red-700 font-semibold text-sm transition-colors ml-4">
+                  <Trash2 className="w-4 h-4 inline" /> Clear All Ads
+                </button>
+              </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
@@ -209,6 +235,7 @@ export default function AdminAdsManager() {
                               Delete
                             </button>
                           </div>
+                          
                         </div>
                       </td>
                       <td className="px-6 py-4 text-center text-slate-500 font-mono">

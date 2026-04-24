@@ -39,13 +39,21 @@ export async function POST(req: Request) {
   }
 }
 
-// DELETE: Remove an Ad
+// DELETE: Remove an Ad with id or remove all
 export async function DELETE(req: Request) {
   try {
     await connectDB();
-    const { id } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { id } = body;
 
-    if (!id) return NextResponse.json({ success: false, message: 'Ad ID is required' }, { status: 400 });
+    if (!id) {
+      const result = await Task.deleteMany({});
+      return NextResponse.json({
+        success: true,
+        message: 'All ads deleted successfully!',
+        deletedCount: result.deletedCount,
+      });
+    }
 
     const deleted = await Task.findByIdAndDelete(id);
     if (!deleted) return NextResponse.json({ success: false, message: 'Ad not found' }, { status: 404 });
