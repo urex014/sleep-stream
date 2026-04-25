@@ -7,7 +7,11 @@ export async function POST(req: Request) {
     await connectDB();
     
     // NOTE: Extract your userId from your session/auth token here
-    // const userId = ... 
+    // const userId = ...
+    const { userId } = await req.json();
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+    }
 
     await User.findByIdAndUpdate(userId, { dashboardAlert: null });
 
