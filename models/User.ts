@@ -47,6 +47,11 @@ currentStreak: {
   default: 0 
 },
 
+dashboardAlert: { 
+  type: String, 
+  default: null 
+},
+
 // --- LOYALTY LOCK SYSTEM ---
 lockedBalances: [{
   amount: { type: Number, required: true },

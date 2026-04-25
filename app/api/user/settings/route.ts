@@ -25,7 +25,8 @@ export async function GET(req: Request) {
         email: user.email,
         vendorStatus: user.vendorStatus,
         businessName: user.businessName,
-        isVendor: user.isVendor
+        isVendor: user.isVendor,
+        dashboardAlert: user.dashboardAlert
       }
     });
   } catch (error: any) {

@@ -44,11 +44,11 @@ export default function FAQPage() {
       question:"Why am I limited to 20 tasks per day?",
       answer: "We implement daily task limits to maintain a healthy, sustainable ecosystem for both our users and our advertisers.  Advertisers pay for genuine engagement.If users were allowed to click hundreds of ads non- stop, the quality of that engagement drops, which harms the platform.By pacing the tasks, we ensure advertisers get real value, which in turn guarantees we can continue paying you reliably.Additionally, limits prevent automated bots from draining the reward pools, keeping the platform fair for real humans."
     },
-    // {
-    //   category: "General",
-    //   question: "Can i also be a code vendor?",
-    //   answer: "Yes, the vendor registration will be available to all eligible users in the coming weeks. As a code vendor, you can earn by selling ad codes to advertisers. Stay tuned for the official launch announcement! "
-    // }
+    {
+      category: "General",
+      question: "Can i also be a code vendor?",
+      answer: "Yes, the vendor registration will be available to all eligible users in the coming weeks. As a code vendor, you can earn by selling activation codes by adding your own interest. To be a vendor you must have bought a tier and processed withdrawals twice  "
+    }
   ];
 
   const filteredFaqs = faqs.filter(f =>

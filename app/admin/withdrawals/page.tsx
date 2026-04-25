@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CheckCircle2, XCircle, Copy, Clock, Loader2, Wallet } from 'lucide-react';
-import toast from 'react-hot-toast'; // <-- Added Toast!
+import { CheckCircle2, XCircle, Copy, Clock, Loader2, Wallet,AlertTriangle, X } from 'lucide-react';
+import toast from 'react-hot-toast'; 
+
 
 export default function PayoutRequests() {
 
@@ -10,8 +11,43 @@ export default function PayoutRequests() {
   const [withdrawals, setWithdrawals] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [isSendingAlert, setIsSendingAlert] = useState(false);
 
-  // --- 1. FETCH DATA ---
+
+
+
+  const handleSendAlert = async () => {
+  if (!alertMessage.trim()) return toast.error("Message cannot be empty");
+  
+  setIsSendingAlert(true);
+  const loadingToast = toast.loading("Pushing alert to user...");
+
+  try {
+    const res = await fetch('/api/admin/users/alert', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: selectedUserId, message: alertMessage })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      toast.success(data.message, { id: loadingToast });
+      setIsAlertModalOpen(false);
+      setAlertMessage(""); // clear the input
+    } else {
+      toast.error(data.message, { id: loadingToast });
+    }
+  } catch (error) {
+    toast.error("Network Error", { id: loadingToast });
+  } finally {
+    setIsSendingAlert(false);
+  }
+};
+
+
   const fetchPayouts = async () => {
     try {
       const res = await fetch('/api/admin/payouts');
@@ -192,6 +228,18 @@ export default function PayoutRequests() {
                       {item.status === 'Pending' ? (
                         <div className="flex justify-end gap-2">
                           <button
+                            onClick={() => {
+                              // We need the user's ID, not the transaction ID!
+                              // Assuming 'item' has the user object populated or the userId string
+                              setSelectedUserId(item.userId?._id || item.userId); 
+                              setIsAlertModalOpen(true);
+                            }}
+                            className="p-2 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition"
+                            title="Send Dashboard Alert"
+                          >
+                            <AlertTriangle className="w-5 h-5" />
+                          </button>
+                          <button
                             onClick={() => handleAction(item._id, 'Reject')}
                             disabled={processingId === item._id}
                             className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition disabled:opacity-50"
@@ -227,7 +275,51 @@ export default function PayoutRequests() {
           </table>
         </div>
       </div>
+              {/* --- ADMIN ALERT MODAL --- */}
+{isAlertModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-2xl p-6 shadow-2xl relative border border-slate-200 dark:border-slate-800 scale-in-95">
+      
+      <div className="flex justify-between items-center mb-4">
+        <h3 className="text-lg font-bold flex items-center gap-2 text-slate-900 dark:text-white">
+          <AlertTriangle className="w-5 h-5 text-amber-500" /> Push User Alert
+        </h3>
+        <button onClick={() => setIsAlertModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+          <X className="w-5 h-5" />
+        </button>
+      </div>
 
+      <p className="text-sm text-slate-500 mb-4 font-medium">
+        This message will appear as a yellow warning banner at the top of the user's dashboard until they dismiss it.
+      </p>
+
+      <textarea
+        value={alertMessage}
+        onChange={(e) => setAlertMessage(e.target.value)}
+        placeholder="e.g., Your withdrawal was paused because your TRC20 wallet address is invalid. Please update it."
+        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-sm text-slate-700 dark:text-slate-300 min-h-[120px] focus:outline-none focus:ring-2 focus:ring-amber-500/50 mb-4 resize-none"
+      />
+
+      <div className="flex gap-3 justify-end">
+        <button 
+          onClick={() => setIsAlertModalOpen(false)}
+          className="px-4 py-2 font-bold text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-sm transition"
+        >
+          Cancel
+        </button>
+        <button 
+          onClick={handleSendAlert}
+          disabled={isSendingAlert}
+          className="px-5 py-2 font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm transition shadow-lg shadow-amber-500/30 flex items-center gap-2 disabled:opacity-50"
+        >
+          {isSendingAlert && <Loader2 className="w-4 h-4 animate-spin" />}
+          Push Alert
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
     </div>
   );
 }

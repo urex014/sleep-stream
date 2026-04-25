@@ -14,18 +14,32 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { AlertTriangle, X } from 'lucide-react';
 
 export default function DashboardPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<any>(null);
-  
+  const [showAlert, setShowAlert] = useState(true);
   // --- NOTIFICATION STATE ---
   const [notifications, setNotifications] = useState<any[]>([]);
   const [currentNotifIndex, setCurrentNotifIndex] = useState(0);
 
   const MIN_ADS_WITHDRAWAL = 20000;
   const MIN_REF_WITHDRAWAL = 12000;
+
+
+  const dismissAlert = async () => {
+  // Hide it instantly for a snappy UI
+  setShowAlert(false); 
+
+  // Tell the database to delete the message so it doesn't show up again tomorrow
+  try {
+    await fetch('/api/user/alert/dismiss', { method: 'POST' });
+  } catch (error) {
+    console.error("Failed to dismiss alert");
+  }
+};
 
   // --- FETCH DATA ---
   useEffect(() => {
@@ -142,6 +156,28 @@ export default function DashboardPage() {
   </div>
 </div>
         </div>
+
+        {userData?.dashboardAlert && showAlert && (
+          <div className="bg-[#fffbeb] border-l-4 border-[#f59e0b] p-4 mb-6 rounded-r-md shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
+            <div className="flex justify-between items-start">
+              <div className="flex">
+                <AlertTriangle className="h-5 w-5 text-[#f59e0b] mr-3 mt-0.5 shrink-0" />
+                <div>
+                  <h3 className="text-sm font-bold text-[#92400e]">Action Required</h3>
+                  <p className="text-sm text-[#b45309] mt-1 font-medium leading-relaxed">
+                    {userData.dashboardAlert}
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={dismissAlert}
+                className="text-[#d97706] hover:text-[#92400e] hover:bg-[#fef3c7] p-1 rounded transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* --- WELCOME BONUS ALERT --- */}
         {/* {userData.hasClaimedBonus && (
