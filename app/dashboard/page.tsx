@@ -232,7 +232,7 @@ export default function DashboardPage() {
         <div className="flex flex-wrap gap-3 pb-2">
           <button
             onClick={() => router.push('/dashboard/ads')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow-md transition-all ring-1 ring-inset ring-indigo-700"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#337ab7] hover:bg-[#337ab7] text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow-md transition-all ring-1 ring-inset ring-[#286090]"
           >
             <PlaySquare className="w-4 h-4" /> Watch Ads & Earn
           </button>
@@ -285,7 +285,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
                   <div 
-                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transition-all duration-1000 ease-out" 
+                    className="h-full bg-gradient-to-r from-[#337ab7] to-[#337ab7]rounded-full transition-all duration-1000 ease-out" 
                     style={{ width: `${adsProgress}%` }}
                   />
                 </div>

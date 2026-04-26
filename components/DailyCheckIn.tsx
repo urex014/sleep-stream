@@ -88,7 +88,7 @@ export default function DailyCheckIn({ userId, currentStreak, lastCheckInDate, o
           className={`shrink-0 px-6 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-center gap-2 transition-all shadow-sm ${
             hasClaimedToday
               ? 'bg-slate-50 text-emerald-600 border border-emerald-200 cursor-not-allowed'
-              : 'bg-indigo-600 hover:bg-indigo-700 text-white ring-1 ring-inset ring-indigo-700 active:scale-95 hover:shadow-md'
+              : 'bg-[#337ab7] hover:bg-[#286090] text-white ring-1 ring-inset ring-[#286090] active:scale-95 hover:shadow-md'
           }`}
         >
           {isClaiming ? (
