@@ -143,7 +143,7 @@ export default function VendorsPage() {
             Activation Codes
           </h1>
           <p className="text-lg text-[#666666] leading-relaxed font-medium">
-            Purchase your activation code instantly via card, or securely through our list of trusted manual vendors.
+            Purchase your activation code instantly via card or bank transfer, or securely through our list of trusted manual vendors.
           </p>
         </div>
 

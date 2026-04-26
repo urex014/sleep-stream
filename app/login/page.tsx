@@ -83,7 +83,7 @@ export default function LoginPage() {
       <div className="hidden lg:flex flex-col justify-between w-1/2 bg-[#2b3e50] text-white p-12 lg:p-16 border-r border-[#1e2b3c]">
 
         <div className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-normal">
-          <img src="/landingpagelogo-nobg.png" alt="Logo" className='h-12 w-auto object-contain' />
+          <img src="/landingpagelogo-nobg.png" alt="Logo" className='h-25 w-25 object-contain' />
         </div>
 
         <div className="relative z-10 max-w-lg mb-12">
@@ -126,10 +126,21 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* --- RIGHT SIDE: LOGIN FORM --- */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12">
 
-        <div className="w-full max-w-md">
+      {/* --- RIGHT SIDE: LOGIN FORM --- */}
+      
+      <div className="relative flex-1 flex flex-col justify-center items-center p-6 sm:p-12 overflow-hidden">
+
+        {/* --- MOBILE-ONLY BACKGROUND PATTERN --- */}
+        {/* The 'lg:hidden' class ensures these vanish on desktop so the plain background remains */}
+        <div className="absolute inset-0 bg-[radial-gradient(#337ab7_1px,transparent_1px)] opacity-[0.12] [background-size:24px_24px] pointer-events-none lg:hidden"></div>
+        
+        {/* Mobile-only brand glows using your exact hex codes */}
+        <div className="absolute top-[-5%] right-[-10%] w-[70%] h-[50%] rounded-full bg-[#337ab7] opacity-15 blur-[100px] pointer-events-none lg:hidden"></div>
+        <div className="absolute bottom-[-5%] left-[-10%] w-[70%] h-[50%] rounded-full bg-[#5cb85c] opacity-10 blur-[100px] pointer-events-none lg:hidden"></div>
+
+        {/* Form Container - added relative z-10 to float above the pattern */}
+        <div className="relative z-10 w-full max-w-md">
 
           <div className="mb-8">
             <Link 
@@ -207,9 +218,6 @@ export default function LoginPage() {
                   </button>
                 </div>
               </div>
-
-
-              
 
               <button
                 type="submit"

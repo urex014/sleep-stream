@@ -107,7 +107,7 @@ function SignupForm() {
       <div className="hidden lg:flex flex-col justify-between w-1/2 bg-[#2b3e50] text-white p-12 border-r border-[#1e2b3c]">
 
         <div className="relative z-10 flex items-center gap-2 font-bold text-2xl tracking-normal">
-          <img src="landingpagelogo-nobg.png" className='h-20 w-25'></img>
+          <img alt="Sleep-Stream" src="landingpagelogo-nobg.png" className='h-25 w-25'></img>
         </div>
 
         <div className="relative z-10 max-w-lg mb-20">
@@ -141,8 +141,17 @@ function SignupForm() {
       </div>
 
       {/* --- RIGHT SIDE: FORM --- */}
-      <div className="flex-1 flex flex-col justify-center items-center p-6 md:p-12">
-        <div className="w-full max-w-md">
+      {/* Added overflow-hidden here to contain the blurs */}
+      <div className="flex-1 flex relative flex-col justify-center items-center p-6 md:p-12 overflow-hidden">
+        
+        {/* --- MOBILE BACKGROUND PATTERN --- */}
+        {/* These span the entire right side now, instead of being trapped inside the form container */}
+        <div className="absolute inset-0 bg-[radial-gradient(#337ab7_1px,transparent_1px)] opacity-[0.12] [background-size:24px_24px] pointer-events-none lg:hidden"></div>
+        <div className="absolute top-[-5%] right-[-10%] w-[70%] h-[50%] rounded-full bg-[#337ab7] opacity-15 blur-[100px] pointer-events-none lg:hidden"></div>
+        <div className="absolute bottom-[-5%] left-[-10%] w-[70%] h-[50%] rounded-full bg-[#5cb85c] opacity-10 blur-[100px] pointer-events-none lg:hidden"></div>
+
+        {/* Form Container: added relative z-10 so it sits on top of the background */}
+        <div className="w-full max-w-md relative z-10">
 
           <div className="mb-6">
             <Link href="/" className="inline-flex items-center text-[#337ab7] hover:text-[#23527c] text-sm font-bold hover:underline">
@@ -208,26 +217,26 @@ function SignupForm() {
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none border-r border-[#cccccc] bg-[#f5f5f5] rounded-l px-3">
                     <Lock className="w-4 h-4 text-[#777777]" />
                   </div>
-	                  <input
-	                    type={isPasswordVisible ? 'text' : 'password'}
-	                    name="password"
-	                    required
-	                    value={formData.password}
-	                    onChange={handleChange}
-	                    placeholder="••••••••"
-	                    className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-10 outline-none transition-colors"
-	                  />
-	                  <button
-	                    type="button"
-	                    onClick={() => setIsPasswordVisible((v) => !v)}
-	                    aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
-	                    aria-pressed={isPasswordVisible}
-	                    className="absolute inset-y-0 right-0 flex items-center px-3 text-[#777777] hover:text-[#333333]"
-	                  >
-	                    {isPasswordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-	                  </button>
-	                </div>
-	              </div>
+                    <input
+                      type={isPasswordVisible ? 'text' : 'password'}
+                      name="password"
+                      required
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="••••••••"
+                      className="w-full bg-white border border-[#cccccc] focus:border-[#66afe9] focus:shadow-[inset_0_1px_1px_rgba(0,0,0,0.075),0_0_8px_rgba(102,175,233,0.6)] text-[#333333] rounded py-2 pl-14 pr-10 outline-none transition-colors"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setIsPasswordVisible((v) => !v)}
+                      aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+                      aria-pressed={isPasswordVisible}
+                      className="absolute inset-y-0 right-0 flex items-center px-3 text-[#777777] hover:text-[#333333]"
+                    >
+                      {isPasswordVisible ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
 
               {/* Access Code */}
               <div className="space-y-2 mt-6">
@@ -312,7 +321,7 @@ function SignupForm() {
 
           <div className="text-center pt-6">
             <p className="text-[#666666] text-sm">
-              Already valid? <Link href="/login" className="text-[#337ab7] hover:text-[#23527c] font-bold hover:underline ml-1">Log in here</Link>
+              Already have an account? <Link href="/login" className="text-[#337ab7] hover:text-[#23527c] font-bold hover:underline ml-1">Log in here</Link>
             </p>
           </div>
 
