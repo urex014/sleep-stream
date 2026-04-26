@@ -131,6 +131,16 @@ export default function FAQPage() {
         </div>
       </div>
 
+      <div className="w-full rounded-2xl overflow-hidden shadow-sm border border-slate-200">
+  <iframe 
+    className="w-full aspect-video" 
+    src="https://www.youtube.com/embed/hVw4mZyso9U" 
+    title="YouTube video player" 
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+    allowFullScreen
+  ></iframe>
+</div>
+
       {/* 3. PREMIUM SUPPORT CTA (Classic Well/Panel) */}
       <div className="bg-[#f9f9f9] border border-[#dddddd] rounded p-8 md:p-10 text-center shadow-sm">
         <h3 className="text-xl font-bold text-[#222222] mb-2">Still need assistance?</h3>
@@ -139,7 +149,7 @@ export default function FAQPage() {
         </p>
 
         <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="https://t.me/SLEEPSTREAMNG" target="_blank">
+          <Link href="https://t.me/Void0145" target="_blank">
           <button className="flex items-center justify-center gap-2 px-6 py-2.5 rounded bg-white border border-[#cccccc] text-[#333333] hover:bg-[#e6e6e6] hover:border-[#adadad] font-bold transition-colors shadow-sm text-sm">
             <Send className="w-4 h-4 text-[#337ab7]" /> Telegram Support
           </button>

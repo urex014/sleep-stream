@@ -15,6 +15,11 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { AlertTriangle, X } from 'lucide-react';
+import DailyCheckIn from '@/components/DailyCheckIn';
+import LoyaltyLock from '@/components/LoyaltyLock';
+
+
+
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -29,17 +34,43 @@ export default function DashboardPage() {
   const MIN_REF_WITHDRAWAL = 12000;
 
 
-  const dismissAlert = async () => {
-  // Hide it instantly for a snappy UI
-  setShowAlert(false); 
 
-  // Tell the database to delete the message so it doesn't show up again tomorrow
+
+  const handleLockSuccess = (amountDeducted: number) => {
+    setUserData((prev: any) => ({
+      ...prev,
+      adsBalance: prev.adsBalance - amountDeducted
+    }));
+  };
+
+
+
+  
+
+//check in success(streak)
+  const handleCheckInSuccess = (rewardAmount: number, newStreak: number) => {
+    setUserData((prev: any) => ({
+      ...prev,
+      adsBalance: prev.adsBalance + rewardAmount,
+      currentStreak: newStreak,
+      lastCheckInDate: new Date().toISOString() // Update the date locally so the button locks
+    }));
+  };
+
+  
+
+
+//user warning box
+  const dismissAlert = async () => {
+  setShowAlert(false); 
   try {
     await fetch('/api/user/alert/dismiss', { method: 'POST' });
   } catch (error) {
     console.error("Failed to dismiss alert");
   }
 };
+
+
 
   // --- FETCH DATA ---
   useEffect(() => {
@@ -83,6 +114,7 @@ export default function DashboardPage() {
     fetchData();
   }, [router]);
 
+
   // --- NOTIFICATION CAROUSEL LOGIC ---
   useEffect(() => {
     if (notifications.length <= 1) return;
@@ -117,61 +149,78 @@ export default function DashboardPage() {
   const refProgress = Math.min((userData.referralBalance / MIN_REF_WITHDRAWAL) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-[#f8f9fa] p-4 md:p-8 font-sans text-[#333333] selection:bg-[#337ab7] selection:text-white">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-800 selection:bg-indigo-500 selection:text-white">
+      <div className="max-w-6xl mx-auto space-y-8">
+        
+        {/* STREAK */}
+        {userData && (userData._id || userData.id) ? (
+          <DailyCheckIn 
+            userId={userData.id || userData._id} 
+            currentStreak={userData.currentStreak || 0} 
+            lastCheckInDate={userData.lastCheckInDate}
+            onClaimSuccess={handleCheckInSuccess}
+          />
+        ):(
+          <p></p>
+        )
+        }
 
         {/* --- HEADER & NOTIFICATION CAROUSEL --- */}
-        <div className="border-b border-[#dddddd]/60 pb-5 flex flex-col md:flex-row justify-between md:items-end gap-6">
+        <div className="flex flex-col md:flex-row justify-between md:items-end gap-6">
           <div>
-            <h1 className="text-3xl font-bold text-[#222222] tracking-tight">
+            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
               Overview
             </h1>
-            <p className="text-[#666666] mt-1.5 text-sm">
-              Welcome back, <span className="font-semibold text-[#333333]">{userData.name}</span>. Start watching ads to increase your balance.
+            <p className="text-slate-500 mt-2 text-sm font-medium">
+              Welcome back, <span className="font-semibold text-slate-700">{userData?.name || 'User'}</span>. Start watching ads to increase your balance.
             </p>
           </div>
 
           {/* Sleek Notification Carousel */}
-          <div className="bg-white border border-[#dddddd]/80 px-4 py-3 rounded-xl shadow-sm flex items-start gap-3 w-full md:w-[320px] lg:w-[400px] min-h-[48px]">
-  <Bell className="w-4 h-4 text-[#f0ad4e] shrink-0 mt-0.5" />
-  <div className="flex-1 grid">
-    {notifications.length > 0 ? (
-      notifications.map((notif, index) => (
-        <div
-          key={notif.id || index}
-          className={`col-start-1 row-start-1 w-full text-sm font-medium transition-all duration-500 ease-in-out ${
-            index === currentNotifIndex 
-              ? 'opacity-100 translate-y-0 z-10' 
-              : 'opacity-0 translate-y-4 pointer-events-none z-0'
-          }`}
-        >
-          {notif.message}
-        </div>
-      ))
-    ) : (
-      <div className="col-start-1 row-start-1 text-sm text-[#777777] font-medium">
-        You're all caught up!
-      </div>
-    )}
-  </div>
-</div>
+          <div className="bg-white border border-slate-200 px-4 py-3 rounded-2xl shadow-sm flex items-start gap-3 w-full md:w-[320px] lg:w-[400px] min-h-[48px]">
+            <Bell className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
+            <div className="flex-1 grid">
+              {notifications.length > 0 ? (
+                notifications.map((notif, index) => (
+                  <div
+                    key={notif.id || index}
+                    className={`col-start-1 row-start-1 w-full text-sm font-medium text-slate-700 transition-all duration-500 ease-in-out ${
+                      index === currentNotifIndex 
+                        ? 'opacity-100 translate-y-0 z-10' 
+                        : 'opacity-0 translate-y-4 pointer-events-none z-0'
+                    }`}
+                  >
+                    {notif.message}
+                  </div>
+                ))
+              ) : (
+                <div className="col-start-1 row-start-1 text-sm text-slate-400 font-medium">
+                  You're all caught up!
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
+        
+
+        {/* --- ALERT --- */}
         {userData?.dashboardAlert && showAlert && (
-          <div className="bg-[#fffbeb] border-l-4 border-[#f59e0b] p-4 mb-6 rounded-r-md shadow-sm animate-in fade-in slide-in-from-top-4 duration-500">
-            <div className="flex justify-between items-start">
-              <div className="flex">
-                <AlertTriangle className="h-5 w-5 text-[#f59e0b] mr-3 mt-0.5 shrink-0" />
+          <div className="bg-amber-50 border border-amber-200 p-4 rounded-2xl shadow-sm animate-in fade-in slide-in-from-top-4 duration-500 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-1 h-full bg-amber-500" />
+            <div className="flex justify-between items-start pl-2">
+              <div className="flex gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
                 <div>
-                  <h3 className="text-sm font-bold text-[#92400e]">Action Required</h3>
-                  <p className="text-sm text-[#b45309] mt-1 font-medium leading-relaxed">
+                  <h3 className="text-sm font-bold text-amber-900">Action Required</h3>
+                  <p className="text-sm text-amber-700 mt-1 font-medium leading-relaxed">
                     {userData.dashboardAlert}
                   </p>
                 </div>
               </div>
               <button 
                 onClick={dismissAlert}
-                className="text-[#d97706] hover:text-[#92400e] hover:bg-[#fef3c7] p-1 rounded transition-colors"
+                className="text-amber-500 hover:text-amber-700 hover:bg-amber-100 p-1.5 rounded-lg transition-colors"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -179,163 +228,171 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* --- WELCOME BONUS ALERT --- */}
-        {/* {userData.hasClaimedBonus && (
-          <div className="bg-[#dff0d8]/80 border border-[#d6e9c6] text-[#3c763d] px-5 py-4 rounded-xl shadow-sm flex items-start gap-3">
-            <Gift className="w-5 h-5 shrink-0 mt-0.5" />
-            <div>
-              <h4 className="font-bold text-[15px] mb-0.5">₦2,000 Sign-up Bonus Credited!</h4>
-              <p className="text-sm opacity-90">Your default balance has been credited. Complete daily ad tasks to reach the ₦20,000 withdrawal limit.</p>
-            </div>
-          </div>
-        )} */}
-
         {/* --- QUICK ACTIONS --- */}
         <div className="flex flex-wrap gap-3 pb-2">
           <button
             onClick={() => router.push('/dashboard/ads')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#5cb85c] hover:bg-[#449d44] active:bg-[#398439] border border-[#4cae4c] rounded-xl text-sm font-bold text-white shadow-sm hover:shadow transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-sm font-semibold shadow-sm hover:shadow-md transition-all ring-1 ring-inset ring-indigo-700"
           >
             <PlaySquare className="w-4 h-4" /> Watch Ads & Earn
           </button>
           <button
             onClick={() => router.push('/dashboard/referrals')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cccccc] rounded-xl text-sm font-bold text-[#333333] hover:bg-[#f5f5f5] active:bg-[#ebebeb] transition-all shadow-sm hover:shadow"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
           >
-            <Users className="w-4 h-4 text-[#337ab7]" /> Invite Friends
+            <Users className="w-4 h-4 text-indigo-500" /> Invite Friends
           </button>
           <button
             onClick={() => router.push('/dashboard/wallet')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cccccc] rounded-xl text-sm font-bold text-[#333333] hover:bg-[#f5f5f5] active:bg-[#ebebeb] transition-all shadow-sm hover:shadow"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
           >
-            <Wallet className="w-4 h-4 text-red-300" /> Withdraw Funds
+            <Wallet className="w-4 h-4 text-emerald-500" /> Withdraw Funds
           </button>
-
           <button
             onClick={() => router.push('/dashboard/surveys')}
-            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-[#cccccc] rounded-xl text-sm font-bold text-[#333333] hover:bg-[#f5f5f5] active:bg-[#ebebeb] transition-all shadow-sm hover:shadow"
+            className="flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
           >
-            <HelpCircle className="w-4 h-4 text-[#f0ad4e]" /> Take Surveys
+            <HelpCircle className="w-4 h-4 text-amber-500" /> Take Surveys
           </button>
-          
         </div>
 
         {/* --- DUAL WALLET OVERVIEW --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {/* 1. ADS WALLET */}
-          <div className="bg-white border border-[#dddddd]/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col h-full overflow-hidden">
-            <div className="p-5 border-b border-[#dddddd]/60 bg-[#fbfbfb] flex justify-between items-center">
-              <h3 className="font-bold text-[#333333] flex items-center gap-2">
-                <PlaySquare className="w-4 h-4 text-[#337ab7]" /> Ads & surveys Balance
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                <PlaySquare className="w-4 h-4 text-indigo-500" /> Ads & Surveys
               </h3>
-              <span className="text-[11px] font-bold text-[#777777] uppercase tracking-wider bg-white px-2 py-1 rounded border border-[#dddddd]/60">Tasks & Clicks</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-100 px-2.5 py-1 rounded-full">
+                Tasks & Clicks
+              </span>
             </div>
 
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div className="mb-8">
-                <h3 className="text-4xl font-bold text-[#222222] mb-1 tracking-tight">
-                  ₦{userData.adsBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Current Balance</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tight">
+                  ₦{(userData?.adsBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </h3>
-                <p className="text-[#777777] text-xs font-bold uppercase tracking-wider">Current Balance</p>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-[#444444] mb-2">
+                <div className="flex justify-between text-xs font-bold text-slate-600 mb-2.5">
                   <span>Withdrawal Progress</span>
-                  <span>{adsProgress.toFixed(1)}%</span>
+                  <span className="text-indigo-600">{adsProgress.toFixed(1)}%</span>
                 </div>
-                <div className="w-full h-3 bg-[#f0f0f0] rounded-full overflow-hidden mb-2 shadow-inner">
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
                   <div 
-                    className="h-full bg-[#337ab7] rounded-full transition-all duration-1000 ease-out" 
+                    className="h-full bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transition-all duration-1000 ease-out" 
                     style={{ width: `${adsProgress}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-[#777777] font-medium text-right">Min. Payout: ₦{MIN_ADS_WITHDRAWAL.toLocaleString()}</p>
+                <p className="text-xs text-slate-500 font-medium text-right">
+                  Min. Payout: <span className="font-semibold text-slate-700">₦{MIN_ADS_WITHDRAWAL.toLocaleString()}</span>
+                </p>
               </div>
             </div>
           </div>
 
           {/* 2. REFERRAL WALLET */}
-          <div className="bg-white border border-[#dddddd]/60 rounded-2xl shadow-sm hover:shadow-md transition-shadow flex flex-col h-full overflow-hidden">
-            <div className="p-5 border-b border-[#dddddd]/60 bg-[#fbfbfb] flex justify-between items-center">
-              <h3 className="font-bold text-[#333333] flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#5cb85c]" /> Referral Balance
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col h-full overflow-hidden">
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+              <h3 className="font-bold text-slate-800 flex items-center gap-2">
+                <Users className="w-4 h-4 text-emerald-500" /> Referrals
               </h3>
-              <span className="text-[11px] font-bold text-[#777777] uppercase tracking-wider bg-white px-2 py-1 rounded border border-[#dddddd]/60">Network Earnings</span>
+              <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-slate-100 px-2.5 py-1 rounded-full">
+                Network Earnings
+              </span>
             </div>
 
             <div className="p-6 flex-1 flex flex-col justify-between">
               <div className="mb-8">
-                <h3 className="text-4xl font-bold text-[#222222] mb-1 tracking-tight">
-                  ₦{userData.referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider mb-1">Current Balance</p>
+                <h3 className="text-4xl font-black text-slate-900 tracking-tight">
+                  ₦{(userData?.referralBalance || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </h3>
-                <p className="text-[#777777] text-xs font-bold uppercase tracking-wider">Current Balance</p>
               </div>
 
               <div>
-                <div className="flex justify-between text-xs font-bold text-[#444444] mb-2">
+                <div className="flex justify-between text-xs font-bold text-slate-600 mb-2.5">
                   <span>Withdrawal Progress</span>
-                  <span>{refProgress.toFixed(1)}%</span>
+                  <span className="text-emerald-600">{refProgress.toFixed(1)}%</span>
                 </div>
-                <div className="w-full h-3 bg-[#f0f0f0] rounded-full overflow-hidden mb-2 shadow-inner">
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden mb-3">
                   <div 
-                    className="h-full bg-[#5cb85c] rounded-full transition-all duration-1000 ease-out" 
+                    className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-1000 ease-out" 
                     style={{ width: `${refProgress}%` }}
                   />
                 </div>
-                <p className="text-[11px] text-[#777777] font-medium text-right">Min. Payout: ₦{MIN_REF_WITHDRAWAL.toLocaleString()}</p>
+                <p className="text-xs text-slate-500 font-medium text-right">
+                  Min. Payout: <span className="font-semibold text-slate-700">₦{MIN_REF_WITHDRAWAL.toLocaleString()}</span>
+                </p>
               </div>
             </div>
           </div>
 
         </div>
 
+
+        {userData && (userData._id || userData.id) && (
+        <LoyaltyLock 
+          userId={userData._id || userData.id}
+          adsBalance={userData.adsBalance || 0}
+          onLockSuccess={handleLockSuccess}
+        />
+      )}
+
         {/* --- DAILY STATISTICS --- */}
-        <div className="bg-white border border-[#dddddd]/60 rounded-2xl shadow-sm overflow-hidden mt-2">
-          <div className="p-5 border-b border-[#dddddd]/60 bg-[#fbfbfb] flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-[#777777]" />
-            <h3 className="font-bold text-[#333333] text-base">Today's Activity</h3>
+        <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden mt-4">
+          <div className="p-6 border-b border-slate-100 flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-slate-400" />
+            <h3 className="font-bold text-slate-800 text-base">Today's Activity</h3>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-[#dddddd]/60">
-            <div className="p-6 text-center hover:bg-[#fcfcfc] transition-colors">
-              <div className="w-12 h-12 rounded-full bg-[#337ab7]/10 flex items-center justify-center mx-auto mb-3">
-                <PlaySquare className="w-6 h-6 text-[#337ab7]" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x lg:divide-y-0 divide-slate-100">
+            {/* Stat 1 */}
+            <div className="p-6 text-center hover:bg-slate-50 transition-colors flex flex-col items-center">
+              <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4">
+                <PlaySquare className="w-5 h-5 text-indigo-600" />
               </div>
-              <div className="text-2xl font-bold text-[#222222]">{userData.adsWatchedToday}</div>
-              <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Videos Watched</div>
+              <div className="text-3xl font-extrabold text-slate-900">{userData?.adsWatchedToday || 0}</div>
+              <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1.5">Videos Watched</div>
             </div>
 
-            <div className="p-6 text-center hover:bg-[#fcfcfc] transition-colors">
-              <div className="w-12 h-12 rounded-full bg-[#f0ad4e]/10 flex items-center justify-center mx-auto mb-3">
-                <MousePointerClick className="w-6 h-6 text-[#f0ad4e]" />
+            {/* Stat 2 */}
+            <div className="p-6 text-center hover:bg-slate-50 transition-colors flex flex-col items-center">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center mb-4">
+                <MousePointerClick className="w-5 h-5 text-amber-600" />
               </div>
-              <div className="text-2xl font-bold text-[#222222]">{userData.linksClickedToday}</div>
-              <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Links Clicked</div>
+              <div className="text-3xl font-extrabold text-slate-900">{userData?.linksClickedToday || 0}</div>
+              <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1.5">Links Clicked</div>
             </div>
 
-            <div className="p-6 text-center hover:bg-[#fcfcfc] transition-colors">
-              <div className="w-12 h-12 rounded-full bg-[#5cb85c]/10 flex items-center justify-center mx-auto mb-3">
-                <Users className="w-6 h-6 text-[#5cb85c]" />
+            {/* Stat 3 */}
+            <div className="p-6 text-center hover:bg-slate-50 transition-colors flex flex-col items-center">
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center mb-4">
+                <Users className="w-5 h-5 text-emerald-600" />
               </div>
-              <div className="text-2xl font-bold text-[#222222]">{userData.activeReferrals}</div>
-              <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Active Referrals</div>
+              <div className="text-3xl font-extrabold text-slate-900">{userData?.activeReferrals || 0}</div>
+              <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1.5">Active Referrals</div>
             </div>
 
-            <div className="p-6 text-center hover:bg-[#fcfcfc] transition-colors">
-              <div className="w-12 h-12 rounded-full bg-[#5cb85c]/10 flex items-center justify-center mx-auto mb-3">
-                <HelpCircle className="w-6 h-6 text-red-300]" />
+            {/* Stat 4 */}
+            <div className="p-6 text-center hover:bg-slate-50 transition-colors flex flex-col items-center">
+              <div className="w-12 h-12 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center mb-4">
+                <HelpCircle className="w-5 h-5 text-rose-500" />
               </div>
-              <div className="text-2xl font-bold text-[#222222]">{userData.surveysCompleted}</div>
-              <div className="text-[11px] text-[#777777] uppercase font-bold tracking-wider mt-1">Surveys Completed</div>
+              <div className="text-3xl font-extrabold text-slate-900">{userData?.surveysCompleted || 0}</div>
+              <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider mt-1.5">Surveys Completed</div>
             </div>
           </div>
 
-          <div className="p-4 bg-[#fbfbfb] border-t border-[#dddddd]/60 text-center">
+          <div className="p-5 bg-slate-50 border-t border-slate-100 text-center">
             <button
               onClick={() => router.push('/dashboard/ads')}
-              className="text-[#337ab7] font-semibold text-sm hover:text-[#23527c] transition-colors flex items-center justify-center gap-1.5 mx-auto group"
+              className="text-[#337ab7]  font-bold text-sm hover:text-[#286090] transition-colors flex items-center justify-center gap-1.5 mx-auto group"
             >
               Go to Ads Manager 
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

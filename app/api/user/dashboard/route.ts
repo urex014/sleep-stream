@@ -63,6 +63,7 @@ export async function GET(req: Request) {
     return NextResponse.json({
       success: true,
       user: {
+        id: user._id || user.id,
         name: user.username,
         email: user.email, // CRITICAL: Paystack needs this for the upgrade page
         tier: user.tier, // CRITICAL: Frontend needs this to know their rank

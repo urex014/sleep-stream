@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, ExternalLink, CheckCircle, XCircle, Loader2, List, Trash2 } from 'lucide-react';
+import { ShieldAlert, ExternalLink, CheckCircle, XCircle, Loader2, List, CheckCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
@@ -11,6 +11,10 @@ export default function AdminAdsModerationPage() {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [processingId, setProcessingId] = useState<string | null>(null);
+  const [isApprovingAll, setIsApprovingAll] = useState(false);
+
+
+  
 
   // Fetch all ads
   const fetchAllCampaigns = async () => {
@@ -59,6 +63,38 @@ export default function AdminAdsModerationPage() {
     }
   };
 
+
+
+  const handleApproveAll = async () => {
+  // Prevent accidental clicks!
+  if (!window.confirm("Are you sure you want to approve ALL pending ads instantly?")) return;
+
+  setIsApprovingAll(true);
+  const loadingToast = toast.loading("Approving all pending ads...");
+
+  try {
+    // Make sure this matches the exact URL path of the API route you showed me!
+    const res = await fetch('/api/admin/manage-ads', {
+      method: 'POST',
+    });
+    const data = await res.json();
+
+    if (res.ok && data.success) {
+      toast.success(data.message, { id: loadingToast }); // Will say "X ads approved"
+      
+      // Call your fetch function here to refresh the table data instantly!
+      fetchAllCampaigns(); 
+      
+    } else {
+      toast.error(data.message || "Failed to approve ads", { id: loadingToast });
+    }
+  } catch (error) {
+    toast.error("Network error occurred", { id: loadingToast });
+  } finally {
+    setIsApprovingAll(false);
+  }
+};
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
@@ -86,6 +122,18 @@ export default function AdminAdsModerationPage() {
           <div className="flex items-center gap-2">
             <List className="w-4 h-4 text-[#777777]" />
             <h3 className="font-bold text-[#333333] text-base">All Campaigns</h3>
+            <button
+            onClick={handleApproveAll}
+            disabled={isApprovingAll}
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
+          >
+            {isApprovingAll ? (
+              <Loader2 className="w-5 h-5 animate-spin" />
+            ) : (
+              <CheckCheck className="w-5 h-5" />
+            )}
+            {isApprovingAll ? "Approving..." : "Approve All Pending"}
+          </button>
           </div>
           <span className="text-[11px] font-bold bg-[#337ab7] text-white px-2 py-1 rounded shadow-inner">
             {campaigns.filter(c => c.status === 'Pending Review').length} Pending

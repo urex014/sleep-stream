@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const TransactionSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
-  type: { type: String, enum: ['Earning', 'Withdrawal', 'Deposit', 'Transfer'], required: true },
+  type: { type: String, enum: ['Earning', 'Withdrawal', 'Deposit', 'Transfer', 'Deduction'], required: true },
   // Added 'General' so old legacy data doesn't crash your app
   wallet: { type: String, enum: ['Ads', 'Referral', 'System', 'General'], required: true }, 
   method: { type: String, required: true },
