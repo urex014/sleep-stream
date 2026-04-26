@@ -191,12 +191,21 @@ export default function LandingPage() {
           <p className="text-lg text-[#94a3b8] mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
             Join thousands of users who are already turning their idle time into passive income. Simple tasks, real money, no experience needed.
           </p>
+
+          <button
+            onClick={() => router.push('/faq')}
+            className="bg-[#337ab7] hover:bg-[#337ab7] text-white font-bold text-lg mx-4 my-6 px-10 py-4 rounded-full inline-flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(92,184,92,0.3)] active:scale-95 group"
+          >
+            Have Questions? <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </button>
           <button
             onClick={() => router.push('/signup')}
             className="bg-[#5cb85c] hover:bg-[#4cae4c] text-white font-bold text-lg px-10 py-4 rounded-full inline-flex items-center gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(92,184,92,0.3)] active:scale-95 group"
           >
             Create Your Free Account <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
           </button>
+
+          
           
           <div className="mt-8 flex items-center justify-center gap-6 text-[#64748b] text-sm font-medium">
             <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-[#5cb85c]" /> Secure Platform</span>

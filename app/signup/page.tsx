@@ -2,7 +2,7 @@
 'use client';
 
 	import React, { useState, useEffect, Suspense } from 'react';
-	import { Bot, Mail, Lock, User, ArrowRight, Gift, ChevronLeft, KeyRound, ShieldCheck, Loader2, Eye, EyeOff } from 'lucide-react';
+	import { Bot, Mail, Lock, User, ArrowRight, Gift, ChevronLeft, KeyRound, ShieldCheck, Loader2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 	import Link from 'next/link';
 	import { useRouter, useSearchParams } from 'next/navigation';
 	import Logo from '@/components/Logo';
@@ -288,10 +288,23 @@ function SignupForm() {
                   <>Validate & Create Account <ArrowRight className="w-4 h-4" /></>
                 )}
               </button>
+
+              <p className="mt-4 text-center text-xs text-[#666666]">
+                By creating an account, you agree to our{" "}
+                <Link href="/Terms-and-Conditions" className="text-[#337ab7] hover:text-[#23527c] hover:underline font-semibold">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-[#337ab7] hover:text-[#23527c] hover:underline font-semibold">
+                  Privacy Policy
+                </Link>
+                .
+              </p>
               
             </form>
             <Link href="https://t.me/void0145">
-                            <button className="mt-6 inline-flex items-center justify-center rounded border border-[#bcdff1] bg-gradient-to-b from-[#f4fbff] to-[#e6f4fb] px-4 py-2 text-sm font-bold text-[#337ab7] shadow-sm transition-all hover:border-[#8ec7e6] hover:from-[#eef8fe] hover:to-[#dff0f8] hover:text-[#23527c]">
+                            <button className="mt-6 inline-flex items-center min-w-full justify-center rounded border border-[#bcdff1] bg-gradient-to-b from-[#f4fbff] to-[#e6f4fb] px-4 py-2 text-sm font-bold text-[#337ab7] shadow-sm transition-all hover:border-[#8ec7e6] hover:from-[#eef8fe] hover:to-[#dff0f8] hover:text-[#23527c]">
+                              <AlertTriangle className="w-4 h-4 mr-2 text-[#31708f]" />
                               click here for issues with activation code
                             </button>
                           </Link>
