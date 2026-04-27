@@ -300,7 +300,7 @@ function SignupForm() {
 
               <p className="mt-4 text-center text-xs text-[#666666]">
                 By creating an account, you agree to our{" "}
-                <Link href="/Terms-and-Conditions" className="text-[#337ab7] hover:text-[#23527c] hover:underline font-semibold">
+                <Link href="/terms-and-conditions" className="text-[#337ab7] hover:text-[#23527c] hover:underline font-semibold">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
