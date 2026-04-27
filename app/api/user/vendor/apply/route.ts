@@ -1,46 +1,51 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
+import VendorRequest from '@/models/VendorRequest';
 import User from '@/models/User';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
 export async function POST(req: Request) {
   try {
     await connectDB();
-
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-    if (!token) return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
-
-    const decoded: any = jwt.verify(token, JWT_SECRET);
-    const userId = decoded.id;
-
-    const { businessName, businessDescription } = await req.json();
-
-    if (!businessName || !businessDescription) {
-      return NextResponse.json({ success: false, message: 'All fields are required' }, { status: 400 });
-    }
+    const { userId, email } = await req.json();
 
     const user = await User.findById(userId);
-    
-    if (user.vendorStatus === 'Pending') {
-      return NextResponse.json({ success: false, message: 'Application already in progress' }, { status: 400 });
+    if (!user) return NextResponse.json({ success: false, message: "User not found" }, { status: 404 });
+
+    await VendorRequest.create({
+      userId,
+      email,
+      status: 'Pending'
+    });
+
+    return NextResponse.json({ success: true, message: "Application submitted" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ success: false, message: `Server Error: ${error}` }, { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  try {
+    await connectDB();
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get('userId');
+
+    if (!userId) {
+      return NextResponse.json({ success: false, message: 'User ID is required' }, { status: 400 });
     }
-    
-    if (user.isVendor) {
-      return NextResponse.json({ success: false, message: 'You are already a vendor' }, { status: 400 });
-    }
 
-    user.businessName = businessName;
-    user.businessDescription = businessDescription;
-    user.vendorStatus = 'Pending';
-    await user.save();
+    const vendorRequest = await VendorRequest.findOne({ userId })
+      .sort({ createdAt: -1 })
+      .select('status');
 
-    return NextResponse.json({ success: true, message: 'Application submitted successfully!' });
-
-  } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: true,
+        // If there is no request in the DB, default to "None"
+        status: vendorRequest?.status ?? 'None', 
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json({ success: false, message: `Server Error: ${error}` }, { status: 500 });
   }
 }

@@ -14,6 +14,9 @@ import {
   Check
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import VendorApplication from '@/components/VendorApplication';
+import PurchasedCodesPage from '@/app/admin/purchased-codes/page';
+import BuyWholesaleCode from '@/components/PurchaseCode';
 
 export default function SettingsPage() {
 
@@ -32,6 +35,7 @@ export default function SettingsPage() {
     isVendor: false
   });
 
+  const [vendorStatus, setVendorStatus] = useState<string | null>(null);
   // --- 1. FETCH DATA ---
   useEffect(() => {
     const fetchSettings = async () => {
@@ -41,6 +45,12 @@ export default function SettingsPage() {
         if (data.success) {
           setProfile(data.profile);
         }
+        const statusRes = await fetch(`/api/user/vendor/apply?userId=${data.user._id || data.user.id}`);
+          const statusData = await statusRes.json();
+          
+          if (statusData.success) {
+            setVendorStatus(statusData.status); // This will be 'None', 'Pending', 'Approved', or 'Rejected'
+          }
       } catch (error) {
         console.error("Failed to load settings");
       } finally {
@@ -49,6 +59,7 @@ export default function SettingsPage() {
     };
     fetchSettings();
   }, []);
+
 
   useEffect(() => {
     return () => {
@@ -249,36 +260,13 @@ export default function SettingsPage() {
 
         {/* vwndor */}
         <div className="lg:col-span-5 flex flex-col">
-          <div className="bg-[#fcf8e3] border border-[#faebcc] rounded shadow-sm flex-1 flex flex-col text-[#8a6d3b]">
-
-            <div className="p-4 border-b border-[#faebcc] bg-[#faf2cc] flex items-center gap-2">
-              <Sparkles className="w-4 h-4" />
-              <h3 className="font-bold text-base">Vendor Network</h3>
-            </div>
-
-            <div className="p-6 flex-1 flex flex-col">
-              <p className="text-sm mb-5 leading-relaxed">
-                Ready to scale? The vendor portal will allow you to purchase access codes in bulk, generate revenue, and manage your own clients directly from the dashboard.
-              </p>
-
-              <ul className="space-y-2.5 mb-6">
-                {['Bulk code generation', 'Wholesale pricing tiers', 'Client management tools'].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm font-bold">
-                    <span className="w-1.5 h-1.5 bg-[#8a6d3b] rounded-full shrink-0"></span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-auto pt-5 border-t border-[#faebcc] flex justify-between items-center">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#8a6d3b] text-white text-xs font-bold">
-                  <Lock className="w-3 h-3" /> Coming Soon
-                </div>
-                <ArrowRight className="w-4 h-4 text-[#8a6d3b] opacity-70" />
-              </div>
-
-            </div>
-          </div>
+          {/* { profile.isVendor ? (
+            <BuyWholesaleCode userId={profile.id} email={profile.email} />
+          ):(
+            <VendorApplication userId={profile.id} isAlreadyVendor={profile.isVendor} vendorStatus={vendorStatus} email={profile.email} />
+          )} */}
+          
+          
         </div>
 
       </div>

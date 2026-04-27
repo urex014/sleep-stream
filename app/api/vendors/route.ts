@@ -1,3 +1,6 @@
+//add and fetch vendors for the vendor page
+
+
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/db';
 import Vendor from '@/models/Vendor';
