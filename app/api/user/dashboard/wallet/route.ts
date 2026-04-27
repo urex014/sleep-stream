@@ -3,8 +3,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/db';
 import User from '@/models/User';
-import mongoose from 'mongoose';
-import Transaction from '@/models/Transaction'; // Make sure this file exists!
+import Transaction from '@/models/Transaction'; 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -31,22 +30,53 @@ export async function GET(req: Request) {
       return NextResponse.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    // 4. Get Transaction History safely
+    // 4. Pagination Setup
+    // Extract page and limit from the URL (e.g., /api/user/wallet?page=2&limit=20)
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '20', 10);
+    const skip = (page - 1) * limit;
+
     let history = [];
+    let totalTransactions = 0;
+    let lockedAmount = 0;
+
     try {
-      history = await Transaction.find({ userId: user._id }).sort({ createdAt: -1 }).limit(20);
+      // 5. Run Database Queries in Parallel for Maximum Speed
+      const [fetchedHistory, totalCount, pendingAggregation] = await Promise.all([
+        // Get the specific page of transactions
+        Transaction.find({ userId: user._id })
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(limit),
+        
+        // Count total transactions for pagination math
+        Transaction.countDocuments({ userId: user._id }),
+
+        // Safely sum all pending withdrawals across the entire database
+        Transaction.aggregate([
+          { $match: { userId: user._id, type: 'Withdrawal', status: 'Pending' } },
+          { $group: { _id: null, totalLocked: { $sum: '$amount' } } }
+        ])
+      ]);
+
+      history = fetchedHistory;
+      totalTransactions = totalCount;
+      lockedAmount = pendingAggregation[0]?.totalLocked || 0;
+
     } catch (txError) {
       console.log("Transaction fetch skipped or failed. Did you create the model?");
-      // We don't crash the server here, just return an empty array if the table doesn't exist yet
     }
 
-    // 5. Calculate "Locked" funds (Pending withdrawals)
-    const pendingWithdrawals = history.filter(tx => tx.type === 'Withdrawal' && tx.status === 'Pending');
-    const lockedAmount = pendingWithdrawals.reduce((sum, tx) => sum + tx.amount, 0);
+    // 6. Calculate Pagination Metadata
+    const totalPages = Math.ceil(totalTransactions / limit);
+    const hasNextPage = page < totalPages;
+    const hasPrevPage = page > 1;
 
+    // 7. Calculate Wallet Totals
     const totalBalance = (user.adsBalance || 0) + (user.referralBalance || 0);
 
-    // 6. Return Payload
+    // 8. Return Payload
     return NextResponse.json({
       success: true,
       wallet: {
@@ -56,7 +86,14 @@ export async function GET(req: Request) {
         adsBalance: user.adsBalance || 0,
         referralBalance: user.referralBalance || 0
       },
-      history
+      history,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalTransactions,
+        hasNextPage,
+        hasPrevPage
+      }
     });
 
   } catch (error: any) {

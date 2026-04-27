@@ -217,7 +217,7 @@ export default function VendorsPage() {
               </div>
 
               {/* Conditional rendering to prevent click without email */}
-              {/* <div className="space-y-3 mt-4">
+              <div className="space-y-3 mt-4">
                 <button
                   type="button"
                   disabled
@@ -226,10 +226,10 @@ export default function VendorsPage() {
                   <CreditCard className="w-5 h-5 drop-shadow-sm" /> Auto-Purchase Currently Disabled
                 </button>
                 <div className="bg-[#fcf8e3] border border-[#faebcc] text-[#8a6d3b] px-4 py-3 rounded text-sm text-center font-bold shadow-sm">
-                  Card payments are temporarily paused. Please scroll down to purchase manually from a verified vendor below!
+                  Auto payments are temporarily paused. Please scroll down to purchase manually from a verified vendor below!
                 </div>
-              </div> */}
-              {buyerEmail && buyerEmail.includes('@') ? (
+              </div>
+              {/* {buyerEmail && buyerEmail.includes('@') ? (
                 <PaystackButton
                   {...paystackProps}
                 
@@ -244,7 +244,7 @@ export default function VendorsPage() {
                 >
                   <CreditCard className="w-5 h-5 drop-shadow-sm" /> Pay ₦{CODE_PRICE.toLocaleString()} 
                 </button>
-              )}
+              )} */}
             </div>
           )}
         </div>

@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Wallet, ArrowUpRight, History,
-  AlertCircle, Landmark, Loader2, ChevronLeft,
+  AlertCircle, Landmark, Loader2, ChevronLeft, ChevronRight,
   Users, PlaySquare, ArrowRightLeft, AlertTriangle, Clock
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,11 @@ export default function WalletPage() {
   });
   const [history, setHistory] = useState<any[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
+  
+  // --- PAGINATION STATES ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [paginationData, setPaginationData] = useState<any>(null);
+  const [isHistoryPaginating, setIsHistoryPaginating] = useState(false);
 
   // --- ACTION STATES ---
   const [actionType, setActionType] = useState<'crypto' | 'fiat' | 'transfer' | null>(null);
@@ -57,24 +62,36 @@ export default function WalletPage() {
     return ()=>clearInterval(interval)
   }, [])
 
-  // --- 1. FETCH DATA ---
-  const fetchWalletData = async () => {
+  // --- 1. FETCH DATA (UPDATED FOR PAGINATION) ---
+  const fetchWalletData = async (page = 1) => {
+    // Only trigger full page loader on initial load. Use table fader for pagination.
+    if (page === 1 && !wallet.total) setIsLoadingData(true);
+    else setIsHistoryPaginating(true);
+
     try {
-      const res = await fetch('/api/user/dashboard/wallet');
+      // Pass the dynamic page number to the backend
+      const res = await fetch(`/api/user/dashboard/wallet?page=${page}&limit=20`);
       const data = await res.json();
+      
       if (res.status === 401) return router.push('/login');
+      
       if (data.success) {
         setWallet(data.wallet);
         setHistory(data.history);
+        setPaginationData(data.pagination); // Save pagination metadata
       }
     } catch (error) {
       console.error("Failed to load wallet");
     } finally {
       setIsLoadingData(false);
+      setIsHistoryPaginating(false);
     }
   };
 
-  useEffect(() => { fetchWalletData(); }, []);
+  // Trigger fetch when currentPage changes instead of just once on mount
+  useEffect(() => { 
+    fetchWalletData(currentPage); 
+  }, [currentPage]);
 
   // --- 2. HANDLERS ---
   const handleWithdraw = async () => {
@@ -125,7 +142,7 @@ export default function WalletPage() {
         setCryptoAddress('');
         setBankDetails({ bankName: '', accountNumber: '', accountHolder: '' });
         setActionType(null);
-        fetchWalletData();
+        fetchWalletData(currentPage); // Refetch current page to update balances
       } else {
         toast.error(data.message);
       }
@@ -153,7 +170,7 @@ export default function WalletPage() {
         toast.success("Transfer Successful! Funds have been moved to your Ads Wallet.");
         setAmount('');
         setActionType(null);
-        fetchWalletData();
+        fetchWalletData(currentPage);
       } else {
         toast.error(data.message);
       }
@@ -167,7 +184,7 @@ export default function WalletPage() {
   if (isLoadingData) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#337ab7] animate-spin" />
       </div>
     );
   }
@@ -176,19 +193,19 @@ export default function WalletPage() {
   const currentMinThreshold = withdrawSource === 'ads' ? MIN_ADS_WITHDRAWAL : MIN_REF_WITHDRAWAL;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16 font-sans text-slate-800 selection:bg-indigo-500 selection:text-white animate-in fade-in duration-500">
+    <div className="max-w-4xl mx-auto space-y-8 pb-16 font-sans text-slate-800 selection:bg-[#337ab7] selection:text-white animate-in fade-in duration-500">
 
       {/* --- PREMIUM BALANCE PANEL --- */}
       <div className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 rounded-3xl shadow-xl p-8 md:p-10 text-white overflow-hidden">
         
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none"></div>
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-[#337ab7]/20 blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 rounded-full bg-[#5cb85c]/10 blur-3xl pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-white/10 pb-8">
           <div>
             <div className="inline-flex items-center gap-2 mb-3">
               <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
-                <Wallet className="w-5 h-5 text-indigo-200" />
+                <Wallet className="w-5 h-5 text-blue-200" />
               </div>
               <span className="text-sm font-semibold uppercase tracking-wider text-slate-300">Total Network Balance</span>
             </div>
@@ -201,7 +218,7 @@ export default function WalletPage() {
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-5 mt-8">
           <div className="bg-white/5 border border-white/10 hover:bg-white/10 transition-colors rounded-2xl p-5 backdrop-blur-sm">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-indigo-200 text-xs font-semibold uppercase tracking-wider flex items-center gap-2">
+              <p className="text-blue-200 text-xs font-semibold uppercase tracking-wider flex items-center gap-2">
                 <PlaySquare className="w-4 h-4" /> Ads Wallet
               </p>
             </div>
@@ -227,14 +244,14 @@ export default function WalletPage() {
         <div className="relative">
           {!actionType ? (
             <div className="flex flex-col items-center justify-center py-4 animate-in zoom-in-95 fade-in duration-300">
-              <div className="w-16 h-16 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-sm">
+              <div className="w-16 h-16 bg-blue-50 text-[#337ab7] rounded-2xl flex items-center justify-center mb-6 shadow-sm">
                 <ArrowUpRight className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold text-slate-900 mb-3 tracking-tight">Manage Funds</h3>
               {/* --- WITHDRAWAL STATUS BANNER --- */}
               <div className={`mb-8 flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold border ${
                 isOpen 
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200' 
+                  ? 'bg-emerald-50 text-[#5cb85c] border-[#5cb85c]/30' 
                   : 'bg-amber-50 text-amber-700 border-amber-200'
               }`}>
                 <Clock className="w-4 h-4" />
@@ -249,13 +266,12 @@ export default function WalletPage() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                 <button
                   onClick={() => setActionType('crypto')}
-                  
-                  className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-indigo-500 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                  className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-[#337ab7] hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                 >
-                  <div className="p-3 bg-slate-50 group-hover:bg-indigo-50 rounded-xl transition-colors">
-                    <Wallet className="w-7 h-7 text-slate-600 group-hover:text-indigo-600 transition-colors" />
+                  <div className="p-3 bg-slate-50 group-hover:bg-[#337ab7]/10 rounded-xl transition-colors">
+                    <Wallet className="w-7 h-7 text-slate-600 group-hover:text-[#337ab7] transition-colors" />
                   </div>
-                  <span className="font-semibold text-slate-700 group-hover:text-indigo-700 transition-colors">Crypto Wallet</span>
+                  <span className="font-semibold text-slate-700 group-hover:text-[#337ab7] transition-colors">Crypto Wallet</span>
                 </button>
                 
                 <button
@@ -274,12 +290,12 @@ export default function WalletPage() {
 
                 <button
                   onClick={() => setActionType('transfer')}
-                  className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-emerald-500 hover:shadow-md hover:-translate-y-1 transition-all duration-200"
+                  className="group flex flex-col items-center justify-center gap-4 p-6 rounded-2xl bg-white border-2 border-slate-100 hover:border-[#5cb85c] hover:shadow-md hover:-translate-y-1 transition-all duration-200"
                 >
-                  <div className="p-3 bg-slate-50 group-hover:bg-emerald-50 rounded-xl transition-colors">
-                    <ArrowRightLeft className="w-7 h-7 text-slate-600 group-hover:text-emerald-600 transition-colors" />
+                  <div className="p-3 bg-slate-50 group-hover:bg-[#5cb85c]/10 rounded-xl transition-colors">
+                    <ArrowRightLeft className="w-7 h-7 text-slate-600 group-hover:text-[#5cb85c] transition-colors" />
                   </div>
-                  <span className="font-semibold text-slate-700 group-hover:text-emerald-700 transition-colors">Transfer to Ads</span>
+                  <span className="font-semibold text-slate-700 group-hover:text-[#5cb85c] transition-colors">Transfer to Ads</span>
                 </button>
               </div>
             </div>
@@ -287,7 +303,7 @@ export default function WalletPage() {
 
             /* --- TRANSFER FLOW --- */
             <div className="max-w-xl mx-auto animate-in slide-in-from-right-8 fade-in duration-300">
-              <button onClick={() => { setActionType(null); setAmount(''); }} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-8 group">
+              <button onClick={() => { setActionType(null); setAmount(''); }} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#337ab7] transition-colors mb-8 group">
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to options
               </button>
 
@@ -303,7 +319,7 @@ export default function WalletPage() {
                     <p className="text-2xl font-bold text-slate-900">₦{(wallet.referralBalance || 0).toLocaleString()}</p>
                   </div>
                   <div className="p-3 bg-white rounded-xl shadow-sm">
-                    <Users className="w-6 h-6 text-emerald-500" />
+                    <Users className="w-6 h-6 text-[#5cb85c]" />
                   </div>
                 </div>
 
@@ -318,13 +334,13 @@ export default function WalletPage() {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full pl-10 pr-4 py-4 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-slate-900 rounded-xl outline-none text-xl font-bold transition-all"
+                      className="w-full pl-10 pr-4 py-4 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 text-slate-900 rounded-xl outline-none text-xl font-bold transition-all"
                     />
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 p-4 bg-indigo-50/50 border border-indigo-100 text-indigo-800 rounded-xl">
-                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-indigo-500" />
+                <div className="flex items-start gap-3 p-4 bg-blue-50/50 border border-blue-100 text-[#337ab7] rounded-xl">
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-[#337ab7]" />
                   <p className="text-sm leading-relaxed">
                     Transfers are processed instantly. Please note that once funds are moved to the Ads Wallet, they are subject to the Ads Wallet withdrawal minimum (₦20,000).
                   </p>
@@ -333,7 +349,7 @@ export default function WalletPage() {
                 <button
                   onClick={handleTransfer}
                   disabled={isProcessing || !amount || parseFloat(amount) <= 0 || parseFloat(amount) > wallet.referralBalance}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold py-4 rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  className="w-full bg-[#337ab7] hover:bg-[#286090] text-white font-semibold py-4 rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                 >
                   {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : "Confirm Transfer"}
                 </button>
@@ -344,7 +360,7 @@ export default function WalletPage() {
 
             /* --- WITHDRAW FLOW --- */
             <div className="max-w-xl mx-auto animate-in slide-in-from-right-8 fade-in duration-300">
-              <button onClick={() => { setActionType(null); setAmount(''); }} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors mb-8 group">
+              <button onClick={() => { setActionType(null); setAmount(''); }} className="flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-[#337ab7] transition-colors mb-8 group">
                 <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to options
               </button>
 
@@ -377,12 +393,12 @@ export default function WalletPage() {
                       onClick={() => setWithdrawSource('ads')}
                       className={`p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
                         withdrawSource === 'ads' 
-                          ? 'bg-indigo-50 border-indigo-500 shadow-sm' 
+                          ? 'bg-blue-50 border-[#337ab7] shadow-sm' 
                           : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                       }`}
                     >
-                      <span className={`block font-bold mb-1 ${withdrawSource === 'ads' ? 'text-indigo-900' : 'text-slate-700'}`}>Ads Wallet</span>
-                      <span className={`block text-sm font-medium ${withdrawSource === 'ads' ? 'text-indigo-600' : 'text-slate-500'}`}>
+                      <span className={`block font-bold mb-1 ${withdrawSource === 'ads' ? 'text-[#286090]' : 'text-slate-700'}`}>Ads Wallet</span>
+                      <span className={`block text-sm font-medium ${withdrawSource === 'ads' ? 'text-[#337ab7]' : 'text-slate-500'}`}>
                         Bal: ₦{(wallet.adsBalance || 0).toLocaleString()}
                       </span>
                     </button>
@@ -391,12 +407,12 @@ export default function WalletPage() {
                       onClick={() => setWithdrawSource('referrals')}
                       className={`p-4 rounded-2xl border-2 text-left transition-all duration-200 ${
                         withdrawSource === 'referrals' 
-                          ? 'bg-emerald-50 border-emerald-500 shadow-sm' 
+                          ? 'bg-emerald-50 border-[#5cb85c] shadow-sm' 
                           : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                       }`}
                     >
-                      <span className={`block font-bold mb-1 ${withdrawSource === 'referrals' ? 'text-emerald-900' : 'text-slate-700'}`}>Referral Wallet</span>
-                      <span className={`block text-sm font-medium ${withdrawSource === 'referrals' ? 'text-emerald-600' : 'text-slate-500'}`}>
+                      <span className={`block font-bold mb-1 ${withdrawSource === 'referrals' ? 'text-[#4cae4c]' : 'text-slate-700'}`}>Referral Wallet</span>
+                      <span className={`block text-sm font-medium ${withdrawSource === 'referrals' ? 'text-[#5cb85c]' : 'text-slate-500'}`}>
                         Bal: ₦{(wallet.referralBalance || 0).toLocaleString()}
                       </span>
                     </button>
@@ -421,7 +437,7 @@ export default function WalletPage() {
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"
-                      className="w-full pl-10 pr-4 py-4 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-slate-900 rounded-xl outline-none text-xl font-bold transition-all"
+                      className="w-full pl-10 pr-4 py-4 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 text-slate-900 rounded-xl outline-none text-xl font-bold transition-all"
                     />
                   </div>
                 </div>
@@ -434,12 +450,10 @@ export default function WalletPage() {
                       <select
                         value={withdrawNetwork}
                         onChange={(e) => setWithdrawNetwork(e.target.value)}
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl text-sm font-semibold text-slate-700 outline-none transition-all cursor-pointer appearance-none"
+                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 rounded-xl text-sm font-semibold text-slate-700 outline-none transition-all cursor-pointer appearance-none"
                         style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: `right 0.5rem center`, backgroundRepeat: `no-repeat`, backgroundSize: `1.5em 1.5em` }}
                       >
-                        {/* <option value="USDT-TRC20">USDT (Tron TRC20)</option> */}
                         <option className='font-bold' value="BNB">BNB Chain</option>
-                        
                       </select>
                     </div>
                     <div>
@@ -449,7 +463,7 @@ export default function WalletPage() {
                         value={cryptoAddress}
                         onChange={(e) => setCryptoAddress(e.target.value)}
                         placeholder="Paste your wallet address"
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl font-mono text-sm outline-none transition-all"
+                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 rounded-xl font-mono text-sm outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -463,7 +477,7 @@ export default function WalletPage() {
                           value={bankDetails.bankName}
                           onChange={(e) => setBankDetails({ ...bankDetails, bankName: e.target.value })}
                           placeholder="e.g. GTBank"
-                          className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl text-sm outline-none transition-all"
+                          className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 rounded-xl text-sm outline-none transition-all"
                         />
                       </div>
                       <div>
@@ -473,7 +487,7 @@ export default function WalletPage() {
                           value={bankDetails.accountNumber}
                           onChange={(e) => setBankDetails({ ...bankDetails, accountNumber: e.target.value })}
                           placeholder="0123456789"
-                          className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl font-mono text-sm outline-none transition-all"
+                          className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 rounded-xl font-mono text-sm outline-none transition-all"
                         />
                       </div>
                     </div>
@@ -484,7 +498,7 @@ export default function WalletPage() {
                         value={bankDetails.accountHolder}
                         onChange={(e) => setBankDetails({ ...bankDetails, accountHolder: e.target.value })}
                         placeholder="John Doe"
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 rounded-xl text-sm outline-none transition-all"
+                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-200 focus:border-[#337ab7] focus:ring-4 focus:ring-[#337ab7]/10 rounded-xl text-sm outline-none transition-all"
                       />
                     </div>
                   </div>
@@ -507,7 +521,7 @@ export default function WalletPage() {
                     (parseFloat(amount) > currentMaxBalance) ||
                     (actionType === 'crypto' ? !cryptoAddress : (!bankDetails.bankName || !bankDetails.accountNumber || !bankDetails.accountHolder))
                   }
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold py-4 rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+                  className="w-full bg-[#5cb85c] hover:bg-[#4cae4c] active:bg-[#4cae4c] text-white font-semibold py-4 rounded-xl shadow-sm hover:shadow-md flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
                 >
                   {isProcessing ? <Loader2 className="animate-spin w-5 h-5" /> : !isOpen ? "Withdrawals Closed" : "Confirm Withdrawal"}
                 </button>
@@ -517,7 +531,7 @@ export default function WalletPage() {
         </div>
       </div>
 
-      {/* --- REFINED HISTORY TABLE --- */}
+      {/* --- REFINED HISTORY TABLE WITH PAGINATION --- */}
       <div className="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="p-6 border-b border-slate-100 bg-white flex items-center gap-2">
           <div className="p-2 bg-slate-50 rounded-lg">
@@ -526,7 +540,7 @@ export default function WalletPage() {
           <h3 className="text-lg font-bold text-slate-800 tracking-tight">Recent Transactions</h3>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto relative">
           <table className="w-full text-left border-collapse">
             <thead className="bg-slate-50/50 text-slate-500 text-xs uppercase font-bold tracking-wider border-b border-slate-100">
               <tr>
@@ -536,7 +550,7 @@ export default function WalletPage() {
                 <th className="px-6 py-4 text-right">Amount</th>
               </tr>
             </thead>
-            <tbody className="text-sm text-slate-700">
+            <tbody className={`text-sm text-slate-700 transition-opacity duration-300 ${isHistoryPaginating ? 'opacity-40' : 'opacity-100'}`}>
               {history.map((tx) => (
                 <tr key={tx._id || tx.id} className="border-b border-slate-50 hover:bg-slate-50/80 transition-colors group">
                   <td className="px-6 py-4">
@@ -548,13 +562,13 @@ export default function WalletPage() {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold
-                      ${tx.status === 'Success' ? 'bg-emerald-100 text-emerald-700'
+                      ${tx.status === 'Success' ? 'bg-[#5cb85c]/10 text-[#4cae4c]'
                         : tx.status === 'Pending' ? 'bg-amber-100 text-amber-700'
                           : 'bg-red-100 text-red-700'}`}>
                       {tx.status}
                     </span>
                   </td>
-                  <td className={`px-6 py-4 text-right font-bold text-base whitespace-nowrap ${tx.type === 'Withdrawal' || tx.type === 'Transfer' ? 'text-slate-900' : 'text-emerald-600'}`}>
+                  <td className={`px-6 py-4 text-right font-bold text-base whitespace-nowrap ${tx.type === 'Withdrawal' || tx.type === 'Transfer' ? 'text-slate-900' : 'text-[#5cb85c]'}`}>
                     {tx.type === 'Withdrawal' || tx.type === 'Transfer' ? '-' : '+'}₦{tx.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </td>
                 </tr>
@@ -564,7 +578,7 @@ export default function WalletPage() {
                   <td colSpan={4} className="px-6 py-16 text-center text-slate-400 font-medium">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <History className="w-8 h-8 opacity-20" />
-                      No transactions yet.
+                      No transactions found.
                     </div>
                   </td>
                 </tr>
@@ -572,8 +586,33 @@ export default function WalletPage() {
             </tbody>
           </table>
         </div>
-      </div>
 
+        {/* --- THE PAGINATION CONTROLS --- */}
+        {paginationData && paginationData.totalPages > 1 && (
+          <div className="px-6 py-5 border-t border-slate-100 bg-white flex items-center justify-between">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={!paginationData.hasPrevPage || isHistoryPaginating}
+              className="flex items-center gap-1 px-4 py-2 text-sm font-bold text-[#337ab7] bg-[#337ab7]/10 hover:bg-[#337ab7]/20 border border-[#337ab7]/20 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-4 h-4" /> Previous
+            </button>
+
+            <span className="text-sm font-bold text-slate-500">
+              Page {paginationData.currentPage} of {paginationData.totalPages}
+            </span>
+
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, paginationData.totalPages))}
+              disabled={!paginationData.hasNextPage || isHistoryPaginating}
+              className="flex items-center gap-1 px-4 py-2 text-sm font-bold text-[#337ab7] bg-[#337ab7]/10 hover:bg-[#337ab7]/20 border border-[#337ab7]/20 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              Next <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+      </div>
     </div>
   );
 }
